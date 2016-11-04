@@ -15,10 +15,10 @@ namespace EveryonesHell
 
         public GameSettings(int windowWidth, int windowHeight, bool fullScreen, bool showCursor)
         {
-            this.WindowWidth = windowWidth;
-            this.WindowHeight = windowHeight;
-            this.FullScreen = fullScreen;
-            this.ShowCursor = showCursor;
+            WindowWidth = windowWidth;
+            WindowHeight = windowHeight;
+            FullScreen = fullScreen;
+            ShowCursor = showCursor;
         }
     }
 }
