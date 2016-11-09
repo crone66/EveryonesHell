@@ -12,5 +12,6 @@ namespace EveryonesHell
     {
         public static Random Randomizer;
         public static GameSettings Settings;
+        public static bool Exit = false;
     }
 }

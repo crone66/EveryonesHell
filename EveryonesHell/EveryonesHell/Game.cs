@@ -33,7 +33,7 @@ namespace EveryonesHell
         public void Run()
         {
             Clock clock = new Clock();
-            while (window.IsOpen)
+            while (window.IsOpen && !GlobalReferences.Exit)
             {
                 Time time = clock.Restart();
 
