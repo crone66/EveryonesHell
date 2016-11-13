@@ -1,3 +1,6 @@
 [submodule "InventorySystem"]
 	path = InventorySystem
 	url = https://github.com/crone66/InventorySystem
+[submodule "TileMapSystem"]
+	path = TileMapSystem
+	url = https://github.com/crone66/TileMapSystem
