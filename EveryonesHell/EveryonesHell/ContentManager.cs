@@ -54,7 +54,7 @@ namespace EveryonesHell
                 content.Add(type, new Dictionary<string, object>());
             }
 
-            if (content[type].ContainsKey(key))
+            if (!content[type].ContainsKey(key))
             {
                 content[type].Add(key, newContent);
             }

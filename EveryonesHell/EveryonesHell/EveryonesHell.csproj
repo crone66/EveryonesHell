@@ -73,55 +73,64 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-	<ContentWithTargetPath Include="extlibs\csfml-audio-2.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>csfml-audio-2.dll</TargetPath>
-	</ContentWithTargetPath>
-	
-	<ContentWithTargetPath Include="extlibs\csfml-graphics-2.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>csfml-graphics-2.dll</TargetPath>
-	</ContentWithTargetPath>
-	
-	<ContentWithTargetPath Include="extlibs\csfml-network-2.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>csfml-network-2.dll</TargetPath>
-	</ContentWithTargetPath>
-	
-	<ContentWithTargetPath Include="extlibs\csfml-system-2.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>csfml-system-2.dll</TargetPath>
-	</ContentWithTargetPath>
-	
-	<ContentWithTargetPath Include="extlibs\csfml-window-2.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>csfml-window-2.dll</TargetPath>
-	</ContentWithTargetPath>
-	
-	<ContentWithTargetPath Include="extlibs\libsndfile-1.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>libsndfile-1.dll</TargetPath>
-	</ContentWithTargetPath>
-	
-	<ContentWithTargetPath Include="extlibs\openal32.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>openal32.dll</TargetPath>
-	</ContentWithTargetPath>
-	
-	<ContentWithTargetPath Include="extlibs\OpenTK.Compatibility.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>OpenTK.Compatibility.dll</TargetPath>
-	</ContentWithTargetPath>
-	
-	<ContentWithTargetPath Include="extlibs\OpenTK.dll">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>OpenTK.dll</TargetPath>
-	</ContentWithTargetPath>
-	
+    <ContentWithTargetPath Include="extlibs\csfml-audio-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-audio-2.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="extlibs\csfml-graphics-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-graphics-2.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="extlibs\csfml-network-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-network-2.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="extlibs\csfml-system-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-system-2.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="extlibs\csfml-window-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>csfml-window-2.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="extlibs\libsndfile-1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libsndfile-1.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="extlibs\openal32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>openal32.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="extlibs\OpenTK.Compatibility.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>OpenTK.Compatibility.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="extlibs\OpenTK.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>OpenTK.dll</TargetPath>
+    </ContentWithTargetPath>
+    <Content Include="Content\testBlue.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\testGray.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\testGreen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\testRed.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="extlibs\sfmlnet-audio-2.dll" />
     <Content Include="extlibs\sfmlnet-graphics-2.dll" />
     <Content Include="extlibs\sfmlnet-system-2.dll" />
     <Content Include="extlibs\sfmlnet-window-2.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\TileMapSystem\TileMapSystem\TileMapSystem\TileMapSystem.csproj">
+      <Project>{eaf17554-f4f5-4b7d-9b2d-324da658f891}</Project>
+      <Name>TileMapSystem</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
