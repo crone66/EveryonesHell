@@ -86,20 +86,30 @@ namespace EveryonesHell
                 //Handle input
                 if (Keyboard.IsKeyPressed(Keyboard.Key.W))
                 {
-                    y -= 1 ;
+                    TryMove(0, -1);
                 }
                 else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
                 {
-                    y += 1;
+                    TryMove(0, 1);
                 }
                 else if (Keyboard.IsKeyPressed(Keyboard.Key.A))
                 {
-                    x -= 1;
+                    TryMove(-1, 0);
                 }
                 else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
                 {
-                    x += 1;
+                    TryMove(1, 0);
                 }
+            }
+        }
+
+        private void TryMove(int xTranslation, int yTranslation)
+        {
+            int tileId = tileMap.GetTile(y + yTranslation, x + xTranslation);
+            if(tileId == 0)
+            {
+                x += xTranslation;
+                y += yTranslation;
             }
         }
 
