@@ -61,11 +61,11 @@
     <Compile Include="EveryonesHellEditorMain.Designer.cs">
       <DependentUpon>EveryonesHellEditorMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
+    <Compile Include="QuestEditor.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="QuestEditor.Designer.cs">
+      <DependentUpon>QuestEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProjectFile.cs" />
@@ -81,8 +81,8 @@
     <EmbeddedResource Include="EveryonesHellEditorMain.resx">
       <DependentUpon>EveryonesHellEditorMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="QuestEditor.resx">
+      <DependentUpon>QuestEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProjectScreen.resx">
       <DependentUpon>ProjectScreen.cs</DependentUpon>

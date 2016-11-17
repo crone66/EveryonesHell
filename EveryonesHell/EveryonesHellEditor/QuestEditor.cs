@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace QuestEditor
 {
-    public partial class Form1 : Form
+    public partial class Form1 : UserControl
     {
         bool error;
         List<Quest> loadedQuests;
