@@ -61,10 +61,12 @@
     <Compile Include="EveryonesHellEditorMain.Designer.cs">
       <DependentUpon>EveryonesHellEditorMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
+    <Compile Include="ItemEditor.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs" />
+    <Compile Include="ItemEditor.Designer.cs">
+      <DependentUpon>ItemEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="QuestEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -85,7 +87,7 @@
     <EmbeddedResource Include="EveryonesHellEditorMain.resx">
       <DependentUpon>EveryonesHellEditorMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx" />
+    <EmbeddedResource Include="ItemEditor.resx" />
     <EmbeddedResource Include="QuestEditor.resx">
       <DependentUpon>QuestEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,7 +104,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

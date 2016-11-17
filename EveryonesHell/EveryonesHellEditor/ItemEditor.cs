@@ -9,14 +9,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using FileDescriptions;
 
-namespace WindowsFormsApplication3
+namespace EveryonesHellEditor
 {
-    public partial class Form1 : Form
+    public partial class ItemEditor : UserControl
     {
         bool error = false;
 
-        public Form1()
+        public ItemEditor()
         {
             InitializeComponent();
         }

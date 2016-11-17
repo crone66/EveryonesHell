@@ -1,6 +1,6 @@
-﻿namespace WindowsFormsApplication3
+﻿namespace EveryonesHellEditor
 {
-    partial class Form1
+    partial class ItemEditor
     {
         /// <summary>
         /// Required designer variable.
