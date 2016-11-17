@@ -69,14 +69,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimationManager.cs" />
+    <Compile Include="DialogManagment\DialogManager.cs" />
+    <Compile Include="EntityManagment\Character.cs" />
     <Compile Include="ContentManager.cs" />
     <Compile Include="CustomExceptions\DuplicateKeyException.cs" />
+    <Compile Include="EntityManagment\DrawableObjects.cs" />
+    <Compile Include="EntityManagment\Entity.cs" />
+    <Compile Include="EntityManagment\EntityManager.cs" />
+    <Compile Include="EntityManagment\InteractiveObjects.cs" />
     <Compile Include="Exceptionhandler.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameSettings.cs" />
     <Compile Include="GlobalReferences.cs" />
+    <Compile Include="EntityManagment\NPC.cs" />
+    <Compile Include="EntityManagment\Player.cs" />
+    <Compile Include="MenuManagment\Menu.cs" />
+    <Compile Include="MenuManagment\MenuManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuestManagment\QuestTracker.cs" />
+    <Compile Include="Scene.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -136,6 +148,10 @@
     <Content Include="extlibs\sfmlnet-window-2.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\InventorySystem\InventorySystem\InventorySystem\InventorySystem.csproj">
+      <Project>{1927D937-90DD-42F0-AAF2-9451E93DB8F7}</Project>
+      <Name>InventorySystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\TileMapSystem\TileMapSystem\TileMapSystem\TileMapSystem.csproj">
       <Project>{eaf17554-f4f5-4b7d-9b2d-324da658f891}</Project>
       <Name>TileMapSystem</Name>
