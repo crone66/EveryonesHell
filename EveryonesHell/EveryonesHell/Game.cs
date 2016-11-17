@@ -26,11 +26,16 @@ namespace EveryonesHell
         private int x = 10;
         private int y = 10;
 
+        private View view;
+        private float zoomFactor = 2f;
 
         public Game()
         {
             window = new RenderWindow(new VideoMode(windowWidth, windowHeight), "test");
-
+            view = window.GetView();
+            view.Zoom(zoomFactor);
+            window.SetView(view);
+            
             LoadContent();
         }
 
@@ -82,7 +87,7 @@ namespace EveryonesHell
             elapsedTime -= elapsedSeconds;
             if (elapsedTime <= 0f)
             {
-                elapsedTime = 0.25f;
+                elapsedTime = 0.15f;
                 //Handle input
                 if (Keyboard.IsKeyPressed(Keyboard.Key.W))
                 {
@@ -122,8 +127,10 @@ namespace EveryonesHell
         private void Draw(float elapsedSeconds)
         {
             window.Clear(Color.Blue);
+            float zoomWidth = ((windowWidth * zoomFactor) - (windowWidth)) / 2f;
+            float zoomHeight = ((windowHeight * zoomFactor) - (windowHeight)) / 2f;
 
-            int[,] fieldInView = tileMap.GetTileMapInScreen(800, 600);
+            int[,] fieldInView = tileMap.GetTileMapInScreen(Convert.ToInt32(windowWidth * zoomFactor), Convert.ToInt32(windowHeight * zoomFactor));
             int rowCount = fieldInView.GetUpperBound(0);
             int columnCount = fieldInView.GetUpperBound(1);
             for (int row = 0; row < rowCount; row++)
@@ -132,14 +139,13 @@ namespace EveryonesHell
                 {
                     int id = fieldInView[row, column];
                     Sprite sprite = sprites[id];
-                    sprite.Position = new Vector2f(column * 50, row * 50);
+                    sprite.Position = new Vector2f((column * 50) - zoomWidth, (row * 50) - zoomHeight);
                     window.Draw(sprite);
                 }
             }
 
-            sprites[-1].Position = new Vector2f((columnCount / 2) * 50, (rowCount / 2) * 50);
+            sprites[-1].Position = new Vector2f(((columnCount / 2) * 50) - zoomWidth, ((rowCount / 2) * 50) - zoomHeight);
             window.Draw(sprites[-1]);
-            //Draw something
 
             window.Display();
         }
