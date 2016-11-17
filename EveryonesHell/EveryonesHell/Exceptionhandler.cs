@@ -30,6 +30,7 @@ namespace EveryonesHell
             if (ExceptionHandled != null)
                 ExceptionHandled(this,EventArgs.Empty);
 
+
         }
 
         private void CloseProgram(String Message, String StackTrace)
@@ -54,6 +55,7 @@ namespace EveryonesHell
         private void createMessageBox(String Message, String StackTrace)
         {
             File.WriteAllText(errorReportPath + ".txt", "Message: " + Message + Environment.NewLine + "StackTrace: " + StackTrace);
+            
             //Start Program
             Process.Start(errorReportPath + ".exe");
 
