@@ -87,7 +87,9 @@
     <EmbeddedResource Include="EveryonesHellEditorMain.resx">
       <DependentUpon>EveryonesHellEditorMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ItemEditor.resx" />
+    <EmbeddedResource Include="ItemEditor.resx">
+      <DependentUpon>ItemEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="QuestEditor.resx">
       <DependentUpon>QuestEditor.cs</DependentUpon>
     </EmbeddedResource>
