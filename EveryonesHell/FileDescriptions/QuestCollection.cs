@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FileDescriptions
+﻿namespace FileDescriptions
 {
-    public struct QuestCollection
+    public struct Questcollection
     {
+        public Quest[] Quests;
+
+        public Questcollection(Quest[] quests)
+        {
+            Quests = quests;
+        }
     }
 }

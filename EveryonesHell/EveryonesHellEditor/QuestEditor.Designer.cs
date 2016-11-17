@@ -192,7 +192,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(726, 780);
             this.Controls.Add(this.btLoad);
             this.Controls.Add(this.lbError);
             this.Controls.Add(this.tbRequired);
@@ -210,7 +209,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btSave);
             this.Name = "Form1";
-            this.Text = "Form 1";
+            this.Size = new System.Drawing.Size(726, 780);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

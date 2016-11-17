@@ -58,7 +58,7 @@
     <Compile Include="NPC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quest.cs" />
-    <Compile Include="QuestCollection.cs" />
+    <Compile Include="Questcollection.cs" />
     <Compile Include="Recipe.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
