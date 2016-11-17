@@ -8,7 +8,7 @@ using System.Collections.Generic;
  * Date: 9.11.2016
  */
 
-namespace AnimationManager
+namespace EveryonesHell
 {
     public class AnimationManager
     {
