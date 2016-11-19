@@ -4,3 +4,6 @@
 [submodule "TileMapSystem"]
 	path = TileMapSystem
 	url = https://github.com/crone66/TileMapSystem
+[submodule "DebugConsole"]
+	path = DebugConsole
+	url = https://github.com/crone66/DebugConsole
