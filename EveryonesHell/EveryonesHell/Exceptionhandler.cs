@@ -37,7 +37,7 @@ namespace EveryonesHell
         {
             createMessageBox(Message, StackTrace);
             //End Program
-            GlobalReferences.Exit = true;
+            GlobalReferences.State = GameState.Exit;
         }
 
         private void writeLog(String Message, String StackTrace)
