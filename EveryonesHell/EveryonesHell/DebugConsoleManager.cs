@@ -13,13 +13,19 @@ namespace EveryonesHell
         private const int width = 600;
         private const int outputHeight = 380;
         private const int inputHeight = 25;
+        private const int suggestionCount = 5;
+        private const float KeyDelay = 0.15f;
 
         public DebuggingConsole DebugConsole;
         private Text baseText;
         private RectangleShape outputBackground;
         private RectangleShape inputBackground;
         private RectangleShape autoCompletionBackgorund;
+        private RectangleShape suggestionHighlighter;
         private Game game;
+
+        private int selectedIndex = -1;
+        private float elapsedTime;
         public DebugConsoleManager(Game game, Font font)
         {
             this.game = game;
@@ -58,6 +64,11 @@ namespace EveryonesHell
             autoCompletionBackgorund.FillColor = new SFML.Graphics.Color(0, 0, 0, 128);
             autoCompletionBackgorund.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 200);
             autoCompletionBackgorund.Position = new SFML.System.Vector2f(0, outputHeight + inputHeight + 5);
+
+            suggestionHighlighter = new RectangleShape(new SFML.System.Vector2f(0, 0));
+            suggestionHighlighter.FillColor = new SFML.Graphics.Color(100, 100, 100, 128);
+            suggestionHighlighter.OutlineColor = new SFML.Graphics.Color(100, 100, 100, 200);
+            suggestionHighlighter.Position = new SFML.System.Vector2f(0, 0);
         }
 
         public void Update(float elapsedMilliseconds)
@@ -65,6 +76,29 @@ namespace EveryonesHell
             if (DebugConsole.IsOpen)
             {
                 DebugConsole.Update(elapsedMilliseconds, Keyboard.IsKeyPressed(Keyboard.Key.Left), Keyboard.IsKeyPressed(Keyboard.Key.Right));
+                if (elapsedTime <= 0)
+                {
+                    if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+                    {
+                        selectedIndex++;
+                        if (selectedIndex >= suggestionCount)
+                            selectedIndex = 0;
+
+                        elapsedTime = KeyDelay;
+                    }
+                    else if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+                    {
+                        selectedIndex--;
+                        if (selectedIndex < 0)
+                            selectedIndex = suggestionCount - 1;
+
+                        elapsedTime = KeyDelay;
+                    }
+                }
+                else
+                {
+                    elapsedTime -= elapsedMilliseconds;
+                }
             }
         }
 
@@ -108,7 +142,7 @@ namespace EveryonesHell
                 {
                     List<Text> suggestions = new List<Text>();
                     float width = 0;
-                    for (int i = 0; i < DebugConsole.RenderingInfo.AutoComplete.Length && i < 5; i++)
+                    for (int i = 0; i < DebugConsole.RenderingInfo.AutoComplete.Length && i < suggestionCount; i++)
                     {
                         Text suggest = new Text(baseText);
                         suggest.DisplayedString = DebugConsole.RenderingInfo.AutoComplete[i];
@@ -124,6 +158,13 @@ namespace EveryonesHell
 
                     for (int i = 0; i < suggestions.Count; i++)
                     {
+                        if (selectedIndex >= 0 && selectedIndex == i)
+                        {
+                            suggestions[i].Color = new SFML.Graphics.Color(255, 150, 0);
+                            suggestionHighlighter.Position = new SFML.System.Vector2f(0, autoCompletionBackgorund.Position.Y + (selectedIndex * lineSpacing));
+                            suggestionHighlighter.Size = new SFML.System.Vector2f(suggestions[i].GetGlobalBounds().Width, lineSpacing);
+                            window.Draw(suggestionHighlighter);
+                        }
                         window.Draw(suggestions[i]);
                     }
                 }
@@ -136,6 +177,12 @@ namespace EveryonesHell
             {
                 for (int i = 0; i < e.Unicode.Length; i++)
                 {
+                    if (selectedIndex != -1 && e.Unicode[0] == 13 && selectedIndex < DebugConsole.RenderingInfo.AutoComplete.Length)
+                    {
+                        DebugConsole.CurrentCommand = DebugConsole.RenderingInfo.AutoComplete[selectedIndex];
+                        selectedIndex = -1;
+                        return;
+                    }
                     DebugConsole.Update(0f, e.Unicode[i], false, false);
                 }
             }
