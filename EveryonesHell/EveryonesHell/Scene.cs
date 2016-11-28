@@ -19,16 +19,39 @@ namespace EveryonesHell
         private ContentManager content;
         private Dictionary<int, Sprite> sprites;
 
-        private DebugConsoleManager consoleManager;
-
         private byte[] fieldsInView;
         private float elapsedTime;
-        private int x = 10;
-        private int y = -210; 
+        private int x = -657;
+        private int y = -340; 
         private float zoomFactor;
         private uint windowWidth = 800;
         private uint windowHeight = 600;
 
+        public int X
+        {
+            get
+            {
+                return x;
+            }
+
+            set
+            {
+                x = value;
+            }
+        }
+
+        public int Y
+        {
+            get
+            {
+                return y;
+            }
+
+            set
+            {
+                y = value;
+            }
+        }
 
         public Scene(float zoomFactor)
         {
@@ -40,15 +63,31 @@ namespace EveryonesHell
                 new AreaSpread(2, 0.125f, 0, 20, 200, true, true, 5, SpreadOption.Circle, LayerType.Height)
             };
 
-            mapManager = new TileMapManager(settings, areaSpreads, x, y);
+            mapManager = new TileMapManager(settings, areaSpreads);
+            mapManager.GridChanged += MapManager_GridChanged;
+            mapManager.GridChangeRequested += MapManager_GridChangeRequested;
+            mapManager.GridGenerationIsSlow += MapManager_GridGenerationIsSlow;
+            mapManager.Changelevel(settings, areaSpreads, x, y, false);
+            Game.ConsoleManager.DebugConsole.WriteLine("X: " + X.ToString() + " Y:" + Y.ToString(), 255, 255, 255);
         }
 
-        public void LoadContent(RenderWindow window)
+        private void MapManager_GridGenerationIsSlow(object sender, GridEventArgs e)
         {
-            Font font = new Font(@"C:\Windows\Fonts\arial.ttf");
-            consoleManager = new DebugConsoleManager(this, font);
-            window.TextEntered += consoleManager.TextEntered;
+            Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid generation is slow From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 0, 0);
+        }
 
+        private void MapManager_GridChangeRequested(object sender, GridEventArgs e)
+        {
+            Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid change requested From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 255, 255);
+        }
+
+        private void MapManager_GridChanged(object sender, GridEventArgs e)
+        {
+            Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid changed From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 255, 255);
+        }
+
+        public void LoadContent()
+        {
             //Load your content
             content = new ContentManager();
             content.Add("Content/testBlue.png", new Texture("Content/testBlue.png"));
@@ -69,9 +108,8 @@ namespace EveryonesHell
 
         public void Update(float elapsedMilliseconds)
         {
-            mapManager.Update(y, x);
+            mapManager.Update(Y, X);
             fieldsInView = mapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32(windowWidth * zoomFactor), Convert.ToInt32(windowHeight * zoomFactor));
-            consoleManager.Update(elapsedMilliseconds);
         }
 
         public void Input(float elapsedMilliseconds)
@@ -80,34 +118,28 @@ namespace EveryonesHell
             {
                 case GameState.Play:
                     {
-                        if (!consoleManager.DebugConsole.IsOpen)
+                        if (!Game.ConsoleManager.DebugConsole.IsOpen)
                         {
-                            elapsedTime -= elapsedMilliseconds;
+                            elapsedTime -= elapsedMilliseconds;                    
                             if (elapsedTime <= 0f)
                             {
-                                //Handle input
+                                elapsedTime = 0.05f;
                                 if (Keyboard.IsKeyPressed(Keyboard.Key.W))
                                 {
                                     TryMove(0, -1);
-                                    elapsedTime = 15f;
                                 }
                                 else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
                                 {
                                     TryMove(0, 1);
-                                    elapsedTime = 15f;
                                 }
                                 else if (Keyboard.IsKeyPressed(Keyboard.Key.A))
                                 {
                                     TryMove(-1, 0);
-                                    elapsedTime = 15f;
                                 }
                                 else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
                                 {
                                     TryMove(1, 0);
-                                    elapsedTime = 15f;
                                 }
-                                else if (Keyboard.IsKeyPressed(Keyboard.Key.BackSlash))
-                                    consoleManager.DebugConsole.Open();
                             }
                         }
                     }
@@ -140,17 +172,15 @@ namespace EveryonesHell
 
             sprites[-1].Position = new Vector2f(((columnCount / 2) * 50) - zoomWidth, ((rowCount / 2) * 50) - zoomHeight);
             window.Draw(sprites[-1]);
-
-            consoleManager.Draw(window);
         }
 
         private void TryMove(int xTranslation, int yTranslation)
         {
-            int tileId = mapManager.CurrentLevel.GetTile(y + yTranslation, x + xTranslation);
+            int tileId = mapManager.CurrentLevel.GetTile(Y + yTranslation, X + xTranslation);
             if (tileId == 0)
             {
-                x += xTranslation;
-                y += yTranslation;
+                X += xTranslation;
+                Y += yTranslation;
             }
         }
     }

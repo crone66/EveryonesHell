@@ -23,7 +23,15 @@ namespace EveryonesHell
         private View view;
         private float zoomFactor = 1f;
 
-        private Scene scene;
+        private Scene currentScene;
+        public Scene CurrentScene
+        {
+            get
+            {
+                return currentScene;
+            }
+        }
+        public static DebugConsoleManager ConsoleManager;
 
         public Game()
         {
@@ -44,27 +52,33 @@ namespace EveryonesHell
             {
                 window.DispatchEvents();
                 Time time = clock.Restart();
-
-                Input(time.AsMilliseconds());
-                Update(time.AsMilliseconds());
-                Draw(time.AsMilliseconds());
+                Input(time.AsSeconds());
+                Update(time.AsSeconds());
+                Draw(time.AsSeconds());
             }
         }
 
         private void LoadContent()
         {
-            scene = new Scene(zoomFactor);
-            scene.LoadContent(window);
+            Font font = new Font(@"C:\Windows\Fonts\arial.ttf");
+            ConsoleManager = new DebugConsoleManager(this, font);
+            window.TextEntered += ConsoleManager.TextEntered;
+
+            currentScene = new Scene(zoomFactor);
+            currentScene.LoadContent();
             GlobalReferences.State = GameState.Play;
         }
 
        
         private void Input(float elapsedMilliseconds)
         {
-            switch(GlobalReferences.State)
+            if (Keyboard.IsKeyPressed(Keyboard.Key.BackSlash))
+                Game.ConsoleManager.DebugConsole.Open();
+
+            switch (GlobalReferences.State)
             {
                 case GameState.Play:
-                    scene.Input(elapsedMilliseconds);
+                    currentScene.Input(elapsedMilliseconds);
                     break;
                 case GameState.Pause:
                     break;
@@ -77,11 +91,13 @@ namespace EveryonesHell
 
         private void Update(float elapsedMilliseconds)
         {
+            Game.ConsoleManager.Update(elapsedMilliseconds);
             //Update something
             switch(GlobalReferences.State)
             {
+                
                 case GameState.Play:
-                    scene.Update(elapsedMilliseconds);
+                    currentScene.Update(elapsedMilliseconds);
                     break;
                 case GameState.Pause:
                     break;
@@ -94,14 +110,12 @@ namespace EveryonesHell
 
         private void Draw(float elapsedMilliseconds)
         {
-
+            window.Clear(Color.Blue);
             switch (GlobalReferences.State)
             {
                 case GameState.Play:
                     {
-                        window.Clear(Color.Blue);
-                        scene.Draw(window);
-                        window.Display();
+                        currentScene.Draw(window);
                     }
                     break;
                 case GameState.Pause:
@@ -111,7 +125,9 @@ namespace EveryonesHell
                 case GameState.Exit:
                     break;
             }
-            
+            Game.ConsoleManager.Draw(window);
+            window.Display();
+
         }
 
         public void Dispose()
