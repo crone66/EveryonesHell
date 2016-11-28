@@ -30,10 +30,16 @@ namespace QuestEditor
                 lbError.Text = "Quest-ID fehlt";
             }
 
+            if (tbNumber.Text.Length == 0 && (tbEnemy.Text.Length > 0 || tbEnemy.Text == "-1"))
+            {
+                error = true;
+                lbError.Text = "Number of enemies to kill fehlt";
+            }
+
             if (tbBasedOn.Text.Length == 0)
             {
                 error = true;
-                lbError.Text = "Quest-ID fehlt";
+                lbError.Text = "Based on Dialogue fehlt";
             }
 
             if (tbID.Text.Length == 0)
@@ -58,6 +64,16 @@ namespace QuestEditor
                 tbRequired.Text = "-1";
             }
 
+            if (tbEnemy.Text.Length == 0)
+            {
+                tbEnemy.Text = "-1";
+            }
+
+            if (tbNumber.Text.Length == 0 && (tbEnemy.Text.Length == 0 || tbEnemy.Text == "-1"))
+            {
+                tbRequired.Text = "-1";
+            }
+
             for (int i = 0; i < idList.Count; i++)
             {
                 if (Convert.ToInt32(tbID.Text) == idList[i])
@@ -77,9 +93,11 @@ namespace QuestEditor
                 int questItem = Convert.ToInt32(tbQuestitem.Text);
                 int basedOnDialogue = Convert.ToInt32(tbBasedOn.Text);
                 int requiredItem = Convert.ToInt32(tbRequired.Text);
+                int enemy = Convert.ToInt32(tbEnemy.Text);
+                int enemyCount = Convert.ToInt32(tbNumber.Text);
                 string description = Convert.ToString(tbDescription.Text);
 
-                Quest quest = new Quest(name, id, questItem, basedOnDialogue, requiredItem, description);
+                Quest quest = new Quest(name, id, questItem, basedOnDialogue, requiredItem, enemy, enemyCount, description);
                 loadedQuests.Add(quest);
                 Questcollection questcollection = new Questcollection(loadedQuests.ToArray());
 
@@ -135,6 +153,8 @@ namespace QuestEditor
                         tbQuestitem.Text = quest.Questitem.ToString();
                         tbBasedOn.Text = quest.BasedOnDialogue.ToString();
                         tbRequired.Text = quest.RequiredItem.ToString();
+                        tbEnemy.Text = quest.Enemy.ToString();
+                        tbNumber.Text = quest.EnemyCount.ToString();
                         tbDescription.Text = quest.Description.ToString();
                     }
 

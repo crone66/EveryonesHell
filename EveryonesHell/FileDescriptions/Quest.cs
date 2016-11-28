@@ -7,15 +7,19 @@
         public int Questitem;
         public int BasedOnDialogue;
         public int RequiredItem;
+        public int Enemy;
+        public int EnemyCount;
         public string Description;
 
-        public Quest(string name, int questID, int questItem, int basedOnDialogue, int requiredItem, string description)
+        public Quest(string name, int questID, int questItem, int basedOnDialogue, int requiredItem, int enemy, int enemyCount, string description)
         {
             Name = name;
             QuestID = questID;
             Questitem = questItem;
             BasedOnDialogue = basedOnDialogue;
             RequiredItem = requiredItem;
+            Enemy = enemy;
+            EnemyCount = enemyCount;
             Description = description;
         }
     }

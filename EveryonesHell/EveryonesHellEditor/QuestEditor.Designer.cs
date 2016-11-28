@@ -45,13 +45,17 @@
             this.lbError = new System.Windows.Forms.Label();
             this.btLoad = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.lbEnemy = new System.Windows.Forms.Label();
+            this.tbEnemy = new System.Windows.Forms.TextBox();
+            this.tbNumber = new System.Windows.Forms.TextBox();
+            this.lbNumber = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(82, 513);
+            this.btSave.Location = new System.Drawing.Point(282, 636);
             this.btSave.Name = "btSave";
-            this.btSave.Size = new System.Drawing.Size(163, 95);
+            this.btSave.Size = new System.Drawing.Size(149, 81);
             this.btSave.TabIndex = 7;
             this.btSave.Text = "Speichern";
             this.btSave.UseVisualStyleBackColor = true;
@@ -79,14 +83,14 @@
             // 
             this.tbName.Location = new System.Drawing.Point(82, 151);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(566, 31);
+            this.tbName.Size = new System.Drawing.Size(882, 31);
             this.tbName.TabIndex = 1;
             // 
             // tbID
             // 
             this.tbID.Location = new System.Drawing.Point(82, 240);
             this.tbID.Name = "tbID";
-            this.tbID.Size = new System.Drawing.Size(246, 31);
+            this.tbID.Size = new System.Drawing.Size(278, 31);
             this.tbID.TabIndex = 2;
             this.tbID.TextChanged += new System.EventHandler(this.tbID_TextChanged);
             // 
@@ -102,7 +106,7 @@
             // lbQuestitem
             // 
             this.lbQuestitem.AutoSize = true;
-            this.lbQuestitem.Location = new System.Drawing.Point(404, 212);
+            this.lbQuestitem.Location = new System.Drawing.Point(386, 212);
             this.lbQuestitem.Name = "lbQuestitem";
             this.lbQuestitem.Size = new System.Drawing.Size(148, 25);
             this.lbQuestitem.TabIndex = 6;
@@ -110,9 +114,9 @@
             // 
             // tbQuestitem
             // 
-            this.tbQuestitem.Location = new System.Drawing.Point(402, 240);
+            this.tbQuestitem.Location = new System.Drawing.Point(384, 240);
             this.tbQuestitem.Name = "tbQuestitem";
-            this.tbQuestitem.Size = new System.Drawing.Size(246, 31);
+            this.tbQuestitem.Size = new System.Drawing.Size(278, 31);
             this.tbQuestitem.TabIndex = 3;
             this.tbQuestitem.TextChanged += new System.EventHandler(this.tbID_TextChanged);
             // 
@@ -128,8 +132,9 @@
             // tbDescription
             // 
             this.tbDescription.Location = new System.Drawing.Point(82, 423);
+            this.tbDescription.Multiline = true;
             this.tbDescription.Name = "tbDescription";
-            this.tbDescription.Size = new System.Drawing.Size(566, 31);
+            this.tbDescription.Size = new System.Drawing.Size(882, 163);
             this.tbDescription.TabIndex = 6;
             // 
             // lbBasedOn
@@ -145,14 +150,14 @@
             // 
             this.tbBasedOn.Location = new System.Drawing.Point(82, 330);
             this.tbBasedOn.Name = "tbBasedOn";
-            this.tbBasedOn.Size = new System.Drawing.Size(246, 31);
+            this.tbBasedOn.Size = new System.Drawing.Size(278, 31);
             this.tbBasedOn.TabIndex = 4;
             this.tbBasedOn.TextChanged += new System.EventHandler(this.tbID_TextChanged);
             // 
             // lbRequire
             // 
             this.lbRequire.AutoSize = true;
-            this.lbRequire.Location = new System.Drawing.Point(402, 302);
+            this.lbRequire.Location = new System.Drawing.Point(384, 302);
             this.lbRequire.Name = "lbRequire";
             this.lbRequire.Size = new System.Drawing.Size(145, 25);
             this.lbRequire.TabIndex = 12;
@@ -160,16 +165,16 @@
             // 
             // tbRequired
             // 
-            this.tbRequired.Location = new System.Drawing.Point(402, 330);
+            this.tbRequired.Location = new System.Drawing.Point(384, 330);
             this.tbRequired.Name = "tbRequired";
-            this.tbRequired.Size = new System.Drawing.Size(246, 31);
+            this.tbRequired.Size = new System.Drawing.Size(278, 31);
             this.tbRequired.TabIndex = 5;
             this.tbRequired.TextChanged += new System.EventHandler(this.tbID_TextChanged);
             // 
             // lbError
             // 
             this.lbError.AutoSize = true;
-            this.lbError.Location = new System.Drawing.Point(277, 513);
+            this.lbError.Location = new System.Drawing.Point(481, 636);
             this.lbError.Name = "lbError";
             this.lbError.Size = new System.Drawing.Size(0, 25);
             this.lbError.TabIndex = 14;
@@ -178,7 +183,7 @@
             // 
             this.btLoad.Location = new System.Drawing.Point(82, 636);
             this.btLoad.Name = "btLoad";
-            this.btLoad.Size = new System.Drawing.Size(163, 95);
+            this.btLoad.Size = new System.Drawing.Size(149, 81);
             this.btLoad.TabIndex = 8;
             this.btLoad.Text = "Laden";
             this.btLoad.UseVisualStyleBackColor = true;
@@ -188,10 +193,48 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // lbEnemy
+            // 
+            this.lbEnemy.AutoSize = true;
+            this.lbEnemy.Location = new System.Drawing.Point(688, 213);
+            this.lbEnemy.Name = "lbEnemy";
+            this.lbEnemy.Size = new System.Drawing.Size(173, 25);
+            this.lbEnemy.TabIndex = 15;
+            this.lbEnemy.Text = "Enemy to kill - ID";
+            // 
+            // tbEnemy
+            // 
+            this.tbEnemy.Location = new System.Drawing.Point(686, 241);
+            this.tbEnemy.Name = "tbEnemy";
+            this.tbEnemy.Size = new System.Drawing.Size(278, 31);
+            this.tbEnemy.TabIndex = 16;
+            this.tbEnemy.TextChanged += new System.EventHandler(this.tbID_TextChanged);
+            // 
+            // tbNumber
+            // 
+            this.tbNumber.Location = new System.Drawing.Point(686, 330);
+            this.tbNumber.Name = "tbNumber";
+            this.tbNumber.Size = new System.Drawing.Size(278, 31);
+            this.tbNumber.TabIndex = 17;
+            this.tbNumber.TextChanged += new System.EventHandler(this.tbID_TextChanged);
+            // 
+            // lbNumber
+            // 
+            this.lbNumber.AutoSize = true;
+            this.lbNumber.Location = new System.Drawing.Point(693, 299);
+            this.lbNumber.Name = "lbNumber";
+            this.lbNumber.Size = new System.Drawing.Size(254, 25);
+            this.lbNumber.TabIndex = 18;
+            this.lbNumber.Text = "Number of enemies to kill";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lbNumber);
+            this.Controls.Add(this.tbNumber);
+            this.Controls.Add(this.tbEnemy);
+            this.Controls.Add(this.lbEnemy);
             this.Controls.Add(this.btLoad);
             this.Controls.Add(this.lbError);
             this.Controls.Add(this.tbRequired);
@@ -209,7 +252,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btSave);
             this.Name = "Form1";
-            this.Size = new System.Drawing.Size(726, 780);
+            this.Size = new System.Drawing.Size(1052, 780);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -235,6 +278,10 @@
         private System.Windows.Forms.Label lbError;
         private System.Windows.Forms.Button btLoad;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label lbEnemy;
+        private System.Windows.Forms.TextBox tbEnemy;
+        private System.Windows.Forms.TextBox tbNumber;
+        private System.Windows.Forms.Label lbNumber;
     }
 }
 
