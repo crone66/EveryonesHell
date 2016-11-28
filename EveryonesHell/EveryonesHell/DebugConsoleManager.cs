@@ -39,7 +39,7 @@ namespace EveryonesHell
             commands[index++] = new CommandDescriptor("getproperty", "", false, CommandHandler_GetProp);
             commands[index++] = new CommandDescriptor("exit", "", false, CommandHandler_Exit);
 
-            DebugConsole = new DebuggingConsole(commands);
+            DebugConsole = new DebuggingConsole(commands, new DebugConsole.Color(255, 255, 255));
 
             baseText = new Text("", font, 14);
             baseText.Color = SFML.Graphics.Color.White;
