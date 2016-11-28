@@ -15,14 +15,13 @@ namespace EveryonesHell
         private const int inputHeight = 25;
 
         public DebuggingConsole DebugConsole;
-        private Scene currentScene;
         private Text baseText;
         private RectangleShape outputBackground;
         private RectangleShape inputBackground;
-
-        public DebugConsoleManager(Scene scene, Font font)
+        private Game game;
+        public DebugConsoleManager(Game game, Font font)
         {
-            currentScene = scene;
+            this.game = game;
             CommandDescriptor[] commands = new CommandDescriptor[14];
             int index = 0;
             commands[index++] = new CommandDescriptor("help", "", false, CommandHandler_Help);
@@ -205,10 +204,14 @@ namespace EveryonesHell
 
         private void CommandHandler_GetGridPosition(object sender, ExecuteCommandArgs e)
         {
+            DebugConsole.WriteLine("> " + e.Command.Command, 255, 255, 255);
+            DebugConsole.WriteLine("X: " + game.CurrentScene.X.ToString() + ", Y:" + game.CurrentScene.Y.ToString(), 255, 255, 255);
         }
 
         private void CommandHandler_GetPosition(object sender, ExecuteCommandArgs e)
         {
+            DebugConsole.WriteLine("> " + e.Command.Command, 255, 255, 255);
+            DebugConsole.WriteLine("X: " + game.CurrentScene.X.ToString() + ", Y:" + game.CurrentScene.Y.ToString(), 255, 255, 255);
         }
 
         private void CommandHandler_Teleport(object sender, ExecuteCommandArgs args)
