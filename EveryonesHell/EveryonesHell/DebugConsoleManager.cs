@@ -18,26 +18,28 @@ namespace EveryonesHell
         private Text baseText;
         private RectangleShape outputBackground;
         private RectangleShape inputBackground;
+        private RectangleShape autoCompletionBackgorund;
         private Game game;
         public DebugConsoleManager(Game game, Font font)
         {
             this.game = game;
-            CommandDescriptor[] commands = new CommandDescriptor[14];
+            CommandDescriptor[] commands = new CommandDescriptor[15];
             int index = 0;
+            commands[index++] = new CommandDescriptor("exit", "", false, CommandHandler_Exit);
+            commands[index++] = new CommandDescriptor("quit", "", false, CommandHandler_Quit);
             commands[index++] = new CommandDescriptor("help", "", false, CommandHandler_Help);
             commands[index++] = new CommandDescriptor("clear", "", false, CommandHandler_Clear);
             commands[index++] = new CommandDescriptor("list", "", false, CommandHandler_Help);
-            commands[index++] = new CommandDescriptor("getposition", "", false, CommandHandler_GetPosition);
-            commands[index++] = new CommandDescriptor("getgridposition", "", false, CommandHandler_GetGridPosition);
-            commands[index++] = new CommandDescriptor("teleport", "", false, CommandHandler_Teleport);
-            commands[index++] = new CommandDescriptor("spawn", "", false, CommandHandler_Spawn);
-            commands[index++] = new CommandDescriptor("kill", "", false, CommandHandler_Kill);
-            commands[index++] = new CommandDescriptor("god", "", false, CommandHandler_God);
             commands[index++] = new CommandDescriptor("noclip", "", false, CommandHandler_Noclip);
             commands[index++] = new CommandDescriptor("changelevel", "", false, CommandHandler_Changelevel);
-            commands[index++] = new CommandDescriptor("setproperty", "", false, CommandHandler_SetProp);
-            commands[index++] = new CommandDescriptor("getproperty", "", false, CommandHandler_GetProp);
-            commands[index++] = new CommandDescriptor("exit", "", false, CommandHandler_Exit);
+            commands[index++] = new CommandDescriptor("ent_setproperty", "", false, CommandHandler_SetProp);
+            commands[index++] = new CommandDescriptor("ent_getproperty", "", false, CommandHandler_GetProp);
+            commands[index++] = new CommandDescriptor("ent_getposition", "", false, CommandHandler_GetPosition);
+            commands[index++] = new CommandDescriptor("ent_getgridposition", "", false, CommandHandler_GetGridPosition);
+            commands[index++] = new CommandDescriptor("ent_teleport", "", false, CommandHandler_Teleport);
+            commands[index++] = new CommandDescriptor("ent_spawn", "", false, CommandHandler_Spawn);
+            commands[index++] = new CommandDescriptor("ent_kill", "", false, CommandHandler_Kill);
+            commands[index++] = new CommandDescriptor("ent_god", "", false, CommandHandler_God);
 
             DebugConsole = new DebuggingConsole(commands, new DebugConsole.Color(255, 255, 255));
 
@@ -51,6 +53,11 @@ namespace EveryonesHell
             inputBackground.FillColor = new SFML.Graphics.Color(0, 0, 0, 128);
             inputBackground.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 200);
             inputBackground.Position = new SFML.System.Vector2f(0, outputHeight + 5);
+
+            autoCompletionBackgorund = new RectangleShape(new SFML.System.Vector2f(0, 0));
+            autoCompletionBackgorund.FillColor = new SFML.Graphics.Color(0, 0, 0, 128);
+            autoCompletionBackgorund.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 200);
+            autoCompletionBackgorund.Position = new SFML.System.Vector2f(0, outputHeight + inputHeight + 5);
         }
 
         public void Update(float elapsedMilliseconds)
@@ -96,6 +103,30 @@ namespace EveryonesHell
                 currentCommand.Color = SFML.Graphics.Color.White;
                 currentCommand.Position = new SFML.System.Vector2f(10, outputHeight + (inputHeight - lineSpacing));
                 window.Draw(currentCommand);
+               
+                if(DebugConsole.RenderingInfo.AutoComplete.Length > 0 && DebugConsole.RenderingInfo.CommandLine.Length > 0)
+                {
+                    List<Text> suggestions = new List<Text>();
+                    float width = 0;
+                    for (int i = 0; i < DebugConsole.RenderingInfo.AutoComplete.Length && i < 5; i++)
+                    {
+                        Text suggest = new Text(baseText);
+                        suggest.DisplayedString = DebugConsole.RenderingInfo.AutoComplete[i];
+                        suggest.Color = SFML.Graphics.Color.White;
+                        suggest.Position = new SFML.System.Vector2f(autoCompletionBackgorund.Position.X, autoCompletionBackgorund.Position.Y + (i * lineSpacing));
+                        suggestions.Add(suggest);
+                        if(suggest.GetGlobalBounds().Width > width)
+                            width = suggest.GetGlobalBounds().Width;
+                    }
+
+                    autoCompletionBackgorund.Size = new SFML.System.Vector2f(width, suggestions.Count* lineSpacing);
+                    window.Draw(autoCompletionBackgorund);
+
+                    for (int i = 0; i < suggestions.Count; i++)
+                    {
+                        window.Draw(suggestions[i]);
+                    }
+                }
             }
         }
 
@@ -181,6 +212,11 @@ namespace EveryonesHell
             }
 
             return null;
+        }
+
+        private void CommandHandler_Quit(object sender, ExecuteCommandArgs e)
+        {
+            GlobalReferences.State = GameState.Exit;
         }
 
         private void CommandHandler_Exit(object sender, ExecuteCommandArgs e)

@@ -31,6 +31,7 @@ namespace EveryonesHell
                 return currentScene;
             }
         }
+
         public static DebugConsoleManager ConsoleManager;
 
         public Game()
@@ -63,13 +64,12 @@ namespace EveryonesHell
             Font font = new Font(@"C:\Windows\Fonts\arial.ttf");
             ConsoleManager = new DebugConsoleManager(this, font);
             window.TextEntered += ConsoleManager.TextEntered;
-
+            
             currentScene = new Scene(zoomFactor);
             currentScene.LoadContent();
             GlobalReferences.State = GameState.Play;
         }
 
-       
         private void Input(float elapsedMilliseconds)
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.BackSlash))
