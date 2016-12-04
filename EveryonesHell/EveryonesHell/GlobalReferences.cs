@@ -8,6 +8,9 @@ using System;
 
 namespace EveryonesHell
 {
+    /// <summary>
+    /// Important references for the game
+    /// </summary>
     public static class GlobalReferences
     {
         public static Random Randomizer;

@@ -13,6 +13,9 @@ using System.Collections.Generic;
 
 namespace EveryonesHell
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Game : IDisposable
     {
         private RenderWindow window;
@@ -34,6 +37,9 @@ namespace EveryonesHell
 
         public static DebugConsoleManager ConsoleManager;
 
+        /// <summary>
+        /// Constructor of Game. Initzilizes RenderWindow and calls LoadContent
+        /// </summary>
         public Game()
         {
             window = new RenderWindow(new VideoMode(windowWidth, windowHeight), "test");
@@ -59,6 +65,9 @@ namespace EveryonesHell
             }
         }
 
+        /// <summary>
+        /// Loads content after window initzialisation
+        /// </summary>
         private void LoadContent()
         {
             Font font = new Font(@"C:\Windows\Fonts\arial.ttf");
@@ -70,7 +79,11 @@ namespace EveryonesHell
             GlobalReferences.State = GameState.Play;
         }
 
-        private void Input(float elapsedMilliseconds)
+        /// <summary>
+        /// Input Handling called before Update
+        /// </summary>
+        /// <param name="elapsedSeconds"></param>
+        private void Input(float elapsedSeconds)
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.BackSlash))
                 Game.ConsoleManager.DebugConsole.Open();
@@ -78,7 +91,7 @@ namespace EveryonesHell
             switch (GlobalReferences.State)
             {
                 case GameState.Play:
-                    currentScene.Input(elapsedMilliseconds);
+                    currentScene.Input(elapsedSeconds);
                     break;
                 case GameState.Pause:
                     break;
@@ -89,15 +102,19 @@ namespace EveryonesHell
             }
         }
 
-        private void Update(float elapsedMilliseconds)
+        /// <summary>
+        /// Update loop, update objects depending on current gameState
+        /// </summary>
+        /// <param name="elapsedSeconds"></param>
+        private void Update(float elapsedSeconds)
         {
-            Game.ConsoleManager.Update(elapsedMilliseconds);
+            Game.ConsoleManager.Update(elapsedSeconds);
             //Update something
             switch(GlobalReferences.State)
             {
                 
                 case GameState.Play:
-                    currentScene.Update(elapsedMilliseconds);
+                    currentScene.Update(elapsedSeconds);
                     break;
                 case GameState.Pause:
                     break;
@@ -108,7 +125,11 @@ namespace EveryonesHell
             }
         }
 
-        private void Draw(float elapsedMilliseconds)
+        /// <summary>
+        /// Draw loop, draws content depending on current gameState
+        /// </summary>
+        /// <param name="elapsedSeconds"></param>
+        private void Draw(float elapsedSeconds)
         {
             window.Clear(Color.Blue);
             switch (GlobalReferences.State)
@@ -130,6 +151,9 @@ namespace EveryonesHell
 
         }
 
+        /// <summary>
+        /// Used to dispose managed and unmanaged memory
+        /// </summary>
         public void Dispose()
         {
         }

@@ -10,6 +10,9 @@ using TileMapSystem;
 
 namespace EveryonesHell
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Scene
     {
         private TileMapManager mapManager;
@@ -53,6 +56,10 @@ namespace EveryonesHell
             }
         }
 
+        /// <summary>
+        /// A Scene can be used as represantation of a level or menu
+        /// </summary>
+        /// <param name="zoomFactor">indicates the zoom factor to zoom in or out (default value 1)</param>
         public Scene(float zoomFactor)
         {
             this.zoomFactor = zoomFactor;
@@ -71,34 +78,48 @@ namespace EveryonesHell
             Game.ConsoleManager.DebugConsole.WriteLine("X: " + X.ToString() + " Y:" + Y.ToString(), 255, 255, 255);
         }
 
+        /// <summary>
+        /// An eventhandler that is fired when a grid on screen isn't generated yet.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MapManager_GridGenerationIsSlow(object sender, GridEventArgs e)
         {
             Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid generation is slow From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 0, 0);
         }
 
+        /// <summary>
+        /// Eventhandler will be fired when a new grid generation starts
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MapManager_GridChangeRequested(object sender, GridEventArgs e)
         {
             Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid change requested From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 255, 255);
         }
 
+        /// <summary>
+        /// Eventhandler will be fired when grid was changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MapManager_GridChanged(object sender, GridEventArgs e)
         {
             Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid changed From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 255, 255);
         }
 
+        /// <summary>
+        /// Loads required content for the scene
+        /// </summary>
         public void LoadContent()
         {
             //Load your content
+            
             content = new ContentManager();
-            content.Add("Content/testBlue.png", new Texture("Content/testBlue.png"));
-            content.Add("Content/testRed.png", new Texture("Content/testRed.png"));
-            content.Add("Content/testGreen.png", new Texture("Content/testGreen.png"));
-            content.Add("Content/testGray.png", new Texture("Content/testGray.png"));
-            Sprite blue = content.CreateSprite("Content/testBlue.png");
-            Sprite red = content.CreateSprite("Content/testRed.png");
-            Sprite green = content.CreateSprite("Content/testGreen.png");
-            Sprite gray = content.CreateSprite("Content/testGray.png");
-
+            Sprite blue = content.Load<Sprite, Texture>("1", "Content/testBlue.png");
+            Sprite red = content.Load<Sprite, Texture>("-1", "Content/testRed.png");
+            Sprite green = content.Load<Sprite, Texture>("0", "Content/testGreen.png");
+            Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
             sprites = new Dictionary<int, Sprite>();
             sprites.Add(0, green);
             sprites.Add(1, blue);
@@ -106,13 +127,21 @@ namespace EveryonesHell
             sprites.Add(-1, red);
         }
 
-        public void Update(float elapsedMilliseconds)
+        /// <summary>
+        /// Updates the current scene
+        /// </summary>
+        /// <param name="elapsedSeconds"></param>
+        public void Update(float elapsedSeconds)
         {
             mapManager.Update(Y, X);
             fieldsInView = mapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32(windowWidth * zoomFactor), Convert.ToInt32(windowHeight * zoomFactor));
         }
 
-        public void Input(float elapsedMilliseconds)
+        /// <summary>
+        /// Handles input for the current scene
+        /// </summary>
+        /// <param name="elapsedSeconds"></param>
+        public void Input(float elapsedSeconds)
         {
             switch (GlobalReferences.State)
             {
@@ -120,7 +149,7 @@ namespace EveryonesHell
                     {
                         if (!Game.ConsoleManager.DebugConsole.IsOpen)
                         {
-                            elapsedTime -= elapsedMilliseconds;                    
+                            elapsedTime -= elapsedSeconds;                    
                             if (elapsedTime <= 0f)
                             {
                                 elapsedTime = 0.05f;
@@ -149,6 +178,10 @@ namespace EveryonesHell
             }
         }
 
+        /// <summary>
+        /// Draws the current scene
+        /// </summary>
+        /// <param name="window">Window to render</param>
         public void Draw(RenderWindow window)
         {
             windowWidth = Convert.ToUInt32(window.DefaultView.Size.X);
@@ -174,6 +207,11 @@ namespace EveryonesHell
             window.Draw(sprites[-1]);
         }
 
+        /// <summary>
+        /// (Testing) Collision detection and player movement
+        /// </summary>
+        /// <param name="xTranslation"></param>
+        /// <param name="yTranslation"></param>
         private void TryMove(int xTranslation, int yTranslation)
         {
             int tileId = mapManager.CurrentLevel.GetTile(Y + yTranslation, X + xTranslation);
