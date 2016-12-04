@@ -66,8 +66,8 @@ namespace EveryonesHell
             settings = new GeneratorSettings(1, 50, 1.5f, 1000000, 10000000, true, 1000f);
             areaSpreads = new AreaSpread[2]
             {
-                new AreaSpread(1, 0.30f, 0, 20, 250, true, true, 5, SpreadOption.Circle, LayerType.Height),
-                new AreaSpread(2, 0.125f, 0, 20, 200, true, true, 5, SpreadOption.Circle, LayerType.Height)
+                new AreaSpread(1, 0.30f, 20, 250, true, true, 5, SpreadOption.Circle, LayerType.Height),
+                new AreaSpread(2, 0.125f, 20, 200, true, true, 5, SpreadOption.Circle, LayerType.Height)
             };
 
             mapManager = new TileMapManager(settings, areaSpreads);
