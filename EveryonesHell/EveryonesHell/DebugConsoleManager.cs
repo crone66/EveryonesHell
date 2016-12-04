@@ -26,6 +26,12 @@ namespace EveryonesHell
 
         private int selectedIndex = -1;
         private float elapsedTime;
+
+        /// <summary>
+        /// Constructor of DebugConsoleManager. Initzialize DebuggingConsole and prepares shapes for rendering
+        /// </summary>
+        /// <param name="game">Game class with references to entities and other command related stuff</param>
+        /// <param name="font">Font to draw console input and output</param>
         public DebugConsoleManager(Game game, Font font)
         {
             this.game = game;
@@ -71,11 +77,15 @@ namespace EveryonesHell
             suggestionHighlighter.Position = new SFML.System.Vector2f(0, 0);
         }
 
-        public void Update(float elapsedMilliseconds)
+        /// <summary>
+        /// Updates the debugging console and handles arrowkey input
+        /// </summary>
+        /// <param name="elapsedSeconds">elapsed seconds since last update</param>
+        public void Update(float elapsedSeconds)
         {
             if (DebugConsole.IsOpen)
             {
-                DebugConsole.Update(elapsedMilliseconds, Keyboard.IsKeyPressed(Keyboard.Key.Left), Keyboard.IsKeyPressed(Keyboard.Key.Right));
+                DebugConsole.Update(elapsedSeconds, Keyboard.IsKeyPressed(Keyboard.Key.Left), Keyboard.IsKeyPressed(Keyboard.Key.Right));
                 if (elapsedTime <= 0)
                 {
                     if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
@@ -97,11 +107,15 @@ namespace EveryonesHell
                 }
                 else
                 {
-                    elapsedTime -= elapsedMilliseconds;
+                    elapsedTime -= elapsedSeconds;
                 }
             }
         }
 
+        /// <summary>
+        /// Draws debugging console including input, output and suggestions
+        /// </summary>
+        /// <param name="window">window to render</param>
         public void Draw(RenderWindow window)
         {
             if (DebugConsole.IsOpen)
@@ -109,68 +123,99 @@ namespace EveryonesHell
                 window.Draw(outputBackground);
                 window.Draw(inputBackground);
 
-                List<Text> linesToDraw = new List<Text>();
-                int avalibleLines = (int)Math.Floor((double)outputHeight / (double)lineSpacing);
-                for (int i = DebugConsole.RenderingInfo.Lines.Length - 1; i >= 0 && avalibleLines > 0; i--)
-                {
-                    Text currentLine = new Text(baseText);
-                    currentLine.DisplayedString = DebugConsole.RenderingInfo.Lines[i];
-                    DebugConsole.Color color = DebugConsole.RenderingInfo.LineColors[i];
-                    currentLine.Color = new SFML.Graphics.Color(color.R, color.G, color.B, color.A);
+                DrawOutput(window);
 
-                    Text[] lines = LineWrap(currentLine);
-                    for (int j = lines.Length - 1; j >= 0 && avalibleLines > 0; j--)
-                    {
-                        linesToDraw.Add(lines[j]);
-                        avalibleLines--;
-                    }
+                DrawCurrentCommand(window);
+                DrawSuggestions(window);
+            }
+        }
+
+        /// <summary>
+        /// Draws command suggestions and background
+        /// </summary>
+        /// <param name="window">window to render</param>
+        private void DrawSuggestions(RenderWindow window)
+        {
+            if (DebugConsole.RenderingInfo.AutoComplete.Length > 0 && DebugConsole.RenderingInfo.CommandLine.Length > 0)
+            {
+                List<Text> suggestions = new List<Text>();
+                float width = 0;
+                for (int i = 0; i < DebugConsole.RenderingInfo.AutoComplete.Length && i < suggestionCount; i++)
+                {
+                    Text suggest = new Text(baseText);
+                    suggest.DisplayedString = DebugConsole.RenderingInfo.AutoComplete[i];
+                    suggest.Color = SFML.Graphics.Color.White;
+                    suggest.Position = new SFML.System.Vector2f(autoCompletionBackgorund.Position.X, autoCompletionBackgorund.Position.Y + (i * lineSpacing));
+                    suggestions.Add(suggest);
+                    if (suggest.GetGlobalBounds().Width > width)
+                        width = suggest.GetGlobalBounds().Width;
                 }
 
-                for (int i = 0; i < linesToDraw.Count; i++)
-                {
-                    linesToDraw[i].Position = new SFML.System.Vector2f(0, lineSpacing * ((linesToDraw.Count - 1) - i));
-                    window.Draw(linesToDraw[i]);
-                }
-                
-                Text currentCommand = new Text(baseText);
-                currentCommand.DisplayedString = DebugConsole.RenderingInfo.CommandLine;
-                currentCommand.Color = SFML.Graphics.Color.White;
-                currentCommand.Position = new SFML.System.Vector2f(10, outputHeight + (inputHeight - lineSpacing));
-                window.Draw(currentCommand);
-               
-                if(DebugConsole.RenderingInfo.AutoComplete.Length > 0 && DebugConsole.RenderingInfo.CommandLine.Length > 0)
-                {
-                    List<Text> suggestions = new List<Text>();
-                    float width = 0;
-                    for (int i = 0; i < DebugConsole.RenderingInfo.AutoComplete.Length && i < suggestionCount; i++)
-                    {
-                        Text suggest = new Text(baseText);
-                        suggest.DisplayedString = DebugConsole.RenderingInfo.AutoComplete[i];
-                        suggest.Color = SFML.Graphics.Color.White;
-                        suggest.Position = new SFML.System.Vector2f(autoCompletionBackgorund.Position.X, autoCompletionBackgorund.Position.Y + (i * lineSpacing));
-                        suggestions.Add(suggest);
-                        if(suggest.GetGlobalBounds().Width > width)
-                            width = suggest.GetGlobalBounds().Width;
-                    }
+                autoCompletionBackgorund.Size = new SFML.System.Vector2f(width, suggestions.Count * lineSpacing);
+                window.Draw(autoCompletionBackgorund);
 
-                    autoCompletionBackgorund.Size = new SFML.System.Vector2f(width, suggestions.Count* lineSpacing);
-                    window.Draw(autoCompletionBackgorund);
-
-                    for (int i = 0; i < suggestions.Count; i++)
+                for (int i = 0; i < suggestions.Count; i++)
+                {
+                    if (selectedIndex >= 0 && selectedIndex == i)
                     {
-                        if (selectedIndex >= 0 && selectedIndex == i)
-                        {
-                            suggestions[i].Color = new SFML.Graphics.Color(255, 150, 0);
-                            suggestionHighlighter.Position = new SFML.System.Vector2f(0, autoCompletionBackgorund.Position.Y + (selectedIndex * lineSpacing));
-                            suggestionHighlighter.Size = new SFML.System.Vector2f(suggestions[i].GetGlobalBounds().Width, lineSpacing);
-                            window.Draw(suggestionHighlighter);
-                        }
-                        window.Draw(suggestions[i]);
+                        suggestions[i].Color = new SFML.Graphics.Color(255, 150, 0);
+                        suggestionHighlighter.Position = new SFML.System.Vector2f(0, autoCompletionBackgorund.Position.Y + (selectedIndex * lineSpacing));
+                        suggestionHighlighter.Size = new SFML.System.Vector2f(suggestions[i].GetGlobalBounds().Width, lineSpacing);
+                        window.Draw(suggestionHighlighter);
                     }
+                    window.Draw(suggestions[i]);
                 }
             }
         }
 
+        /// <summary>
+        /// Draw console output lines and output box
+        /// </summary>
+        /// <param name="window">window to render</param>
+        private void DrawOutput(RenderWindow window)
+        {
+            List<Text> linesToDraw = new List<Text>();
+            int avalibleLines = (int)Math.Floor((double)outputHeight / (double)lineSpacing);
+            for (int i = DebugConsole.RenderingInfo.Lines.Length - 1; i >= 0 && avalibleLines > 0; i--)
+            {
+                Text currentLine = new Text(baseText);
+                currentLine.DisplayedString = DebugConsole.RenderingInfo.Lines[i];
+                DebugConsole.Color color = DebugConsole.RenderingInfo.LineColors[i];
+                currentLine.Color = new SFML.Graphics.Color(color.R, color.G, color.B, color.A);
+
+                Text[] lines = LineWrap(currentLine);
+                for (int j = lines.Length - 1; j >= 0 && avalibleLines > 0; j--)
+                {
+                    linesToDraw.Add(lines[j]);
+                    avalibleLines--;
+                }
+            }
+
+            for (int i = 0; i < linesToDraw.Count; i++)
+            {
+                linesToDraw[i].Position = new SFML.System.Vector2f(0, lineSpacing * ((linesToDraw.Count - 1) - i));
+                window.Draw(linesToDraw[i]);
+            }
+        }
+
+        /// <summary>
+        /// Draws the current command and inputbox
+        /// </summary>
+        /// <param name="window">window to render</param>
+        private void DrawCurrentCommand(RenderWindow window)
+        {
+            Text currentCommand = new Text(baseText);
+            currentCommand.DisplayedString = DebugConsole.RenderingInfo.CommandLine;
+            currentCommand.Color = SFML.Graphics.Color.White;
+            currentCommand.Position = new SFML.System.Vector2f(10, outputHeight + (inputHeight - lineSpacing));
+            window.Draw(currentCommand);
+        }
+
+        /// <summary>
+        /// Event to catch all key strokes
+        /// </summary>
+        /// <param name="sender">event sender</param>
+        /// <param name="e">event args</param>
         public void TextEntered(object sender, TextEventArgs e)
         {
             if (DebugConsole.IsOpen)
@@ -188,6 +233,11 @@ namespace EveryonesHell
             }
         }
 
+        /// <summary>
+        /// Formats console output and creates new lines if the given line is to long
+        /// </summary>
+        /// <param name="baseLine">unformated line</param>
+        /// <returns>returns an array of lines</returns>
         private Text[] LineWrap(Text baseLine)
         {
             string text = baseLine.DisplayedString;
@@ -239,6 +289,12 @@ namespace EveryonesHell
             return lines.ToArray();
         }
 
+        /// <summary>
+        /// Removes the last word of a given line or if it's just one word, it removes the last 10 characters.
+        /// </summary>
+        /// <param name="text">text to remove from</param>
+        /// <param name="word">word to remove</param>
+        /// <returns>returns changed text</returns>
         private string RemoveLastWord(string text, string word)
         {
             if (text.Length > word.Length)
@@ -247,6 +303,11 @@ namespace EveryonesHell
                 return text.Substring(0, text.Length - 10);
         }
 
+        /// <summary>
+        /// The Function searchs for the last word in a given string
+        /// </summary>
+        /// <param name="text">text to search in</param>
+        /// <returns>returns last word</returns>
         private string GetLastWord(string text)
         {
             string[] words = text.Split(' ');
@@ -261,74 +322,150 @@ namespace EveryonesHell
             return null;
         }
 
+        /// <summary>
+        /// Handels game quit command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
         private void CommandHandler_Quit(object sender, ExecuteCommandArgs e)
         {
             GlobalReferences.State = GameState.Exit;
         }
 
+        /// <summary>
+        /// Handels console exit command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
         private void CommandHandler_Exit(object sender, ExecuteCommandArgs e)
         {
             DebugConsole.Close();
         }
 
+        /// <summary>
+        /// Handels console help command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
         private void CommandHandler_Help(object sender, ExecuteCommandArgs e)
         {
-            DebugConsole.WriteLine("> " + e.Command, 255, 255, 255);
+            CommandDescriptor cmd = (CommandDescriptor)sender;
+            DebugConsole.WriteLine("> " + cmd.Command, 255, 255, 255);
             foreach (KeyValuePair<string, CommandDescriptor> command in DebugConsole.Commands)
             {
                 DebugConsole.WriteLine(command.Key + ": " + command.Value.Description, 255, 255, 255);
             }
         }
 
+        /// <summary>
+        /// Handels console clear command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
         private void CommandHandler_Clear(object sender, ExecuteCommandArgs e)
         {
             DebugConsole.Clear();
         }
 
+        /// <summary>
+        /// Handels ent_getgridposition command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
         private void CommandHandler_GetGridPosition(object sender, ExecuteCommandArgs e)
         {
-            DebugConsole.WriteLine("> " + e.Command.Command, 255, 255, 255);
+            CommandDescriptor cmd = (CommandDescriptor)sender;
+            DebugConsole.WriteLine("> " + cmd.Command, 255, 255, 255);
             DebugConsole.WriteLine("X: " + game.CurrentScene.X.ToString() + ", Y:" + game.CurrentScene.Y.ToString(), 255, 255, 255);
         }
 
+        /// <summary>
+        /// Handels ent_getposition command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
         private void CommandHandler_GetPosition(object sender, ExecuteCommandArgs e)
         {
-            DebugConsole.WriteLine("> " + e.Command.Command, 255, 255, 255);
+            CommandDescriptor cmd = (CommandDescriptor)sender;
+            DebugConsole.WriteLine("> " + cmd.Command, 255, 255, 255);
             DebugConsole.WriteLine("X: " + game.CurrentScene.X.ToString() + ", Y:" + game.CurrentScene.Y.ToString(), 255, 255, 255);
         }
 
-        private void CommandHandler_Teleport(object sender, ExecuteCommandArgs args)
+        /// <summary>
+        /// Handels ent_teleport command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
+        private void CommandHandler_Teleport(object sender, ExecuteCommandArgs e)
         {
 
         }
 
-        private void CommandHandler_Spawn(object sender, ExecuteCommandArgs args)
+        /// <summary>
+        /// Handels ent_spawn command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
+        private void CommandHandler_Spawn(object sender, ExecuteCommandArgs e)
         {
 
         }
 
-        private void CommandHandler_Kill(object sender, ExecuteCommandArgs args)
-        {
-
-        }
-        private void CommandHandler_God(object sender, ExecuteCommandArgs args)
-        {
-
-        }
-        private void CommandHandler_Noclip(object sender, ExecuteCommandArgs args)
-        {
-
-        }
-        private void CommandHandler_Changelevel(object sender, ExecuteCommandArgs args)
+        /// <summary>
+        /// Handels ent_kill command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
+        private void CommandHandler_Kill(object sender, ExecuteCommandArgs e)
         {
 
         }
 
+        /// <summary>
+        /// Handels god command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
+        private void CommandHandler_God(object sender, ExecuteCommandArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Handels noclip command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
+        private void CommandHandler_Noclip(object sender, ExecuteCommandArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Handels changelevel command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
+        private void CommandHandler_Changelevel(object sender, ExecuteCommandArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Handels ent_setproperty command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
         private void CommandHandler_SetProp(object sender, ExecuteCommandArgs e)
         {
 
         }
 
+        /// <summary>
+        /// Handels ent_getproperty command
+        /// </summary>
+        /// <param name="sender">command</param>
+        /// <param name="e">command args</param>
         private void CommandHandler_GetProp(object sender, ExecuteCommandArgs e)
         {
 

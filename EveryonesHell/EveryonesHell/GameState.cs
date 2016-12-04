@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace EveryonesHell
 {
+    /// <summary>
+    /// Enumaration of game states
+    /// </summary>
     public enum GameState
     {
         Play,
