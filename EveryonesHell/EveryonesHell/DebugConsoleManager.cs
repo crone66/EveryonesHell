@@ -349,7 +349,8 @@ namespace EveryonesHell
         /// <param name="e">command args</param>
         private void CommandHandler_Help(object sender, ExecuteCommandArgs e)
         {
-            DebugConsole.WriteLine("> " + e.Command, 255, 255, 255);
+            CommandDescriptor cmd = (CommandDescriptor)sender;
+            DebugConsole.WriteLine("> " + cmd.Command, 255, 255, 255);
             foreach (KeyValuePair<string, CommandDescriptor> command in DebugConsole.Commands)
             {
                 DebugConsole.WriteLine(command.Key + ": " + command.Value.Description, 255, 255, 255);
@@ -373,7 +374,8 @@ namespace EveryonesHell
         /// <param name="e">command args</param>
         private void CommandHandler_GetGridPosition(object sender, ExecuteCommandArgs e)
         {
-            DebugConsole.WriteLine("> " + e.Command.Command, 255, 255, 255);
+            CommandDescriptor cmd = (CommandDescriptor)sender;
+            DebugConsole.WriteLine("> " + cmd.Command, 255, 255, 255);
             DebugConsole.WriteLine("X: " + game.CurrentScene.X.ToString() + ", Y:" + game.CurrentScene.Y.ToString(), 255, 255, 255);
         }
 
@@ -384,7 +386,8 @@ namespace EveryonesHell
         /// <param name="e">command args</param>
         private void CommandHandler_GetPosition(object sender, ExecuteCommandArgs e)
         {
-            DebugConsole.WriteLine("> " + e.Command.Command, 255, 255, 255);
+            CommandDescriptor cmd = (CommandDescriptor)sender;
+            DebugConsole.WriteLine("> " + cmd.Command, 255, 255, 255);
             DebugConsole.WriteLine("X: " + game.CurrentScene.X.ToString() + ", Y:" + game.CurrentScene.Y.ToString(), 255, 255, 255);
         }
 
