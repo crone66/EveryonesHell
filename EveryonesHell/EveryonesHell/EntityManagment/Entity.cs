@@ -24,29 +24,133 @@ namespace EveryonesHell.EntityManagment
         private Vector2i size;
         private Sprite currentSprite;
 
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+
+            set
+            {
+                id = value;
+            }
+        }
+
+        public bool Visable
+        {
+            get
+            {
+                return visable;
+            }
+
+            set
+            {
+                visable = value;
+            }
+        }
+
+        public bool Collidable
+        {
+            get
+            {
+                return collidable;
+            }
+
+            set
+            {
+                collidable = value;
+            }
+        }
+
+        public bool Active
+        {
+            get
+            {
+                return active;
+            }
+
+            set
+            {
+                active = value;
+            }
+        }
+
+        public int TileRow
+        {
+            get
+            {
+                return tileRow;
+            }
+
+            set
+            {
+                tileRow = value;
+            }
+        }
+
+        public int TileColumn
+        {
+            get
+            {
+                return tileColumn;
+            }
+
+            set
+            {
+                tileColumn = value;
+            }
+        }
+
+        public Vector2f Position
+        {
+            get
+            {
+                return position;
+            }
+
+            set
+            {
+                position = value;
+            }
+        }
+
+        public Vector2i Size
+        {
+            get
+            {
+                return size;
+            }
+
+            set
+            {
+                size = value;
+            }
+        }
+
         public Entity()
         {
-            id = Count++;
+            Id = Count++;
         }
 
         public Entity(bool visable, bool collidable, bool active)
         {
-            id = Count++;
-            this.visable = visable;
-            this.collidable = collidable;
-            this.active = active;
+            Id = Count++;
+            this.Visable = visable;
+            this.Collidable = collidable;
+            this.Active = active;
         }
 
         public Entity(bool visable, bool collidable, bool active, int tileRow, int tileColumn, Vector2f position, Vector2i size, Sprite currentSprite)
         {
-            id = Count++;
-            this.visable = visable;
-            this.collidable = collidable;
-            this.active = active;
-            this.tileRow = tileRow;
-            this.tileColumn = tileColumn;
-            this.position = position;
-            this.size = size;
+            Id = Count++;
+            this.Visable = visable;
+            this.Collidable = collidable;
+            this.Active = active;
+            this.TileRow = tileRow;
+            this.TileColumn = tileColumn;
+            this.Position = position;
+            this.Size = size;
             this.currentSprite = currentSprite;
         }
 
