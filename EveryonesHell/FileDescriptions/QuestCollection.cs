@@ -1,4 +1,10 @@
-﻿namespace FileDescriptions
+﻿/* 
+ * Purpose: struct collecting all the quests
+ * Author: Lukas Bosniak
+ * Date: 13.11.2016
+ */
+
+namespace FileDescriptions
 {
     public struct Questcollection
     {
