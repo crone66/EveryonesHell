@@ -70,7 +70,6 @@
   <ItemGroup>
     <Compile Include="AnimationManager.cs" />
     <Compile Include="DebugConsoleManager.cs" />
-    <Compile Include="DialogManagment\DialogManager.cs" />
     <Compile Include="EntityManagment\Character.cs" />
     <Compile Include="ContentManager.cs" />
     <Compile Include="CustomExceptions\DuplicateKeyException.cs" />
