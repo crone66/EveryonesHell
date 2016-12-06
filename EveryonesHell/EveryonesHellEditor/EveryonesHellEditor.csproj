@@ -44,6 +44,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +56,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateNewFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateNewFileDialog.Designer.cs">
+      <DependentUpon>CreateNewFileDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DialogEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DialogEditor.Designer.cs">
+      <DependentUpon>DialogEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EditorControl.Designer.cs">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="EveryonesHellEditorMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +85,12 @@
     </Compile>
     <Compile Include="ItemEditor.Designer.cs">
       <DependentUpon>ItemEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewProject.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewProject.Designer.cs">
+      <DependentUpon>NewProject.cs</DependentUpon>
     </Compile>
     <Compile Include="QuestEditor.cs">
       <SubType>UserControl</SubType>
@@ -82,11 +107,21 @@
       <DependentUpon>ProjectScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeSettings.cs" />
+    <EmbeddedResource Include="CreateNewFileDialog.resx">
+      <DependentUpon>CreateNewFileDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DialogEditor.resx">
+      <DependentUpon>DialogEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EveryonesHellEditorMain.resx">
       <DependentUpon>EveryonesHellEditorMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ItemEditor.resx">
       <DependentUpon>ItemEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewProject.resx">
+      <DependentUpon>NewProject.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="QuestEditor.resx">
       <DependentUpon>QuestEditor.cs</DependentUpon>

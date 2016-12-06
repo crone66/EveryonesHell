@@ -1,10 +1,10 @@
 ﻿namespace FileDescriptions
 {
-    public struct Questcollection
+    public struct QuestCollection
     {
         public Quest[] Quests;
 
-        public Questcollection(Quest[] quests)
+        public QuestCollection(Quest[] quests)
         {
             Quests = quests;
         }

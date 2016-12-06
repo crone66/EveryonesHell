@@ -56,6 +56,7 @@
     <Compile Include="ItemCollection.cs" />
     <Compile Include="MapOverrides.cs" />
     <Compile Include="NPC.cs" />
+    <Compile Include="NPCCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quest.cs" />
     <Compile Include="Questcollection.cs" />

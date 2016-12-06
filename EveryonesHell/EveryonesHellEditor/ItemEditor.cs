@@ -13,7 +13,7 @@ using FileDescriptions;
 
 namespace EveryonesHellEditor
 {
-    public partial class ItemEditor : UserControl
+    public partial class ItemEditor : EditorControl
     {
         bool error = false;
 
@@ -25,6 +25,16 @@ namespace EveryonesHellEditor
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        public override void SetupNodes(TreeNode fileNode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object LoadCollection(FileDescription file)
+        {
+            return LoadFile(typeof(QuestCollection), file.Path);
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)

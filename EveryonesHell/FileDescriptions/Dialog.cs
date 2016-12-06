@@ -11,21 +11,41 @@ namespace FileDescriptions
         public int DialogID;
         public string DialogText;
         public int NextDialogId;
-        public string[] DialogAnswers;
-        public int[] DialogConditions;
-        public string[] DialogValues;
-        public int[] NextDialogAnswerIds;
+        public int[] DialogAnswerIds;
 
-        public Dialog(int dialogid, string dialogtext, int nextdialogid, string[] dialoganswers, int[] dialogconditions, string[] dialogvalues, int[] nextdialoganswerids)
+        public UnknownEntity[] Rewards;
+        public UnknownEntity[] Conditions;
+
+        public Dialog(int dialogId, string dialogText, int nextDialogId, int[] dialogAnswerIds, UnknownEntity[] rewards, UnknownEntity[] conditions)
         {
-            DialogID = dialogid;
-            DialogText = dialogtext;
-            NextDialogId = nextdialogid;
-            DialogAnswers = dialoganswers;
-            DialogConditions = dialogconditions;
-            DialogValues = dialogvalues;
-            NextDialogAnswerIds = nextdialoganswerids;
+            DialogID = dialogId;
+            DialogText = dialogText;
+            NextDialogId = nextDialogId;
+            DialogAnswerIds = dialogAnswerIds;
+            Rewards = rewards;
+            Conditions = conditions;
         }
 
+    }
+
+    public struct UnknownEntity
+    {
+        public string Type;
+        public int Id;
+        public int Count;
+
+        public UnknownEntity(string type, int id, int count)
+        {
+            Type = type;
+            Id = id;
+            Count = count;
+        }
+
+        public UnknownEntity(string type, int id)
+        {
+            Type = type;
+            Id = id;
+            Count = 1;
+        }
     }
 }

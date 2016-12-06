@@ -5,21 +5,76 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using FileDescriptions;
 
-namespace QuestEditor
+namespace EveryonesHellEditor
 {
-    public partial class Form1 : UserControl
+    public partial class QuestEditor : EditorControl
     {
         bool error;
         List<Quest> loadedQuests;
         List<int> idList;
 
-        public Form1()
+        public QuestEditor()
         {
             InitializeComponent();
 
             error = true;
             loadedQuests = new List<Quest>();
             idList = new List<int>();
+        }
+
+        public override void SetupNodes(TreeNode fileNode)
+        {
+            for (int i = 0; i < loadedQuests.Count; i++)
+            {
+                fileNode.Nodes.Add(new TreeNode(loadedQuests[i].QuestID.ToString()));
+            }
+        }
+
+        public override object LoadCollection(FileDescription file)
+        {
+            return LoadFile(typeof(QuestCollection), file.Path);
+        }
+
+        public override void Init(FileDescription file, TreeNode fileNode)
+        {
+            base.Init(file, fileNode);
+            if (File.Exists(file.Path))
+            {
+                QuestCollection questCollection = (QuestCollection)LoadCollection(file);
+                loadedQuests.Clear();
+                if (questCollection.Quests != null)
+                    loadedQuests.AddRange(questCollection.Quests);
+            }
+        }
+
+        public override void Init(FileDescription file, TreeNode fileNode, int id)
+        {
+            base.Init(file, fileNode, id);
+            if (File.Exists(file.Path))
+            {
+                QuestCollection questCollection = (QuestCollection)LoadCollection(file);
+                loadedQuests.Clear();
+                if (questCollection.Quests != null)
+                    loadedQuests.AddRange(questCollection.Quests);
+
+                if (loadedQuests.Count > 0)
+                {
+                    int index = loadedQuests.FindIndex(q => q.QuestID == id);
+                    if (index >= 0)
+                    {
+                        Quest quest = loadedQuests[index];
+
+                        tbName.Text = quest.Name.ToString();
+                        tbID.Text = quest.QuestID.ToString();
+                        tbQuestitem.Text = quest.Questitem.ToString();
+                        tbBasedOn.Text = quest.BasedOnDialogue.ToString();
+                        tbRequired.Text = quest.RequiredItem.ToString();
+                        tbEnemy.Text = quest.Enemy.ToString();
+                        tbNumber.Text = quest.EnemyCount.ToString();
+                        tbDescription.Text = quest.Description.ToString();
+                    }
+                }
+            }
         }
 
         private void btSave_Click(object sender, EventArgs e)
@@ -85,11 +140,14 @@ namespace QuestEditor
 
             if (!error)
             {
-                XmlSerializer xml = new XmlSerializer(typeof(Questcollection));
-                StreamWriter sw = new StreamWriter("quests.xml");
-
                 string name = Convert.ToString(tbName.Text);
                 int id = Convert.ToInt32(tbID.Text);
+                if (loadedQuests.Exists(q => q.QuestID == id))
+                {
+                    if (MessageBox.Show("Achtung die ID existiert bereits, soll die ID überschrieben werden?", "Überschreiben?", MessageBoxButtons.YesNo) == DialogResult.No)
+                        return;
+                }
+
                 int questItem = Convert.ToInt32(tbQuestitem.Text);
                 int basedOnDialogue = Convert.ToInt32(tbBasedOn.Text);
                 int requiredItem = Convert.ToInt32(tbRequired.Text);
@@ -99,11 +157,11 @@ namespace QuestEditor
 
                 Quest quest = new Quest(name, id, questItem, basedOnDialogue, requiredItem, enemy, enemyCount, description);
                 loadedQuests.Add(quest);
-                Questcollection questcollection = new Questcollection(loadedQuests.ToArray());
+                QuestCollection questcollection = new QuestCollection(loadedQuests.ToArray());
 
-                xml.Serialize(sw, questcollection);
-                sw.Close();
-
+                SaveFile(questcollection, file.Path);
+                fileNode.Nodes.Add(new TreeNode(id.ToString()));
+                fileNode.ExpandAll();
                 MessageBox.Show("Speichern erfolgreich");
             }
             else
@@ -131,52 +189,38 @@ namespace QuestEditor
             }
         }
 
-        private void btLoad_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    XmlSerializer xml = new XmlSerializer(typeof(Questcollection));
-                    StreamReader r = new StreamReader(openFileDialog1.FileNames[0]);
-
-                    Questcollection questCollection = (Questcollection)xml.Deserialize(r);
-
-                    loadedQuests.Clear();
-                    loadedQuests.AddRange(questCollection.Quests);
-                    if (loadedQuests.Count > 0)
-                    {
-                        Quest quest = loadedQuests[0];
-
-                        tbName.Text = quest.Name.ToString();
-                        tbID.Text = quest.QuestID.ToString();
-                        tbQuestitem.Text = quest.Questitem.ToString();
-                        tbBasedOn.Text = quest.BasedOnDialogue.ToString();
-                        tbRequired.Text = quest.RequiredItem.ToString();
-                        tbEnemy.Text = quest.Enemy.ToString();
-                        tbNumber.Text = quest.EnemyCount.ToString();
-                        tbDescription.Text = quest.Description.ToString();
-                    }
-
-                    for (int i = 0; i < loadedQuests.Count; i++)
-                    {
-                        Quest quest = loadedQuests[i];
-
-                        idList.Add(quest.QuestID);
-                    }
-
-                    r.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Datei konnte nicht geladen werden!" + Environment.NewLine + ex.Message);
-                }
-            }
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            btLoad_Click(null, EventArgs.Empty);
+            New();
+        }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            New();
+        }
+
+        private void New()
+        {
+            tbName.Text = "";
+            tbID.Text = GetNextId().ToString();
+            tbQuestitem.Text = "";
+            tbBasedOn.Text = "";
+            tbRequired.Text = "";
+            tbEnemy.Text = "";
+            tbNumber.Text = "";
+            tbDescription.Text = "";
+        }
+
+        private int GetNextId()
+        {
+            int id = 0;
+            do
+            {
+                if (!loadedQuests.Exists(q => q.QuestID == id))
+                    return id;
+                else
+                    id++;
+            } while (true);
         }
     }
 }
