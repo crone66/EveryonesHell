@@ -1,5 +1,4 @@
-﻿using EveryonesHell.DialogManagment;
-using InventorySystem;
+﻿using InventorySystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,6 @@ namespace EveryonesHell.EntityManagment
     {
         private Inventory inv;
         private AnimationManager animations;
-        private DialogManager dialog;
 
         public override void Update(float elapsedMilliseconds)
         {

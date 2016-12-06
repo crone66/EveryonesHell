@@ -11,7 +11,7 @@ namespace EveryonesHell.QuestManagment
 {
     class QuestTracker
     {
-        XmlSerializer xml = new XmlSerializer(typeof(Questcollection));
+        XmlSerializer xml = new XmlSerializer(typeof(QuestCollection));
         StreamReader r;
 
         InventorySystem.Inventory inventory;
@@ -28,7 +28,7 @@ namespace EveryonesHell.QuestManagment
             this.inventory = inventory;
             r = new StreamReader(path);
 
-            Questcollection questCollection = (Questcollection)xml.Deserialize(r);
+            QuestCollection questCollection = (QuestCollection)xml.Deserialize(r);
             loadedQuests.AddRange(questCollection.Quests);
         }
 
