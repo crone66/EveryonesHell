@@ -169,6 +169,10 @@ namespace EveryonesHell
                                 {
                                     TryMove(1, 0);
                                 }
+                                else if(Keyboard.IsKeyPressed(Keyboard.Key.F))
+                                {
+
+                                }
                             }
                         }
                     }

@@ -85,12 +85,14 @@
     <Compile Include="GlobalReferences.cs" />
     <Compile Include="EntityManagment\NPC.cs" />
     <Compile Include="EntityManagment\Player.cs" />
+    <Compile Include="HUD\DialogSystem.cs" />
     <Compile Include="MenuManagment\Menu.cs" />
     <Compile Include="MenuManagment\MenuManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuestManagment\QuestTracker.cs" />
     <Compile Include="Scene.cs" />
+    <Compile Include="UIHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -161,6 +163,10 @@
     <ProjectReference Include="..\..\TileMapSystem\TileMapSystem\TileMapSystem\TileMapSystem.csproj">
       <Project>{eaf17554-f4f5-4b7d-9b2d-324da658f891}</Project>
       <Name>TileMapSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileDescriptions\FileDescriptions.csproj">
+      <Project>{d6bba1b0-7643-47e5-9451-dae3f06abb27}</Project>
+      <Name>FileDescriptions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
