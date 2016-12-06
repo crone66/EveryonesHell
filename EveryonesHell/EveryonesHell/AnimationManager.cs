@@ -3,7 +3,7 @@ using SFML.System;
 using System.Collections.Generic;
 
 /* 
- * Purpose: Abspielen von Animationen per Spritesheet
+ * Purpose: to run an animation of a spritesheet
  * Author: Lukas Bosniak
  * Date: 9.11.2016
  */

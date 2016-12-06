@@ -1,4 +1,10 @@
-﻿using System;
+﻿/* 
+ * Purpose: Windows forms application to create a XML-file including all quests
+ * Author: Lukas Bosniak
+ * Date: 12.11.2016
+ */
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
