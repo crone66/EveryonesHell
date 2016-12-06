@@ -8,5 +8,11 @@ namespace EveryonesHell.EntityManagment
 {
     public class Player : Character
     {
+
+
+        public Player()
+        {
+
+        }
     }
 }
