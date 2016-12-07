@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.IO;
+using System.Xml.Serialization;
+using System.Xml;
 namespace EveryonesHell
 {
     /// <summary>
@@ -30,7 +32,7 @@ namespace EveryonesHell
         /// <typeparam name="T">asset type</typeparam>
         /// <param name="key">asset key</param>
         /// <returns>The value or reference of the specified asset</returns>
-        private T GetValue<T>(string key)
+        public T GetValue<T>(string key)
         {
             Type type = typeof(T);
 
@@ -71,11 +73,36 @@ namespace EveryonesHell
         /// <returns>returns a new instance of the asset type</returns>
         public T Load<T>(string path)
         {
-            if(Exists(typeof(T), path))
+            return Load<T>(path, path);
+        }
+
+        /// <summary>
+        /// Loads a new asset from path 
+        /// </summary>
+        /// <typeparam name="T">asset Type</typeparam>
+        /// <param name="path">asset path</param>
+        /// <param name="key">asset key</param>
+        /// <returns>returns a new instance of the asset type</returns>
+        public T Load<T>(string path, string key)
+        {
+            if (Exists(typeof(T), key))
                 throw new DuplicateKeyException("Key already exists!");
 
+            Type type = typeof(T);
+            if (type.GetConstructor(Type.EmptyTypes) != null || type.IsValueType)
+            {
+                XmlSerializer xml = new XmlSerializer(type);
+                using (XmlReader reader = XmlReader.Create(path, new XmlReaderSettings()))
+                {
+                    if (xml.CanDeserialize(reader))
+                    {
+                        return (T)LoadXML<T>(reader);
+                    }
+                }
+            }
+
             object obj = Activator.CreateInstance(typeof(T), path);
-            Add(path, obj);
+            Add(key, obj);
             return (T)obj;
         }
 
@@ -114,6 +141,35 @@ namespace EveryonesHell
             Add(path, obj);
             Add(key, result);
             return (T)result;
+        }
+
+        /// <summary>
+        /// Deserializes a xml file
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="path">XML file path</param>
+        /// <returns>Returns an Deserialized object</returns>
+        public T LoadXML<T>(string path)
+        {
+            //using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (XmlReader reader = XmlReader.Create(path, new XmlReaderSettings()))
+            {
+                object result = LoadXML<T>(reader);
+                Add(path, result);
+                return (T)result;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes a xml file
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="xmlReader">Stream to the xml file</param>
+        /// <returns>Returns an Deserialized object</returns>
+        private object LoadXML<T>(XmlReader xmlReader)
+        {
+            XmlSerializer xml = new XmlSerializer(typeof(T));
+            return xml.Deserialize(xmlReader);
         }
 
         /// <summary>

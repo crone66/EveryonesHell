@@ -19,6 +19,7 @@ namespace EveryonesHell
     public class Game : IDisposable
     {
         private RenderWindow window;
+        private ContentManager content;
 
         private uint windowWidth = 800;
         private uint windowHeight = 600;
@@ -70,11 +71,13 @@ namespace EveryonesHell
         /// </summary>
         private void LoadContent()
         {
-            Font font = new Font(@"C:\Windows\Fonts\arial.ttf");
+            content = new ContentManager();
+            Font font = content.Load<Font>(@"C:\Windows\Fonts\arial.ttf", "font");
+            
             ConsoleManager = new DebugConsoleManager(this, font);
             window.TextEntered += ConsoleManager.TextEntered;
             
-            currentScene = new Scene(zoomFactor);
+            currentScene = new Scene(content, zoomFactor);
             currentScene.LoadContent();
             GlobalReferences.State = GameState.Play;
         }
