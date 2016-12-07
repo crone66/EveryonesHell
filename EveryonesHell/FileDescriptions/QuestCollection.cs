@@ -6,9 +6,13 @@
 
 namespace FileDescriptions
 {
+    /// <summary>
+    /// struct including all the quests
+    /// </summary>
     public struct QuestCollection
     {
         public Quest[] Quests;
+
 
         public QuestCollection(Quest[] quests)
         {

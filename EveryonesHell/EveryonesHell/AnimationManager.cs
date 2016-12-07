@@ -1,12 +1,12 @@
-﻿using SFML.Graphics;
-using SFML.System;
-using System.Collections.Generic;
-
-/* 
+﻿/* 
  * Purpose: to run an animation of a spritesheet
  * Author: Lukas Bosniak
  * Date: 9.11.2016
  */
+
+using SFML.Graphics;
+using SFML.System;
+using System.Collections.Generic;
 
 namespace EveryonesHell
 {
@@ -17,6 +17,15 @@ namespace EveryonesHell
         private float frameTime, currentanimationTime;
         private List<IntRect> spriteList;
 
+        /// <summary>
+        /// initialize animationmanager
+        /// </summary>
+        /// <param name="sprite">spritesheet</param>
+        /// <param name="spriteCountX">amount of frames x</param>
+        /// <param name="spriteCountY">amount of frames y</param>
+        /// <param name="frameWidth">width of the frames</param>
+        /// <param name="frameHeight">height of the frames</param>
+        /// <param name="animationFrameTime">time between two frames</param>
         public AnimationManager(Sprite sprite, int spriteCountX, int spriteCountY, int frameWidth, int frameHeight, float animationFrameTime)
         {
             this.sprite = sprite;
@@ -32,6 +41,9 @@ namespace EveryonesHell
             LoadList();
         }
 
+        /// <summary>
+        /// adding the different rectangles the manager has to render to a list
+        /// </summary>
         private void LoadList()
         {
             int positionX = 0;
@@ -53,6 +65,10 @@ namespace EveryonesHell
             }
         }
 
+        /// <summary>
+        /// changing between the rectangles in the list
+        /// </summary>
+        /// <param name="gameTime">elapsed time in the game</param>
         public void Update(Time gameTime)
         {
             currentanimationTime += gameTime.AsMilliseconds();
@@ -71,6 +87,10 @@ namespace EveryonesHell
             sprite.TextureRect = spriteList[currentFrame];
         }
 
+        /// <summary>
+        /// drawing the current frame
+        /// </summary>
+        /// <param name="window">where you draw the frame</param>
         public void Draw(RenderWindow window)
         {
             window.Draw(sprite);
