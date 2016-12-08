@@ -15,26 +15,26 @@ namespace EveryonesHell.HUD
     /// </summary>
     public class DialogSystem
     {
-        private const int padding = 5;
+        private const int padding = 10;
         private const int lineSpacing = 18;
         private const int answerSpacing = 25;
-        private const float selectionDelay = 0.25f;
-
+        private const float selectionDelay = 0.20f;
+        private const int answerCharacterSize = 16;
+        private const int textCharacterSize = 18;
 
         private bool isVisable;
-
         private Dialog currentDialog;
         private Dialog[] answers;
 
         private Vector2f position;
-        private Vector2i size;
-        private Sprite background;
+        private Vector2f size;
         private Font font;
         private DialogCollection dialogs;
 
         private Text[] dialogLines;
         private Text[][] answerLines;
 
+        private RectangleShape shape;
         private int selectedAnswer;
 
         private Color selectionColor;
@@ -51,21 +51,28 @@ namespace EveryonesHell.HUD
 
 
         /// <summary>
-        /// 
+        /// Initzializes a dialog system to handle and draw dialogs
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="size"></param>
-        /// <param name="background"></param>
-        /// <param name="font"></param>
-        public DialogSystem(DialogCollection dialogs, Vector2f position, Vector2i size, Sprite background, Font font, Color textColor, Color selectionColor)
+        /// <param name="dialogs">Dialog collection which contains all availble dialogs</param>
+        /// <param name="position">Dialogbox position</param>
+        /// <param name="size">Dialogbox size</param>
+        /// <param name="font">Font for dialog output</param>
+        /// <param name="textColor">Text color</param>
+        /// <param name="selectionColor">Color of selected answer</param>
+        public DialogSystem(DialogCollection dialogs, Vector2f position, Vector2f size, Font font, Color textColor, Color selectionColor)
         {
             this.dialogs = dialogs;
             this.position = position;
             this.size = size;
-            this.background = background;
             this.font = font;
             this.textColor = textColor;
             this.selectionColor = selectionColor;
+
+            shape = new RectangleShape(new Vector2f(size.X - 4, size.Y - 2));
+            shape.Position = new Vector2f(position.X + 2, position.Y - 2);
+            shape.OutlineThickness = 2;
+            shape.OutlineColor = Color.Black;
+            shape.FillColor = new Color(80, 80, 80, 210);
             elapsedTime = 0f;
         }
 
@@ -76,18 +83,18 @@ namespace EveryonesHell.HUD
         {
             if (isVisable)
             {
-                int count = 0;
+                elapsedTime -= elapsedSeconds;
                 for (int i = 0; i < dialogLines.Length; i++)
                 {
-                    dialogLines[i].Position = new Vector2f(position.X + padding, position.Y + (i * lineSpacing));
-                    count++;
+                    dialogLines[i].Position = new Vector2f(position.X + padding, position.Y + (i * lineSpacing) + padding);
                 }
 
                 for (int i = 0; i < answerLines.Length; i++)
                 {
+                    int count = 0;
                     for (int j = 0; j < answerLines[i].Length; j++)
                     {
-                        answerLines[i][j].Position = new Vector2f(position.X + padding, position.Y + ((i + 1) * answerSpacing) + (count * lineSpacing));
+                        answerLines[i][j].Position = new Vector2f(position.X + padding, position.Y + ((i + 2) * answerSpacing) + (count * lineSpacing));
                         count++;
                     }
                 }
@@ -95,37 +102,75 @@ namespace EveryonesHell.HUD
         }
 
         /// <summary>
+        /// Moves the answer selection up
+        /// </summary>
+        public void SelectionUp()
+        {
+            if (isVisable)
+            {
+                if (elapsedTime <= 0)
+                {
+                    ChangeSelection(selectedAnswer - 1);
+                    elapsedTime = selectionDelay;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Moves the answer selection down
+        /// </summary>
+        public void SelectionDown()
+        {
+            if (isVisable)
+            {
+                if (elapsedTime <= 0)
+                {
+                    ChangeSelection(selectedAnswer + 1);
+                    elapsedTime = selectionDelay;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles next dialog step
+        /// </summary>
+        public void Next()
+        {       
+            if (IsVisable && elapsedTime <= selectionDelay * -1)
+            {
+                elapsedTime = selectionDelay;
+                if (answers != null && answers.Length > 0)
+                {
+                    Open(answers[selectedAnswer].NextDialogId);
+                }
+                else if (currentDialog.NextDialogId >= 0)
+                {
+                    Open(currentDialog.NextDialogId);
+                }
+                else
+                {
+                    isVisable = false;
+                }
+            }
+        }
+        /// <summary>
         /// Handels Dialog input
         /// </summary>
         public void Input(float elapsedSeconds)
         {
             if (isVisable)
             {
-                elapsedTime -= elapsedSeconds;
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Up) && elapsedTime <= 0)
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
                 {
-                    ChangeSelection(selectedAnswer - 1);
-                    elapsedTime = selectionDelay;
+                    SelectionUp();
                 }
-                else if (Keyboard.IsKeyPressed(Keyboard.Key.Down) && elapsedTime <= 0)
+                else if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
                 {
-                    ChangeSelection(selectedAnswer + 1);
-                    elapsedTime = selectionDelay;
+                    SelectionDown();
                 }
-                else if(Keyboard.IsKeyPressed(Keyboard.Key.Return) && elapsedTime <= selectionDelay * -1)
+                else if(Keyboard.IsKeyPressed(Keyboard.Key.Return))
                 {
-                    if(answers != null)
-                    {
-                        Open(answers[selectedAnswer]);
-                    }
-                    else if(currentDialog.NextDialogId >= 0)
-                    {
-                        Open(currentDialog.NextDialogId);
-                    }
-                    else
-                    {
-                        isVisable = false;
-                    }
+                    Next();
                 }
             }
         }
@@ -137,7 +182,8 @@ namespace EveryonesHell.HUD
         {
             if(isVisable)
             {
-                window.Draw(background);
+                
+                window.Draw(shape);
 
                 for (int i = 0; i < dialogLines.Length; i++)
                 {
@@ -155,46 +201,87 @@ namespace EveryonesHell.HUD
         }
 
         /// <summary>
-        /// 
+        /// Opens a dialog window
         /// </summary>
-        /// <param name="dialogId"></param>
+        /// <param name="dialogId">Indicates which dialog should be displayed</param>
         public void Open(int dialogId)
         {
-            Open(dialogs.Dialogs.First(d => d.DialogID == dialogId));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dialog"></param>
-        public void Open(Dialog dialog)
-        {
-            currentDialog = dialog;
-            Text baseDialogText = new Text(currentDialog.DialogText, font);
-            dialogLines = UIHelper.LineWrap(baseDialogText, size.X - (padding * 2));
-
-            if (currentDialog.DialogAnswerIds != null)
+            isVisable = false;
+            try
             {
-                answers = new Dialog[currentDialog.DialogAnswerIds.Length];
-                for (int i = 0; i < currentDialog.DialogAnswerIds.Length; i++)
+                if (dialogId >= 0)
                 {
-                    answers[i] = dialogs.Dialogs.First(d => d.DialogID == currentDialog.DialogAnswerIds[i]);
-                    Text baseText = new Text(answers[i].DialogText, font);
-                    answerLines[i] = UIHelper.LineWrap(baseText, size.X - (padding * 2));
+                    Open(dialogs.Dialogs.First(d => d.DialogID == dialogId));
                 }
+            }
+            catch(Exception ex)
+            {
+                Game.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog ID: " + dialogId.ToString(), 255, 0, 0);
+                Game.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
             }
         }
 
         /// <summary>
-        /// 
+        /// Opens a dialog window
         /// </summary>
-        /// <param name="newIndex"></param>
+        /// <param name="dialog">Dialog to start with</param>
+        public void Open(Dialog dialog)
+        {
+            elapsedTime = selectionDelay;
+            currentDialog = dialog;
+            selectedAnswer = 0;
+
+            Text baseDialogText = new Text(currentDialog.DialogText, font, textCharacterSize);
+            baseDialogText.Color = textColor;
+            dialogLines = UIHelper.LineWrap(baseDialogText, Convert.ToInt32(size.X) - (padding * 2));
+
+            if (currentDialog.DialogAnswerIds != null)
+            {
+                answers = new Dialog[currentDialog.DialogAnswerIds.Length];
+                answerLines = new Text[currentDialog.DialogAnswerIds.Length][];
+                for (int i = 0; i < currentDialog.DialogAnswerIds.Length; i++)
+                {
+                    try
+                    {
+                        answers[i] = dialogs.Dialogs.First(d => d.DialogID == currentDialog.DialogAnswerIds[i]);
+                        Text baseText = new Text(answers[i].DialogText, font, answerCharacterSize);
+                        baseText.Color = i == 0 ? selectionColor : textColor;
+                        answerLines[i] = UIHelper.LineWrap(baseText, Convert.ToInt32(size.X) - (padding * 2));
+                    }
+                    catch(Exception ex)
+                    {
+                        Game.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog answer ID: " + currentDialog.DialogAnswerIds[i].ToString(), 255, 0 ,0);
+                        Game.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
+                    }
+                }
+            }
+            isVisable = true;
+        }
+
+        /// <summary>
+        /// Changes the selected answer
+        /// </summary>
+        /// <param name="newIndex">Answer index</param>
         private void ChangeSelection(int newIndex)
         {
-            selectedAnswer = (selectedAnswer < 0 ? answers.Length - 1 : (selectedAnswer >= answers.Length ? 0 : newIndex));
-            for (int i = 0; i < answerLines[newIndex].Length; i++)
+            ChangeLineColor(selectedAnswer, textColor);
+            selectedAnswer = (newIndex < 0 ? answers.Length - 1 : (newIndex >= answers.Length ? 0 : newIndex));
+            ChangeLineColor(selectedAnswer, selectionColor);
+        }
+
+        /// <summary>
+        /// Changes the color of a line
+        /// </summary>
+        /// <param name="index">Line index</param>
+        /// <param name="color">text color</param>
+        private void ChangeLineColor(int index, Color color)
+        {
+            if (answerLines != null && index < answerLines.Length && answerLines[index] != null)
             {
-                answerLines[newIndex][i].Color = selectionColor;
+                for (int i = 0; i < answerLines[index].Length; i++)
+                {
+                    answerLines[index][i].Color = color;
+                }
             }
         }
     }
