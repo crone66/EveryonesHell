@@ -17,25 +17,19 @@ namespace EveryonesHell.QuestManagment
 {
     class QuestTracker
     {
-        XmlSerializer xml = new XmlSerializer(typeof(QuestCollection));
-        StreamReader r;
-
-        InventorySystem.Inventory inventory;
-        List<Quest> loadedQuests = new List<Quest>();
-        List<Quest> activeQuests = new List<Quest>();
+        private InventorySystem.Inventory inventory;
+        private List<Quest> loadedQuests = new List<Quest>();
+        public List<Quest> activeQuests = new List<Quest>();
 
         /// <summary>
         /// initialize the questtracker
         /// </summary>
         /// <param name="inventory">invetorysystem to check wether the player gained a required item or not</param>
         /// <param name="path">path of the xml-file containing all the quests</param>
-        public QuestTracker(InventorySystem.Inventory inventory, string path)
+        public QuestTracker(InventorySystem.Inventory inventory, List<Quest> loadedQuests)
         {
             this.inventory = inventory;
-            r = new StreamReader(path);
-
-            QuestCollection questCollection = (QuestCollection)xml.Deserialize(r);
-            loadedQuests.AddRange(questCollection.Quests);
+            this.loadedQuests = loadedQuests;
         }
 
         /// <summary>
