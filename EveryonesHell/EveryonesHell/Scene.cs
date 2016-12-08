@@ -30,6 +30,8 @@ namespace EveryonesHell
         private uint windowWidth = 800;
         private uint windowHeight = 600;
 
+        private HUD.DialogSystem dialog;
+
         public int X
         {
             get
@@ -60,9 +62,10 @@ namespace EveryonesHell
         /// A Scene can be used as represantation of a level or menu
         /// </summary>
         /// <param name="zoomFactor">indicates the zoom factor to zoom in or out (default value 1)</param>
-        public Scene(float zoomFactor)
+        public Scene(ContentManager content, float zoomFactor)
         {
             this.zoomFactor = zoomFactor;
+            this.content = content;
             settings = new GeneratorSettings(1, 50, 1.5f, 1000000, 10000000, true, 1000f);
             areaSpreads = new AreaSpread[2]
             {
@@ -112,14 +115,16 @@ namespace EveryonesHell
         /// Loads required content for the scene
         /// </summary>
         public void LoadContent()
-        {
-            //Load your content
-            
-            content = new ContentManager();
+        { 
             Sprite blue = content.Load<Sprite, Texture>("1", "Content/testBlue.png");
             Sprite red = content.Load<Sprite, Texture>("-1", "Content/testRed.png");
             Sprite green = content.Load<Sprite, Texture>("0", "Content/testGreen.png");
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
+            Font font = content.GetValue<Font>("font");
+
+            FileDescriptions.DialogCollection dialogCollection = content.Load<FileDescriptions.DialogCollection>("Content/testDialogs.xml");
+            dialog = new HUD.DialogSystem(dialogCollection, new Vector2f(0, windowHeight - 200), new Vector2f(windowWidth, 200), font, Color.White, Color.Yellow);
+
             sprites = new Dictionary<int, Sprite>();
             sprites.Add(0, green);
             sprites.Add(1, blue);
@@ -134,6 +139,7 @@ namespace EveryonesHell
         public void Update(float elapsedSeconds)
         {
             mapManager.Update(Y, X);
+            dialog.Update(elapsedSeconds);
             fieldsInView = mapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32(windowWidth * zoomFactor), Convert.ToInt32(windowHeight * zoomFactor));
         }
 
@@ -149,30 +155,37 @@ namespace EveryonesHell
                     {
                         if (!Game.ConsoleManager.DebugConsole.IsOpen)
                         {
-                            elapsedTime -= elapsedSeconds;                    
-                            if (elapsedTime <= 0f)
+                            if (!dialog.IsVisable)
                             {
-                                elapsedTime = 0.05f;
-                                if (Keyboard.IsKeyPressed(Keyboard.Key.W))
+                                elapsedTime -= elapsedSeconds;
+                                if (elapsedTime <= 0f)
                                 {
-                                    TryMove(0, -1);
+                                    elapsedTime = 0.05f;
+                                    if (Keyboard.IsKeyPressed(Keyboard.Key.W))
+                                    {
+                                        TryMove(0, -1);
+                                    }
+                                    else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
+                                    {
+                                        TryMove(0, 1);
+                                    }
+                                    else if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+                                    {
+                                        TryMove(-1, 0);
+                                    }
+                                    else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
+                                    {
+                                        TryMove(1, 0);
+                                    }
+                                    else if (Keyboard.IsKeyPressed(Keyboard.Key.F))
+                                    {
+                                        dialog.Open(0);
+                                    }
                                 }
-                                else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
-                                {
-                                    TryMove(0, 1);
-                                }
-                                else if (Keyboard.IsKeyPressed(Keyboard.Key.A))
-                                {
-                                    TryMove(-1, 0);
-                                }
-                                else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
-                                {
-                                    TryMove(1, 0);
-                                }
-                                else if(Keyboard.IsKeyPressed(Keyboard.Key.F))
-                                {
-
-                                }
+                            }
+                            else
+                            {
+                                dialog.Input(elapsedSeconds);
                             }
                         }
                     }
@@ -209,6 +222,8 @@ namespace EveryonesHell
 
             sprites[-1].Position = new Vector2f(((columnCount / 2) * 50) - zoomWidth, ((rowCount / 2) * 50) - zoomHeight);
             window.Draw(sprites[-1]);
+
+            dialog.Draw(window);
         }
 
         /// <summary>
