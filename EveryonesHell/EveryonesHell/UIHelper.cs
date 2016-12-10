@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML.System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -93,6 +94,17 @@ namespace EveryonesHell
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Calculates a vector scale from a source and destination size
+        /// </summary>
+        /// <param name="sourceSize">Source size</param>
+        /// <param name="distinationSize">destination size</param>
+        /// <returns>Returns a scale vector</returns>
+        public static Vector2f GetScale(IntRect sourceSize, IntRect distinationSize)
+        {
+            return new Vector2f(distinationSize.Width / sourceSize.Width, distinationSize.Height / sourceSize.Height);
         }
     }
 }
