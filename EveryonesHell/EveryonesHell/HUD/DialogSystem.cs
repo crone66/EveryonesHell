@@ -216,8 +216,8 @@ namespace EveryonesHell.HUD
             }
             catch(Exception ex)
             {
-                Game.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog ID: " + dialogId.ToString(), 255, 0, 0);
-                Game.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
+                GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog ID: " + dialogId.ToString(), 255, 0, 0);
+                GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
             }
         }
 
@@ -250,8 +250,8 @@ namespace EveryonesHell.HUD
                     }
                     catch(Exception ex)
                     {
-                        Game.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog answer ID: " + currentDialog.DialogAnswerIds[i].ToString(), 255, 0 ,0);
-                        Game.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
+                        GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog answer ID: " + currentDialog.DialogAnswerIds[i].ToString(), 255, 0 ,0);
+                        GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
                     }
                 }
             }

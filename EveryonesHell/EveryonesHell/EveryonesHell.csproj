@@ -74,10 +74,9 @@
     <Compile Include="EntityManagment\Character.cs" />
     <Compile Include="ContentManager.cs" />
     <Compile Include="CustomExceptions\DuplicateKeyException.cs" />
-    <Compile Include="EntityManagment\DrawableObjects.cs" />
     <Compile Include="EntityManagment\Entity.cs" />
     <Compile Include="EntityManagment\EntityManager.cs" />
-    <Compile Include="EntityManagment\InteractiveObjects.cs" />
+    <Compile Include="EntityManagment\InteractiveObject.cs" />
     <Compile Include="Exceptionhandler.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameSettings.cs" />

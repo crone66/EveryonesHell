@@ -287,7 +287,7 @@ namespace EveryonesHell
         {
             CommandDescriptor cmd = (CommandDescriptor)sender;
             DebugConsole.WriteLine("> " + cmd.Command, 255, 255, 255);
-            DebugConsole.WriteLine("X: " + game.CurrentScene.X.ToString() + ", Y:" + game.CurrentScene.Y.ToString(), 255, 255, 255);
+            DebugConsole.WriteLine("X: " + game.CurrentScene.Player.TileColumn.ToString() + ", Y:" + game.CurrentScene.Player.TileRow.ToString(), 255, 255, 255);
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace EveryonesHell
         {
             CommandDescriptor cmd = (CommandDescriptor)sender;
             DebugConsole.WriteLine("> " + cmd.Command, 255, 255, 255);
-            DebugConsole.WriteLine("X: " + game.CurrentScene.X.ToString() + ", Y:" + game.CurrentScene.Y.ToString(), 255, 255, 255);
+            DebugConsole.WriteLine("X: " + game.CurrentScene.Player.Position.X.ToString() + ", Y:" + game.CurrentScene.Player.Position.Y.ToString(), 255, 255, 255);
         }
 
         /// <summary>

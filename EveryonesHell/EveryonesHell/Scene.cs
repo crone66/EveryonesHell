@@ -3,10 +3,9 @@ using SFML.System;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TileMapSystem;
+using FileDescriptions;
+using EveryonesHell.EntityManagment;
 
 namespace EveryonesHell
 {
@@ -22,39 +21,77 @@ namespace EveryonesHell
         private ContentManager content;
         private Dictionary<int, Sprite> sprites;
 
-        private byte[] fieldsInView;
+        private EntityManager entities;
+        private DialogCollection dialogs;
+        private ItemCollection items;
+        private QuestCollection quests;
+
+        private Player player;
+
+        //private Tile[] fieldsInView;
         private float elapsedTime;
         private int x = -657;
         private int y = -340; 
         private float zoomFactor;
-        private uint windowWidth = 800;
-        private uint windowHeight = 600;
 
-        private HUD.DialogSystem dialog;
-
-        public int X
+        public TileMapManager MapManager
         {
             get
             {
-                return x;
-            }
-
-            set
-            {
-                x = value;
+                return mapManager;
             }
         }
 
-        public int Y
+        public DialogCollection Dialogs
         {
             get
             {
-                return y;
+                return dialogs;
+            }
+        }
+
+        public ItemCollection Items
+        {
+            get
+            {
+                return items;
+            }
+        }
+
+        public QuestCollection Quests
+        {
+            get
+            {
+                return quests;
+            }
+        }
+
+        public EntityManager Entities
+        {
+            get
+            {
+                return entities;
+            }
+        }
+
+        public GeneratorSettings Settings
+        {
+            get
+            {
+                return settings;
+            }
+        }
+
+        public Player Player
+        {
+            get
+            {
+                return player;
             }
 
             set
             {
-                y = value;
+                player = value;
             }
         }
 
@@ -69,46 +106,15 @@ namespace EveryonesHell
             settings = new GeneratorSettings(1, 50, 1.5f, 1000000, 10000000, true, 1000f);
             areaSpreads = new AreaSpread[2]
             {
-                new AreaSpread(1, 0.30f, 20, 250, true, true, 5, SpreadOption.Circle, LayerType.Height),
-                new AreaSpread(2, 0.125f, 20, 200, true, true, 5, SpreadOption.Circle, LayerType.Height)
+                new AreaSpread(1, GlobalReferences.FlagCollision, 0.30f, 20, 250, true, true, 5, SpreadOption.Circle, LayerType.Height),
+                new AreaSpread(2, GlobalReferences.FlagCollision, 0.125f, 20, 200, true, true, 5, SpreadOption.Circle, LayerType.Height)
             };
 
-            mapManager = new TileMapManager(settings, areaSpreads);
+            mapManager = new TileMapManager(Settings, areaSpreads);
             mapManager.GridChanged += MapManager_GridChanged;
             mapManager.GridChangeRequested += MapManager_GridChangeRequested;
             mapManager.GridGenerationIsSlow += MapManager_GridGenerationIsSlow;
-            mapManager.Changelevel(settings, areaSpreads, x, y, false);
-            Game.ConsoleManager.DebugConsole.WriteLine("X: " + X.ToString() + " Y:" + Y.ToString(), 255, 255, 255);
-        }
-
-        /// <summary>
-        /// An eventhandler that is fired when a grid on screen isn't generated yet.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MapManager_GridGenerationIsSlow(object sender, GridEventArgs e)
-        {
-            Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid generation is slow From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 0, 0);
-        }
-
-        /// <summary>
-        /// Eventhandler will be fired when a new grid generation starts
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MapManager_GridChangeRequested(object sender, GridEventArgs e)
-        {
-            Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid change requested From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 255, 255);
-        }
-
-        /// <summary>
-        /// Eventhandler will be fired when grid was changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MapManager_GridChanged(object sender, GridEventArgs e)
-        {
-            Game.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid changed From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 255, 255);
+            mapManager.Changelevel(Settings, areaSpreads, x, y, false);
         }
 
         /// <summary>
@@ -121,15 +127,19 @@ namespace EveryonesHell
             Sprite green = content.Load<Sprite, Texture>("0", "Content/testGreen.png");
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
             Font font = content.GetValue<Font>("font");
+            dialogs = content.Load<DialogCollection>("Content/testDialogs.xml");
 
-            FileDescriptions.DialogCollection dialogCollection = content.Load<FileDescriptions.DialogCollection>("Content/testDialogs.xml");
-            dialog = new HUD.DialogSystem(dialogCollection, new Vector2f(0, windowHeight - 200), new Vector2f(windowWidth, 200), font, Color.White, Color.Yellow);
+            HUD.DialogSystem dialog = new HUD.DialogSystem(Dialogs, new Vector2f(0, GlobalReferences.MainGame.WindowHeight - 200), new Vector2f(GlobalReferences.MainGame.WindowWidth, 200), font, Color.White, Color.Yellow);
 
             sprites = new Dictionary<int, Sprite>();
             sprites.Add(0, green);
             sprites.Add(1, blue);
             sprites.Add(2, gray);
             sprites.Add(-1, red);
+
+            Player = new Player(y, x, new Vector2i(50, 50), red, dialog);
+            entities = new EntityManager();
+            entities.Entities.Add(Player);
         }
 
         /// <summary>
@@ -138,9 +148,9 @@ namespace EveryonesHell
         /// <param name="elapsedSeconds"></param>
         public void Update(float elapsedSeconds)
         {
-            mapManager.Update(Y, X);
-            dialog.Update(elapsedSeconds);
-            fieldsInView = mapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32(windowWidth * zoomFactor), Convert.ToInt32(windowHeight * zoomFactor));
+            entities.Update(elapsedSeconds);
+            mapManager.Update(Player.TileRow, Player.TileColumn);
+            //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));
         }
 
         /// <summary>
@@ -153,40 +163,37 @@ namespace EveryonesHell
             {
                 case GameState.Play:
                     {
-                        if (!Game.ConsoleManager.DebugConsole.IsOpen)
+                        if (!GlobalReferences.MainGame.ConsoleManager.DebugConsole.IsOpen)
                         {
-                            if (!dialog.IsVisable)
+                            Vector2i direction = new Vector2i(0, 0);
+
+                            if (Keyboard.IsKeyPressed(Keyboard.Key.W))
                             {
-                                elapsedTime -= elapsedSeconds;
-                                if (elapsedTime <= 0f)
-                                {
-                                    elapsedTime = 0.05f;
-                                    if (Keyboard.IsKeyPressed(Keyboard.Key.W))
-                                    {
-                                        TryMove(0, -1);
-                                    }
-                                    else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
-                                    {
-                                        TryMove(0, 1);
-                                    }
-                                    else if (Keyboard.IsKeyPressed(Keyboard.Key.A))
-                                    {
-                                        TryMove(-1, 0);
-                                    }
-                                    else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
-                                    {
-                                        TryMove(1, 0);
-                                    }
-                                    else if (Keyboard.IsKeyPressed(Keyboard.Key.F))
-                                    {
-                                        dialog.Open(0);
-                                    }
-                                }
+                                direction.Y -= 1;
                             }
-                            else
+
+                            if (Keyboard.IsKeyPressed(Keyboard.Key.S))
                             {
-                                dialog.Input(elapsedSeconds);
+                                direction.Y += 1;
                             }
+
+                            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+                            {
+                                direction.X -= 1;
+                            }
+
+                            if (Keyboard.IsKeyPressed(Keyboard.Key.D))
+                            {
+                                direction.X += 1;
+                            }
+
+                            if (Keyboard.IsKeyPressed(Keyboard.Key.F))
+                            {
+                                Player.OnAction(this, null);
+                            }
+                            
+                            if (direction.X != 0 || direction.Y != 0)
+                                Player.OnMove(this, new DebugConsole.ExecuteCommandArgs(direction));
                         }
                     }
                     break;
@@ -201,44 +208,79 @@ namespace EveryonesHell
         /// <param name="window">Window to render</param>
         public void Draw(RenderWindow window)
         {
-            windowWidth = Convert.ToUInt32(window.DefaultView.Size.X);
-            windowHeight = Convert.ToUInt32(window.DefaultView.Size.Y);
+            Vector2f playerCenter = new Vector2f(player.Position.X + (player.Size.X / 2), player.Position.Y + (player.Size.Y / 2));
+            Vector2f offset = new Vector2f(playerCenter.X - (GlobalReferences.MainGame.WindowWidth / 2), playerCenter.Y - (GlobalReferences.MainGame.WindowHeight / 2));
+            View v = new View(playerCenter, new Vector2f(GlobalReferences.MainGame.WindowWidth, GlobalReferences.MainGame.WindowHeight));
+            
+            v.Zoom(zoomFactor);
+            window.SetView(v);
 
-            float zoomWidth = ((windowWidth * zoomFactor) - (windowWidth)) / 2f;
-            float zoomHeight = ((windowHeight * zoomFactor) - (windowHeight)) / 2f;
+            float zoomWidth = ((GlobalReferences.MainGame.WindowWidth * zoomFactor) - (GlobalReferences.MainGame.WindowWidth)) / 2f;
+            float zoomHeight = ((GlobalReferences.MainGame.WindowHeight * zoomFactor) - (GlobalReferences.MainGame.WindowHeight)) / 2f;
 
-            int rowCount = Convert.ToInt32((windowHeight * zoomFactor) / settings.TileSize);
-            int columnCount = Convert.ToInt32((windowWidth * zoomFactor) / settings.TileSize);
-            for (int row = 0; row < rowCount; row++)
+            int rowCount = Convert.ToInt32((GlobalReferences.MainGame.WindowHeight * zoomFactor) / Settings.TileSize);
+            int columnCount = Convert.ToInt32((GlobalReferences.MainGame.WindowWidth * zoomFactor) / Settings.TileSize);
+            /*for (int row = 0; row < rowCount; row++)
             {
-                for (int column = 0; column < columnCount; column++)
+                for (int column = -0; column < columnCount; column++)
                 {
-                    int id = fieldsInView[(row * columnCount) + column];
+                    int id = fieldsInView[(row * columnCount) + column].Id;
                     Sprite sprite = sprites[id];
-                    sprite.Position = new Vector2f((column * 50) - zoomWidth, (row * 50) - zoomHeight);
+                    
+                    sprite.Position = new Vector2f(((player.TileColumn - (columnCount / 2)) + column) * settings.TileSize,
+                        ((player.TileRow - (rowCount / 2)) + row) * settings.TileSize);
+                    //sprite.Position = offset + new Vector2f((column * Settings.TileSize) - zoomWidth, (row * Settings.TileSize) - zoomHeight);
+                    window.Draw(sprite);
+                }
+            }*/
+
+            int fromRow = (player.TileRow - (rowCount / 2)) - 2;
+            int toRow = (player.TileRow + (rowCount / 2)) + 2;
+            int fromCol = (player.TileColumn - (columnCount / 2)) - 2;
+            int toCol = (player.TileColumn + (columnCount / 2)) +2;
+            for (int r = fromRow; r < toRow; r++)
+            {
+                for (int c = fromCol; c < toCol; c++)
+                {
+                    Tile t = mapManager.CurrentLevel.GetTileValue(r, c);
+                    Sprite sprite = sprites[t.Id];
+                    sprite.Position = new Vector2f(c * settings.TileSize, r * settings.TileSize);
+
                     window.Draw(sprite);
                 }
             }
 
-            sprites[-1].Position = new Vector2f(((columnCount / 2) * 50) - zoomWidth, ((rowCount / 2) * 50) - zoomHeight);
-            window.Draw(sprites[-1]);
+            entities.Draw(window);
+        }      
 
-            dialog.Draw(window);
+        /// <summary>
+        /// An eventhandler that is fired when a grid on screen isn't generated yet.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapManager_GridGenerationIsSlow(object sender, GridEventArgs e)
+        {
+            GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid generation is slow From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 0, 0);
         }
 
         /// <summary>
-        /// (Testing) Collision detection and player movement
+        /// Eventhandler will be fired when a new grid generation starts
         /// </summary>
-        /// <param name="xTranslation"></param>
-        /// <param name="yTranslation"></param>
-        private void TryMove(int xTranslation, int yTranslation)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapManager_GridChangeRequested(object sender, GridEventArgs e)
         {
-            int tileId = mapManager.CurrentLevel.GetTile(Y + yTranslation, X + xTranslation);
-            if (tileId == 0)
-            {
-                X += xTranslation;
-                Y += yTranslation;
-            }
+            GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid change requested From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 255, 255);
+        }
+
+        /// <summary>
+        /// Eventhandler will be fired when grid was changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapManager_GridChanged(object sender, GridEventArgs e)
+        {
+            GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(String.Format("Grid changed From (Row: {0}, Column: {1}); To (Row: {2}, Column: {3}), Recycled: {4}", e.OldGridRow, e.OldGridColumn, e.NewGridRow, e.NewGridColumn, e.IsRecycledMap), 255, 255, 255);
         }
     }
 }
