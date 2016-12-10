@@ -17,6 +17,19 @@ namespace EveryonesHell
         private float frameTime, currentanimationTime;
         private List<IntRect> spriteList;
 
+        public Sprite Sprite
+        {
+            get
+            {
+                return sprite;
+            }
+
+            set
+            {
+                sprite = value;
+            }
+        }
+
         /// <summary>
         /// initialize animationmanager
         /// </summary>
@@ -28,7 +41,7 @@ namespace EveryonesHell
         /// <param name="animationFrameTime">time between two frames</param>
         public AnimationManager(Sprite sprite, int spriteCountX, int spriteCountY, int frameWidth, int frameHeight, float animationFrameTime)
         {
-            this.sprite = sprite;
+            this.Sprite = sprite;
             countX = spriteCountX;
             countY = spriteCountY;
             width = frameWidth;
@@ -84,7 +97,7 @@ namespace EveryonesHell
                 }
             }
 
-            sprite.TextureRect = spriteList[currentFrame];
+            Sprite.TextureRect = spriteList[currentFrame];
         }
 
         /// <summary>
@@ -93,7 +106,7 @@ namespace EveryonesHell
         /// <param name="window">where you draw the frame</param>
         public void Draw(RenderWindow window)
         {
-            window.Draw(sprite);
+            window.Draw(Sprite);
         }
     }
 }
