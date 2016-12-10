@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SFML.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,24 +24,35 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Initziaizes an entity manager
+        /// </summary>
         public EntityManager()
         {
             entities = new List<Entity>();
         }
 
-        public void Update(float elapsedMilliseconds)
+        /// <summary>
+        /// Updates all entities
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
+        public void Update(float elapsedSeconds)
         {
             for (int i = 0; i < entities.Count; i++)
             {
-                entities[i].Update(elapsedMilliseconds);
+                entities[i].Update(elapsedSeconds);
             }
         }
 
-        public void Draw()
+        /// <summary>
+        /// Draws all entities
+        /// </summary>
+        /// <param name="window">Window to render</param>
+        public void Draw(RenderWindow window)
         {
             for (int i = 0; i < entities.Count; i++)
             {
-                entities[i].Draw();
+                entities[i].Draw(window);
             }
         }
     }

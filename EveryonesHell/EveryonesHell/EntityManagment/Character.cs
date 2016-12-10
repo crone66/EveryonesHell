@@ -4,7 +4,9 @@
  * Date: 04.11.2016
  */
 
- using System;
+using SFML.Graphics;
+using SFML.System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,68 +14,26 @@ using System.Threading.Tasks;
 
 namespace EveryonesHell.EntityManagment
 {
-    public class Character : InteractiveObjects
+    public class Character : InteractiveObject
     {
-        AnimationManager animations;
-        private int currentHealth;
-        private int maxHealth;
-
-        /// <summary>
-        /// Returns the current Health while prohibiting it to be changed from outside.
-        /// </summary>
-        public int CurrentHealth
+        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed)
+            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed)
         {
-            get
-            {
-                return currentHealth;
-            }
         }
 
-        public Character()
+        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed)
+            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed)
         {
-
-        }
-
-        /// <summary>
-        /// Can be called when the character suffers damage / gets hit.
-        /// </summary>
-        /// <param name="damageGained"></param>
-        public void Damaged (int damageGained)
-        {
-            if((currentHealth - damageGained) >= 0)
-            {
-                currentHealth -= damageGained;
-            }
-            else
-            {
-                return;//TODO add Death
-            }
-        }
-
-        /// <summary>
-        /// Can be Called when the character gets healed.
-        /// </summary>
-        /// <param name="HealAmount"></param>
-        public void Healed (int HealAmount)
-        {
-            if((currentHealth + HealAmount) <= maxHealth)
-            {
-                currentHealth += HealAmount;
-            }
-            else
-            {
-                currentHealth = maxHealth;
-            }
         }
 
         public override void Update(float elapsedMilliseconds)
         {
-            throw new NotImplementedException();
+            base.Update(elapsedMilliseconds);
         }
 
-        public override void Draw()
+        public override void Draw(RenderWindow window)
         {
-            throw new NotImplementedException();
+            base.Draw(window);
         }
     }
 }

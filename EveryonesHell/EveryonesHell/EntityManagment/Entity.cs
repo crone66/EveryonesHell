@@ -13,9 +13,8 @@ namespace EveryonesHell.EntityManagment
         private static int Count = 0;
 
         private int id;
-        private bool visable;
-        private bool collidable;
-        private bool active;
+        private bool isVisable;
+        private bool isCollidable;
 
         private int tileRow;
         private int tileColumn;
@@ -23,6 +22,10 @@ namespace EveryonesHell.EntityManagment
         private Vector2f position;
         private Vector2i size;
         private Sprite currentSprite;
+        private IntRect spriteRect;
+        private IntRect boundingBox;
+
+        private List<Vector2i> overlappingTiles;
 
         public int Id
         {
@@ -30,49 +33,31 @@ namespace EveryonesHell.EntityManagment
             {
                 return id;
             }
-
-            set
-            {
-                id = value;
-            }
         }
 
         public bool Visable
         {
             get
             {
-                return visable;
+                return isVisable;
             }
 
-            set
+            protected set
             {
-                visable = value;
-            }
-        }
-
-        public bool Collidable
-        {
-            get
-            {
-                return collidable;
-            }
-
-            set
-            {
-                collidable = value;
+                isVisable = value;
             }
         }
 
-        public bool Active
+        public bool IsCollidable
         {
             get
             {
-                return active;
+                return isCollidable;
             }
 
-            set
+            protected set
             {
-                active = value;
+                isCollidable = value;
             }
         }
 
@@ -83,9 +68,10 @@ namespace EveryonesHell.EntityManagment
                 return tileRow;
             }
 
-            set
+            protected set
             {
                 tileRow = value;
+                UpdatePosition();
             }
         }
 
@@ -96,9 +82,10 @@ namespace EveryonesHell.EntityManagment
                 return tileColumn;
             }
 
-            set
+            protected set
             {
                 tileColumn = value;
+                UpdatePosition();
             }
         }
 
@@ -109,9 +96,11 @@ namespace EveryonesHell.EntityManagment
                 return position;
             }
 
-            set
+            protected set
             {
                 position = value;
+                boundingBox = new IntRect(Convert.ToInt32(position.X), Convert.ToInt32(position.Y), size.X, size.Y);
+                UpdateTileIndices();
             }
         }
 
@@ -122,39 +111,245 @@ namespace EveryonesHell.EntityManagment
                 return size;
             }
 
-            set
+            protected set
             {
                 size = value;
+                boundingBox = new IntRect(Convert.ToInt32(position.X), Convert.ToInt32(position.Y), size.X, size.Y);
+                UpdateOverlappingTiles();
             }
         }
 
+        public Sprite CurrentSprite
+        {
+            get
+            {
+                return currentSprite;
+            }
+
+            protected set
+            {
+                currentSprite = value;
+            }
+        }
+
+        public IntRect BoundingBox
+        {
+            get
+            {
+                return boundingBox;
+            }
+
+            protected set
+            {
+                boundingBox = value;
+                position = new Vector2f(boundingBox.Top, boundingBox.Top);
+                size = new Vector2i(boundingBox.Width, boundingBox.Height);
+            }
+        }
+
+        public IntRect SpriteRect
+        {
+            get
+            {
+                return spriteRect;
+            }
+
+            protected set
+            {
+                spriteRect = value;
+            }
+        }
+
+        public List<Vector2i> OverlappingTiles
+        {
+            get
+            {
+                return overlappingTiles;
+            }
+        }
+
+        /// <summary>
+        /// Initzializes a new entity
+        /// </summary>
         public Entity()
         {
-            Id = Count++;
+            id = Count++;
+            overlappingTiles = new List<Vector2i>();
         }
 
-        public Entity(bool visable, bool collidable, bool active)
+        /// <summary>
+        /// Initzializes a new entity
+        /// </summary>
+        /// <param name="visable">Indicates whenther the entity is visable or not</param>
+        /// <param name="collidable">Indicates whenther the entity is collidable or not</param>
+        public Entity(bool visable, bool collidable)
         {
-            Id = Count++;
-            this.Visable = visable;
-            this.Collidable = collidable;
-            this.Active = active;
+            id = Count++;
+            Visable = visable;
+            IsCollidable = collidable;
+            overlappingTiles = new List<Vector2i>();
         }
 
-        public Entity(bool visable, bool collidable, bool active, int tileRow, int tileColumn, Vector2f position, Vector2i size, Sprite currentSprite)
+        /// <summary>
+        /// Initzializes a new entity
+        /// </summary>
+        /// <param name="visable">Indicates whenther the entity is visable or not</param>
+        /// <param name="collidable">Indicates whenther the entity is collidable or not</param>
+        /// <param name="position">Position of the entity</param>
+        /// <param name="size">Size of entity</param>
+        /// <param name="currentSprite">Sprite of entity</param>
+        public Entity(bool visable, bool collidable, Vector2f position, Vector2i size, Sprite currentSprite)
         {
-            Id = Count++;
-            this.Visable = visable;
-            this.Collidable = collidable;
-            this.Active = active;
-            this.TileRow = tileRow;
-            this.TileColumn = tileColumn;
-            this.Position = position;
-            this.Size = size;
-            this.currentSprite = currentSprite;
+            id = Count++;
+            Visable = visable;
+            IsCollidable = collidable;
+            overlappingTiles = new List<Vector2i>();
+            Size = size;
+            Position = position;
+            CurrentSprite = currentSprite;
+            SpriteRect = currentSprite.TextureRect;
         }
 
-        public abstract void Update(float elapsedMilliseconds);
-        public abstract void Draw();
+        /// <summary>
+        /// Initzializes a new entity
+        /// </summary>
+        /// <param name="visable">Indicates whenther the entity is visable or not</param>
+        /// <param name="collidable">Indicates whenther the entity is collidable or not</param>
+        /// <param name="tileRow">Tile row index</param>
+        /// <param name="tileColumn">Tile column index</param>
+        /// <param name="size">Size of entity</param>
+        /// <param name="currentSprite">Sprite of entity</param>
+        public Entity(bool visable, bool collidable, int tileRow, int tileColumn, Vector2i size, Sprite currentSprite)
+        {
+            id = Count++;
+            Visable = visable;
+            IsCollidable = collidable;
+            overlappingTiles = new List<Vector2i>();
+            Size = size;
+            TileRow = tileRow;
+            TileColumn = tileColumn;
+            CurrentSprite = currentSprite;
+            SpriteRect = currentSprite.TextureRect;
+        }
+
+        /// <summary>
+        /// Initzializes a new entity
+        /// </summary>
+        /// <param name="visable">Indicates whenther the entity is visable or not</param>
+        /// <param name="collidable">Indicates whenther the entity is collidable or not</param>
+        /// <param name="position">Position of the entity</param>
+        /// <param name="size">Size of entity</param>
+        /// <param name="currentSprite">Sprite of entity</param>
+        /// <param name="spriteRect">Texture rectangle of the current sprite</param
+        public Entity(bool visable, bool collidable, Vector2f position, Vector2i size, Sprite currentSprite, IntRect spriteRect)
+        {
+            id = Count++;
+            Visable = visable;
+            IsCollidable = collidable;
+            overlappingTiles = new List<Vector2i>();
+            Size = size;
+            Position = position;      
+            CurrentSprite = currentSprite;
+            SpriteRect = spriteRect;
+        }
+
+        /// <summary>
+        /// Initzializes a new entity
+        /// </summary>
+        /// <param name="visable">Indicates whenther the entity is visable or not</param>
+        /// <param name="collidable">Indicates whenther the entity is collidable or not</param>
+        /// <param name="tileRow">Tile row index</param>
+        /// <param name="tileColumn">Tile column index</param>
+        /// <param name="size">Size of entity</param>
+        /// <param name="currentSprite">Sprite of entity</param>
+        /// <param name="spriteRect">Texture rectangle of the current sprite</param>
+        public Entity(bool visable, bool collidable, int tileRow, int tileColumn, Vector2i size, Sprite currentSprite, IntRect spriteRect)
+        {
+            id = Count++;
+            Visable = visable;
+            IsCollidable = collidable;
+            overlappingTiles = new List<Vector2i>();
+            Size = size;
+            TileRow = tileRow;
+            TileColumn = tileColumn;
+            CurrentSprite = currentSprite;
+            SpriteRect = spriteRect;
+        }
+
+        /// <summary>
+        /// Calculates entity tile indices from position
+        /// </summary>
+        protected void UpdateTileIndices()
+        {
+            tileColumn = Convert.ToInt32(Math.Floor(position.X / GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+            tileRow = Convert.ToInt32(Math.Floor(position.Y / GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+            UpdateOverlappingTiles();
+        }
+
+        /// <summary>
+        /// Calculates entity position from tile indices
+        /// </summary>
+        protected void UpdatePosition()
+        {
+            position.X = Convert.ToInt32(Math.Floor(tileColumn * (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+            position.Y = Convert.ToInt32(Math.Floor(tileRow * (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+            boundingBox = new IntRect(Convert.ToInt32(position.X), Convert.ToInt32(position.Y), size.X, size.Y);
+            UpdateOverlappingTiles();
+        }
+
+        /// <summary>
+        /// Searches all overlapping tile indices
+        /// </summary>
+        protected void UpdateOverlappingTiles()
+        {
+            int tileColumnCount = Convert.ToInt32(Math.Ceiling(boundingBox.Width / (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+            int tileRowCount = Convert.ToInt32(Math.Ceiling(boundingBox.Height / (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+
+            overlappingTiles.Clear();
+            for (int r = tileRow - tileRowCount; r < tileRow + tileRowCount + 1; r++)
+            {
+                for (int c = tileColumn - tileColumnCount; c < tileColumn + tileColumnCount + 1; c++)
+                {
+                    if(boundingBox.Intersects(GetTileBoundingBox(new Vector2i(c, r))))
+                        overlappingTiles.Add(new Vector2i(c, r));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates an IntRect from tile indices
+        /// </summary>
+        /// <param name="tileInfo">tile indeces</param>
+        /// <returns>Returns an integer rectangle</returns>
+        protected IntRect GetTileBoundingBox(Vector2i tileInfo)
+        {
+            IntRect tileBox = new IntRect(
+                tileInfo.X * GlobalReferences.MainGame.CurrentScene.Settings.TileSize,
+                tileInfo.Y * GlobalReferences.MainGame.CurrentScene.Settings.TileSize,
+                GlobalReferences.MainGame.CurrentScene.Settings.TileSize,
+                GlobalReferences.MainGame.CurrentScene.Settings.TileSize);
+            return tileBox;
+        }
+
+        /// <summary>
+        /// Draws current sprite of the entity
+        /// </summary>
+        /// <param name="window">Window to render</param>
+        public virtual void Draw(RenderWindow window)
+        {
+            if (isVisable && currentSprite != null)
+            {
+                currentSprite.Position = position;
+                currentSprite.TextureRect = spriteRect;
+                currentSprite.Scale = UIHelper.GetScale(currentSprite.TextureRect, boundingBox);
+                window.Draw(currentSprite);
+            }
+        }
+
+        /// <summary>
+        /// Updates the current entity
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
+        public abstract void Update(float elapsedSeconds);
     }
 }
