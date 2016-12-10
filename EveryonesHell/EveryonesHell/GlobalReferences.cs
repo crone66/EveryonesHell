@@ -16,5 +16,10 @@ namespace EveryonesHell
         public static Random Randomizer;
         public static GameSettings Settings;
         public static GameState State;
+        public static Game MainGame;
+
+        public static byte FlagCollision = 0x01;
+        public static byte FlagObjectInTile = 0x02;
+        public static byte FlagObjectCollisionCheck = 0x04;
     }
 }

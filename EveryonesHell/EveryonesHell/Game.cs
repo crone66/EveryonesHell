@@ -36,14 +36,48 @@ namespace EveryonesHell
             }
         }
 
-        public static DebugConsoleManager ConsoleManager;
+        private DebugConsoleManager consoleManager;
+        public DebugConsoleManager ConsoleManager
+        {
+            get
+            {
+                return consoleManager;
+            }
+        }
+
+        public uint WindowWidth
+        {
+            get
+            {
+                return windowWidth;
+            }
+
+            set
+            {
+                windowWidth = value;
+            }
+        }
+
+        public uint WindowHeight
+        {
+            get
+            {
+                return windowHeight;
+            }
+
+            set
+            {
+                windowHeight = value;
+            }
+        }
 
         /// <summary>
         /// Constructor of Game. Initzilizes RenderWindow and calls LoadContent
         /// </summary>
         public Game()
         {
-            window = new RenderWindow(new VideoMode(windowWidth, windowHeight), "test");
+            GlobalReferences.MainGame = this;
+            window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "test");
             view = window.GetView();
             view.Zoom(zoomFactor);
             window.SetView(view);
@@ -74,8 +108,8 @@ namespace EveryonesHell
             content = new ContentManager();
             Font font = content.Load<Font>(@"C:\Windows\Fonts\arial.ttf", "font");
             
-            ConsoleManager = new DebugConsoleManager(this, font);
-            window.TextEntered += ConsoleManager.TextEntered;
+            consoleManager = new DebugConsoleManager(this, font);
+            window.TextEntered += consoleManager.TextEntered;
             
             currentScene = new Scene(content, zoomFactor);
             currentScene.LoadContent();
@@ -89,7 +123,7 @@ namespace EveryonesHell
         private void Input(float elapsedSeconds)
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.BackSlash))
-                Game.ConsoleManager.DebugConsole.Open();
+                consoleManager.DebugConsole.Open();
 
             switch (GlobalReferences.State)
             {
@@ -111,7 +145,7 @@ namespace EveryonesHell
         /// <param name="elapsedSeconds"></param>
         private void Update(float elapsedSeconds)
         {
-            Game.ConsoleManager.Update(elapsedSeconds);
+            consoleManager.Update(elapsedSeconds);
             //Update something
             switch(GlobalReferences.State)
             {
@@ -134,6 +168,9 @@ namespace EveryonesHell
         /// <param name="elapsedSeconds"></param>
         private void Draw(float elapsedSeconds)
         {
+            windowWidth = Convert.ToUInt32(window.DefaultView.Size.X);
+            windowHeight = Convert.ToUInt32(window.DefaultView.Size.Y);
+
             window.Clear(Color.Blue);
             switch (GlobalReferences.State)
             {
@@ -149,7 +186,7 @@ namespace EveryonesHell
                 case GameState.Exit:
                     break;
             }
-            Game.ConsoleManager.Draw(window);
+            consoleManager.Draw(window);
             window.Display();
 
         }
