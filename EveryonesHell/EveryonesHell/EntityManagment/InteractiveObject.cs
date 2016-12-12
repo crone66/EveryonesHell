@@ -110,6 +110,8 @@ namespace EveryonesHell.EntityManagment
             protected set
             {
                 maxHealth = value;
+                if (health > maxHealth)
+                    health = maxHealth;
             }
         }
 
@@ -158,6 +160,7 @@ namespace EveryonesHell.EntityManagment
             this.viewDirection = viewDirection;
             Speed = speed;
             velocity = new Vector2f(0, 0);
+
         }
 
         /// <summary>
