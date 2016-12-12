@@ -85,6 +85,7 @@
     <Compile Include="EntityManagment\NPC.cs" />
     <Compile Include="EntityManagment\Player.cs" />
     <Compile Include="HUD\DialogSystem.cs" />
+    <Compile Include="HUD\Gaugebar.cs" />
     <Compile Include="HUD\QuestTrackerWindow.cs" />
     <Compile Include="MenuManagment\Menu.cs" />
     <Compile Include="MenuManagment\MenuManager.cs" />

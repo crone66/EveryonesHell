@@ -250,3 +250,4 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/EveryonesHell/EveryonesHell/EntityManagment/Healthbar.cs
