@@ -27,11 +27,14 @@ namespace EveryonesHell
         private QuestCollection quests;
 
         private Player player;
+        private EntityManagment.NPC TheMightyTester;
 
         //private Tile[] fieldsInView;
         private float elapsedTime;
         private int x = -657;
         private int y = -340; 
+        private int NPCx = -655;
+        private int NPCy = -338;
         private float zoomFactor;
 
         public TileMapManager MapManager
@@ -94,6 +97,18 @@ namespace EveryonesHell
                 player = value;
             }
         }
+        
+        public EntityManagment.NPC NPC
+        {
+            get
+            {
+                return NPC;
+            }
+            set
+            {
+                TheMightyTester = value;
+            }
+        }
 
         /// <summary>
         /// A Scene can be used as represantation of a level or menu
@@ -126,6 +141,7 @@ namespace EveryonesHell
             Sprite red = content.Load<Sprite, Texture>("-1", "Content/testRed.png");
             Sprite green = content.Load<Sprite, Texture>("0", "Content/testGreen.png");
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
+            //Sprite NPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
             Font font = content.GetValue<Font>("font");
             dialogs = content.Load<DialogCollection>("Content/testDialogs.xml");
 
@@ -136,10 +152,13 @@ namespace EveryonesHell
             sprites.Add(1, blue);
             sprites.Add(2, gray);
             sprites.Add(-1, red);
+            //sprites.Add(3, NPC);
 
             Player = new Player(y, x, new Vector2i(50, 50), red, dialog);
+            TheMightyTester = new EntityManagment.NPC(NPCy,NPCx, new Vector2i(50, 50), red, dialog);
             entities = new EntityManager();
             entities.Entities.Add(Player);
+            entities.Entities.Add(TheMightyTester);
         }
 
         /// <summary>
@@ -150,6 +169,7 @@ namespace EveryonesHell
         {
             entities.Update(elapsedSeconds);
             mapManager.Update(Player.TileRow, Player.TileColumn);
+            mapManager.Update(TheMightyTester.TileRow, TheMightyTester.TileColumn);
             //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));
         }
 
@@ -190,6 +210,11 @@ namespace EveryonesHell
                             if (Keyboard.IsKeyPressed(Keyboard.Key.F))
                             {
                                 Player.OnAction(this, null);
+                            }
+
+                            if (Keyboard.IsKeyPressed(Keyboard.Key.H))
+                            {
+                                Player.OnJetpack(this, null);
                             }
                             
                             if (direction.X != 0 || direction.Y != 0)

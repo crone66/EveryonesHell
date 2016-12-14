@@ -15,7 +15,7 @@ namespace EveryonesHell.EntityManagment
         private HUD.DialogSystem dialog;
 
         /// <summary>
-        /// Initzializes a new Player
+        /// Initializes a new Player - outdated
         /// </summary>
         /// <param name="position">Position of the player</param>
         /// <param name="size">Size of the player</param>
@@ -29,7 +29,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// Initzializes a new Player
+        /// Initializes a new Player
         /// </summary>
         /// <param name="tileRow">Tile row index</param>
         /// <param name="tileColumn">Tile column index</param>
@@ -120,7 +120,14 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e"></param>
         public void OnJetpack(object sender, ExecuteCommandArgs e)
         {
-
+            if (IsCollidable)
+            {
+                IsCollidable = false;
+            }
+            else
+            {
+                IsCollidable = true;
+            }
         }
 
         /// <summary>

@@ -8,5 +8,6 @@ namespace FileDescriptions
 {
     public struct NPC
     {
+
     }
 }

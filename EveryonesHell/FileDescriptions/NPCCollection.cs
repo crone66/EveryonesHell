@@ -8,5 +8,11 @@ namespace FileDescriptions
 {
     public struct NPCCollection
     {
+        public NPC[] NPCs;
+
+        public NPCCollection(NPC[] npcs)
+        {
+            NPCs = npcs;
+        }
     }
 }

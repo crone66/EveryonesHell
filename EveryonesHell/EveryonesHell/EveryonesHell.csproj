@@ -150,6 +150,7 @@
     <Content Include="Content\testRed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\TheMightyTester.png" />
     <Content Include="extlibs\sfmlnet-audio-2.dll" />
     <Content Include="extlibs\sfmlnet-graphics-2.dll" />
     <Content Include="extlibs\sfmlnet-system-2.dll" />
