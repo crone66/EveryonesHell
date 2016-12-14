@@ -141,7 +141,8 @@ namespace EveryonesHell
             Sprite red = content.Load<Sprite, Texture>("-1", "Content/testRed.png");
             Sprite green = content.Load<Sprite, Texture>("0", "Content/testGreen.png");
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
-            //Sprite NPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
+            Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
+            Sprite testPlayer = content.Load<Sprite, Texture>("4", "Content/Testplayer.png");
             Font font = content.GetValue<Font>("font");
             dialogs = content.Load<DialogCollection>("Content/testDialogs.xml");
 
@@ -152,10 +153,11 @@ namespace EveryonesHell
             sprites.Add(1, blue);
             sprites.Add(2, gray);
             sprites.Add(-1, red);
-            //sprites.Add(3, NPC);
+            sprites.Add(3, testNPC);
+            sprites.Add(4, testPlayer);
 
-            Player = new Player(y, x, new Vector2i(50, 50), red, dialog);
-            TheMightyTester = new EntityManagment.NPC(NPCy,NPCx, new Vector2i(50, 50), red, dialog);
+            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog);
+            TheMightyTester = new EntityManagment.NPC(NPCy,NPCx, new Vector2i(50, 50), testNPC, dialog);
             entities = new EntityManager();
             entities.Entities.Add(Player);
             entities.Entities.Add(TheMightyTester);
