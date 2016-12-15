@@ -13,7 +13,7 @@ namespace EveryonesHell.HUD
     /// <summary>
     /// 
     /// </summary>
-    public class DialogSystem
+    public class DialogSystem : HudElement
     {
         private const int padding = 10;
         private const int lineSpacing = 18;
@@ -79,7 +79,7 @@ namespace EveryonesHell.HUD
         /// <summary>
         /// Updates Dialogsystem
         /// </summary>
-        public void Update(float elapsedSeconds)
+        public override void Update(float elapsedSeconds)
         {
             if (isVisable)
             {
@@ -178,11 +178,10 @@ namespace EveryonesHell.HUD
         /// <summary>
         /// Draws Dialogsystem
         /// </summary>
-        public void Draw(RenderWindow window)
+        public override void Draw(RenderWindow window)
         {
             if(isVisable)
-            {
-                
+            {            
                 window.Draw(shape);
 
                 for (int i = 0; i < dialogLines.Length; i++)
@@ -219,6 +218,19 @@ namespace EveryonesHell.HUD
                 GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog ID: " + dialogId.ToString(), 255, 0, 0);
                 GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
             }
+        }
+
+        /// <summary>
+        /// Opens a dialog window
+        /// </summary>
+        /// <param name="dialogId">Indicates which dialog should be displayed</param>
+        /// <param name="position">Render position of dialog</param>
+        public void Open(int dialogId, Vector2f position)
+        {
+            Vector2f offset = new Vector2f((GlobalReferences.MainGame.WindowWidth / 2) - shape.Size.X, (GlobalReferences.MainGame.WindowHeight / 2) - shape.Size.Y);
+            this.position = position + offset;
+            shape.Position = position + offset;
+            Open(dialogId);
         }
 
         /// <summary>

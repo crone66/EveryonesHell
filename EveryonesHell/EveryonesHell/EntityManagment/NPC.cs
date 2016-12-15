@@ -12,14 +12,14 @@ namespace EveryonesHell.EntityManagment
     {
         private HUD.DialogSystem dialog;
 
-        public NPC(Vector2f position, Vector2i size, Sprite sprite)
-            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new SFML.System.Vector2f(1, 0), 1)
+        public NPC(Vector2f position, Vector2i size, Sprite sprite, Gaugebar healthBar)
+            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new SFML.System.Vector2f(1, 0), 1, healthBar)
         {
 
         }
 
-        public NPC(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620)
+        public NPC(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar)
         {
             this.dialog = dialog;
         }

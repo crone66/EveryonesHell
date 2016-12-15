@@ -25,6 +25,7 @@ namespace EveryonesHell.EntityManagment
         private Vector2f viewDirection;
         private float speed;
         private int groupID;
+        private Gaugebar healthBar;
 
         public event EventHandler OnSpawn;
         public event EventHandler OnMoved;
@@ -142,6 +143,39 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        internal Gaugebar Healthbar
+        {
+            get
+            {
+                return healthBar;
+            }
+
+            set
+            {
+                healthBar = value;
+            }
+        }
+
+        /// <summary>
+        /// Initzializes a new interactive object
+        /// </summary>
+        /// <param name="size">Size of the interactive object</param>
+        /// <param name="animations">Animations of the interactive object</param>
+        /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
+        /// <param name="viewDirection">Indicates the view direction of the object</param>
+        /// <param name="speed">Indicates the movement speed of the object</param>
+        public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed, Gaugebar healthBar)
+            : base(true, true, new Vector2f(0,0), size, animations.Sprite)
+        {
+            this.inventory = null;
+            this.animations = animations;
+            this.isMoveAble = isMoveAble;
+            this.viewDirection = new Vector2f(0, 0);
+            this.healthBar = healthBar;
+            Speed = speed;
+            velocity = new Vector2f(0, 0);
+        }
+
         public int GroupID
         {
             get
@@ -160,7 +194,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed)
+        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
             :base(true, true, position, size, animations.Sprite)
         {
             this.inventory = inventory;
@@ -169,8 +203,11 @@ namespace EveryonesHell.EntityManagment
             this.viewDirection = viewDirection;
             Speed = speed;
             velocity = new Vector2f(0, 0);
-
+            MaxHealth = 100;
+            Health = 50;
+            Healthbar = this.healthBar;
         }
+
 
         /// <summary>
         /// Initzializes a new interactive object
@@ -183,7 +220,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed)
+        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
             : base(true, true, tileRow, tileColumn, size, animations.Sprite)
         {
             this.inventory = inventory;
@@ -192,6 +229,9 @@ namespace EveryonesHell.EntityManagment
             this.viewDirection = viewDirection;
             Speed = speed;
             velocity = new Vector2f(0, 0);
+            MaxHealth = 100;
+            Health = 50;
+            this.healthBar = healthBar;
         }
 
         /// <summary>
@@ -206,6 +246,11 @@ namespace EveryonesHell.EntityManagment
                 Move(elapsedSeconds);
             }
             Velocity = new Vector2f(0, 0);
+
+            if(Healthbar != null)
+            {
+                Healthbar.Update(Position);
+            }
         }
 
         /// <summary>
@@ -343,6 +388,15 @@ namespace EveryonesHell.EntityManagment
         public override void Draw(RenderWindow window)
         {
             base.Draw(window);
+            if(Healthbar != null)
+            {
+                Healthbar.Draw(window);
+            }
+        }
+
+        public override Entity Clone()
+        {
+            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, healthBar.Clone(healthBar.IsFixed));
         }
     }
 }

@@ -108,5 +108,10 @@ namespace EveryonesHell
         {
             window.Draw(Sprite);
         }
+
+        public AnimationManager Clone()
+        {
+            return new AnimationManager(sprite, countX, countY, width, height, frameTime);
+        }
     }
 }

@@ -96,7 +96,7 @@ namespace EveryonesHell.EntityManagment
                 return position;
             }
 
-            protected set
+            set
             {
                 position = value;
                 boundingBox = new IntRect(Convert.ToInt32(position.X), Convert.ToInt32(position.Y), size.X, size.Y);
@@ -351,5 +351,8 @@ namespace EveryonesHell.EntityManagment
         /// </summary>
         /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public abstract void Update(float elapsedSeconds);
+
+        public abstract Entity Clone();
+
     }
 }
