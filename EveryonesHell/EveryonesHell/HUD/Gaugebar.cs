@@ -1,5 +1,5 @@
 ﻿/* 
- * Purpose: Implements a Gaugebar for flexible use
+ * Purpose: Implements a Gaugebar
  * Author: Fabian Subat
  * Date: 10.12.2016
  */
@@ -17,19 +17,20 @@ namespace EveryonesHell
 {
     class Gaugebar
     {
-        Sprite gaugeBarBorder = new Sprite(new Texture(@"../../Resources/healthbarborder.png"));
-        Sprite healthbarimage = new Sprite(new Texture(@"../../Resources/healthbar.png"));
-        Sprite gaugebar = new Sprite(new Texture(@"../../Resources/gaugebar.png"));
+        Sprite gaugebarBorder;
+        Sprite gaugebar;
         public Vector2f OverallGaugeBarSize;
         public int maxValue;
         public int currentValue;
         public float gaugePercent;
         private float elapsedTime;
 
-        public Gaugebar(int currentvalue, int maxvalue, Vector2f gaugebarposition, Vector2f overallsize, Color gaugecolor)
+        public Gaugebar(int currentvalue, int maxvalue, Vector2f gaugebarposition, Sprite gaugeBar, Sprite gaugeBarBorder, Vector2f overallsize, Color gaugecolor)
         {
             currentValue = currentvalue;
             maxValue = maxvalue;
+            gaugebar = gaugeBar;
+            gaugebarBorder = gaugeBarBorder;
             gaugebar.Position = gaugebarposition;
             gaugeBarBorder.Position = gaugebarposition;
             OverallGaugeBarSize = overallsize;
@@ -39,55 +40,55 @@ namespace EveryonesHell
         }
 
         /// <summary>
-        ///Calculates the health% to scale the lifebar. Should be called in Dmg/Heal Func. 
+        /// Calculates the percentage Value for the gaugebar
         /// </summary>
-        /// <param name="currentHealth"></param>
-        /// <param name="maxHealth"></param>
+        /// <param name="currentValue"></param>
+        /// <param name="maxValue"></param>
         /// <returns></returns>
-        public float calculateHealthPercent(float currentHealth, float maxHealth)
+        public float calculateHealthPercent(float currentValue, float maxValue)
         {
-            gaugePercent = currentHealth / maxHealth;
+            gaugePercent = currentValue / maxValue;
             return gaugePercent;
         }
 
 
-        public void Input(float elapsedSeconds)
-        {
-            elapsedTime -= elapsedSeconds;
-            if (elapsedTime <= 0f)
-            {
-                elapsedTime = 0.05f;
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Add) && currentValue < maxValue)
-                {
-                    currentValue++;
-                    Console.WriteLine("currentHealth: {0}", currentValue);
-                }
+        //public void Input(float elapsedSeconds)
+        //{
+        //    elapsedTime -= elapsedSeconds;
+        //    if (elapsedTime <= 0f)
+        //    {
+        //        elapsedTime = 0.05f;
+        //        if (Keyboard.IsKeyPressed(Keyboard.Key.Add) && currentValue < maxValue)
+        //        {
+        //            currentValue++;
+        //            Console.WriteLine("currentHealth: {0}", currentValue);
+        //        }
 
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Subtract) && currentValue > 0)
-                {
-                    currentValue--;
-                    Console.WriteLine("currentHealth: {0}", currentValue);
-                }
-            }
-        }
+        //        if (Keyboard.IsKeyPressed(Keyboard.Key.Subtract) && currentValue > 0)
+        //        {
+        //            currentValue--;
+        //            Console.WriteLine("currentHealth: {0}", currentValue);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Updates the healthbar
         /// </summary>
-        /// <param name="window"></param>
-        public void Update(RenderWindow window)
+        public void Update(Vector2f position)
         {
+            gaugebar.Position = position;
+            gaugebarBorder.Position = position;
             calculateHealthPercent(currentValue, maxValue);
             if (OverallGaugeBarSize != null)
             {
-                //healthbarimage.Scale = new Vector2f(OverallHealthBarSize.X * healthPercent, OverallHealthBarSize.Y);
                 gaugebar.Scale = new Vector2f(OverallGaugeBarSize.X * gaugePercent, OverallGaugeBarSize.Y);
             } 
             else
             {
-                //healthbarimage.Scale = new Vector2f(healthPercent, 1.0f);
                 gaugebar.Scale = new Vector2f(gaugePercent, 1.0f);
             }
+            
 
         }
 
@@ -98,7 +99,7 @@ namespace EveryonesHell
         public void Draw(RenderWindow window)
         {
             window.Draw(gaugebar);
-            window.Draw(gaugeBarBorder);
+            window.Draw(gaugebarBorder);
         }
     }
 }

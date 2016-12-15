@@ -11,24 +11,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SFML.System;
+using DebugConsole;
 
 namespace EveryonesHell.HUD
 {
     class QuestTrackerWindow
     {
         private RectangleShape background;
-        private int width = 650;
-        private int height = 400;
         private RectangleShape nameBackground;
-        private int nameWidth = 250;
+        private int width, height, nameWidth, lineSpacing;
         private Text text;
         private InventorySystem.Inventory inventory = new InventorySystem.Inventory();
         private QuestManagment.QuestTracker questTracker;
         private Font font;
-        private Vector2f position = new Vector2f(75, 200);
+        private Vector2f position;
         private uint characterSizeNames, characterSizeInformation;
-        private int lineSpacing;
-        
+        private bool isVisible;
+
         /// <summary>
         /// initialze questtrackerwindow
         /// </summary>
@@ -37,22 +36,39 @@ namespace EveryonesHell.HUD
         {
             questTracker = new QuestManagment.QuestTracker(inventory, null);
 
+            position = new Vector2f(-653, -340);
+
             background = new RectangleShape(new Vector2f(width, height));
-            background.FillColor = new Color(0, 0, 0, 128);
-            background.OutlineColor = new Color(0, 0, 0, 200);
+            background.FillColor = new SFML.Graphics.Color(0, 0, 0, 128);
+            background.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 200);
             background.Position = position;
 
             nameBackground = new RectangleShape(new Vector2f(nameWidth, height));
-            nameBackground.FillColor = new Color(0, 0, 0, 50);
-            nameBackground.OutlineColor = new Color(0, 0, 0, 100);
+            nameBackground.FillColor = new SFML.Graphics.Color(0, 0, 0, 50);
+            nameBackground.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 100);
+            nameBackground.Position = position;
+
+            width = 650;
+            height = 400;
+            nameWidth = 250;
 
             this.font = font;
             text = new Text("", font, 16);
-            text.Color = new Color(250, 250, 250);
+            text.Color = new SFML.Graphics.Color(250, 250, 250);
 
             characterSizeNames = 16;
             characterSizeInformation = 13;
             lineSpacing = 12;
+
+            isVisible = false;
+        }
+
+        public void UpdatePosition(EntityManagment.Player player)
+        {
+            position = player.Position;
+
+            background.Position = position;
+            nameBackground.Position = position;
         }
 
         /// <summary>
@@ -61,11 +77,14 @@ namespace EveryonesHell.HUD
         /// <param name="window">window where everything is drawn</param>
         public void Draw(RenderWindow window)
         {
-            window.Draw(background);
-            window.Draw(nameBackground);
+            if (isVisible)
+            {
+                window.Draw(background);
+                window.Draw(nameBackground);
 
-            DrawQuestnames(window);
-            DrawQuests(window);
+                DrawQuestnames(window);
+                DrawQuests(window);
+            }
         }
 
         /// <summary>
@@ -130,6 +149,11 @@ namespace EveryonesHell.HUD
                 text = new Text(questTracker.activeQuests[i].Description, font, characterSizeInformation);
                 window.Draw(text);
             }
+        }
+
+        public void OnQuestWindow(object sender, ExecuteCommandArgs e)
+        {
+            isVisible = !isVisible;
         }
     }
 }
