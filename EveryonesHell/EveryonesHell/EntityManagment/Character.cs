@@ -16,13 +16,13 @@ namespace EveryonesHell.EntityManagment
 {
     public class Character : InteractiveObject
     {
-        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed)
-            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed)
+        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Sprite gaugeBar, Sprite gaugeBarBorder)
+            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, gaugeBar, gaugeBarBorder)
         {
         }
 
-        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed)
-            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed)
+        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Sprite gaugeBar, Sprite gaugeBarBorder)
+            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, gaugeBar, gaugeBarBorder)
         {
         }
 
