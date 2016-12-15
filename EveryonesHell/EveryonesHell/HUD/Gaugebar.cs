@@ -15,28 +15,55 @@ using System.Threading.Tasks;
 
 namespace EveryonesHell
 {
-    class Gaugebar
+    public class Gaugebar : HUD.HudElement
     {
-        Sprite gaugebarBorder;
-        Sprite gaugebar;
-        public Vector2f OverallGaugeBarSize;
-        public int maxValue;
-        public int currentValue;
-        public float gaugePercent;
-        private float elapsedTime;
+        private Sprite gaugebarBorder;
+        private Sprite gaugebar;
+        private Vector2f OverallGaugeBarSize;
+        private Vector2f position;
+        private Color color;
+        private int maxValue;
+        private int currentValue;
+        private float gaugePercent;
+        private Vector2f scale;
+        private bool isFixed;
 
-        public Gaugebar(int currentvalue, int maxvalue, Vector2f gaugebarposition, Sprite gaugeBar, Sprite gaugeBarBorder, Vector2f overallsize, Color gaugecolor)
+        public bool IsFixed
+        {
+            get
+            {
+                return isFixed;
+            }
+        }
+
+        public Gaugebar(int currentvalue, int maxvalue, Vector2f gaugebarPosition, Sprite gaugeBar, Sprite gaugeBarBorder, Vector2f overallSize, Color gaugeColor, bool isFixed)
         {
             currentValue = currentvalue;
             maxValue = maxvalue;
             gaugebar = gaugeBar;
             gaugebarBorder = gaugeBarBorder;
-            gaugebar.Position = gaugebarposition;
-            gaugeBarBorder.Position = gaugebarposition;
-            OverallGaugeBarSize = overallsize;
-            gaugebar.Scale = overallsize;
-            gaugeBarBorder.Scale = overallsize;
-            gaugebar.Color = gaugecolor;
+            position = gaugebarPosition;
+            color = gaugeColor;
+            OverallGaugeBarSize = overallSize;
+            scale = OverallGaugeBarSize;
+            this.isFixed = isFixed;
+            GlobalReferences.MainGame.CurrentScene.HudManager.RegistHud(this, isFixed);
+        }
+
+        public void Init(int currentValue, int maxValue, Vector2f newPosition, Vector2f overallSize)
+        {
+            this.currentValue = currentValue;
+            this.maxValue = maxValue;
+            position = newPosition;
+            OverallGaugeBarSize = overallSize;
+            scale = OverallGaugeBarSize;
+        }
+
+        public void Init(int currentValue, int maxValue)
+        {
+            this.currentValue = currentValue;
+            this.maxValue = maxValue;
+            scale = OverallGaugeBarSize;
         }
 
         /// <summary>
@@ -45,61 +72,51 @@ namespace EveryonesHell
         /// <param name="currentValue"></param>
         /// <param name="maxValue"></param>
         /// <returns></returns>
-        public float calculateHealthPercent(float currentValue, float maxValue)
+        private float calculateHealthPercent(float currentValue, float maxValue)
         {
             gaugePercent = currentValue / maxValue;
             return gaugePercent;
         }
 
-
-        //public void Input(float elapsedSeconds)
-        //{
-        //    elapsedTime -= elapsedSeconds;
-        //    if (elapsedTime <= 0f)
-        //    {
-        //        elapsedTime = 0.05f;
-        //        if (Keyboard.IsKeyPressed(Keyboard.Key.Add) && currentValue < maxValue)
-        //        {
-        //            currentValue++;
-        //            Console.WriteLine("currentHealth: {0}", currentValue);
-        //        }
-
-        //        if (Keyboard.IsKeyPressed(Keyboard.Key.Subtract) && currentValue > 0)
-        //        {
-        //            currentValue--;
-        //            Console.WriteLine("currentHealth: {0}", currentValue);
-        //        }
-        //    }
-        //}
-
+        public override void Update(float elapsedSeconds)
+        {
+            
+        }
         /// <summary>
         /// Updates the healthbar
         /// </summary>
         public void Update(Vector2f position)
         {
-            gaugebar.Position = position;
-            gaugebarBorder.Position = position;
             calculateHealthPercent(currentValue, maxValue);
             if (OverallGaugeBarSize != null)
             {
-                gaugebar.Scale = new Vector2f(OverallGaugeBarSize.X * gaugePercent, OverallGaugeBarSize.Y);
+                scale = new Vector2f(OverallGaugeBarSize.X * gaugePercent, OverallGaugeBarSize.Y);
             } 
             else
             {
-                gaugebar.Scale = new Vector2f(gaugePercent, 1.0f);
-            }
-            
-
+                scale = new Vector2f(gaugePercent, 1.0f);
+            }           
         }
 
         /// <summary>
         /// Draws the Healthbar and the border
         /// </summary>
         /// <param name="window"></param>
-        public void Draw(RenderWindow window)
+        public override void Draw(RenderWindow window)
         {
+            gaugebar.Position = position;
+            gaugebarBorder.Position = position;
+            gaugebar.Scale = scale;
+            gaugebar.Color = color;
+
             window.Draw(gaugebar);
             window.Draw(gaugebarBorder);
+
+        }
+
+        public Gaugebar Clone(bool isFixed)
+        {
+            return new Gaugebar(currentValue, maxValue, position, gaugebar, gaugebarBorder, OverallGaugeBarSize, color, isFixed);
         }
     }
 }

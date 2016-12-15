@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TileMapSystem;
 using FileDescriptions;
 using EveryonesHell.EntityManagment;
+using EveryonesHell.HUD;
 
 namespace EveryonesHell
 {
@@ -115,6 +116,19 @@ namespace EveryonesHell
             }
         }
 
+        public HudManager HudManager
+        {
+            get
+            {
+                return hudManager;
+            }
+
+            set
+            {
+                hudManager = value;
+            }
+        }
+
         /// <summary>
         /// A Scene can be used as represantation of a level or menu
         /// </summary>
@@ -136,7 +150,7 @@ namespace EveryonesHell
             mapManager.GridGenerationIsSlow += MapManager_GridGenerationIsSlow;
             mapManager.Changelevel(Settings, areaSpreads, x, y, false);
 
-            hudManager = new HUD.HudManager();
+            HudManager = new HUD.HudManager();
         }
 
         /// <summary>
@@ -158,7 +172,7 @@ namespace EveryonesHell
             //Sprites for the Gaugebar
             Sprite gaugebar = content.Load<Sprite, Texture>("5", "Content/gaugebar.png");
             Sprite gaugebarborder = content.Load<Sprite, Texture>("6", "Content/gaugebarborder.png");
-            Sprite fireBall = content.Load<Sprite, Texture>("5", "Content/fireBall.png");
+            Sprite fireBall = content.Load<Sprite, Texture>("7", "Content/fireBall.png");
 
             Font font = content.GetValue<Font>("font");
             dialogs = content.Load<DialogCollection>("Content/testDialogs.xml");
@@ -175,12 +189,14 @@ namespace EveryonesHell
             sprites.Add(5, gaugebar);
             sprites.Add(6, gaugebarborder);
 
-            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, gaugebar, gaugebarborder);
-            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, dialog, gaugebar, gaugebarborder);
-            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, dialog, gaugebar, gaugebarborder);
+            Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
+
+            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, healthBar);
+            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, dialog, healthBar.Clone(false));
+            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, dialog, healthBar.Clone(false));
 
 
-            hudManager.RegistHud(dialog, true);
+            HudManager.RegistHud(dialog, true);
             entities = new EntityManager();
             entities.Entities.Add(Player);
             entities.Entities.Add(TheMightyTester);
@@ -189,7 +205,7 @@ namespace EveryonesHell
             questTrackerWindow = new HUD.QuestTrackerWindow(font);
 
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
-            EntityFactory.AddPrototype("Bullet", new InteractiveObject(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1));
+            EntityFactory.AddPrototype("Bullet", new InteractiveObject(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1, null));
         }
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
@@ -323,8 +339,8 @@ namespace EveryonesHell
             }
 
             entities.Draw(window);
-            hudManager.Draw(window);
-            hudManager.DrawFixed(window, zoomFactor);
+            HudManager.Draw(window);
+            HudManager.DrawFixed(window, zoomFactor);
             questTrackerWindow.Draw(window);
         }      
 

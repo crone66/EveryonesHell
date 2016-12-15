@@ -22,8 +22,8 @@ namespace EveryonesHell.EntityManagment
         /// <param name="size">Size of the player</param>
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
-        public Player(Vector2f position, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Sprite gaugeBar, Sprite gaugeBarBorder)
-            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, gaugeBar, gaugeBarBorder)
+        public Player(Vector2f position, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar)
+            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar)
         {
             lastDirection = new Vector2i(0, 0);
             this.dialog = dialog;
@@ -37,8 +37,8 @@ namespace EveryonesHell.EntityManagment
         /// <param name="size">Size of the player</param>
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
-        public Player(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Sprite gaugeBar, Sprite gaugeBarBorder)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, gaugeBar, gaugeBarBorder)
+        public Player(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar)
         {
             lastDirection = new Vector2i(0, 0);
             this.dialog = dialog;

@@ -24,7 +24,7 @@ namespace EveryonesHell.EntityManagment
         private Vector2f velocity;
         private Vector2f viewDirection;
         private float speed;
-        private Gaugebar healthbar;
+        private Gaugebar healthBar;
 
         public event EventHandler OnSpawn;
         public event EventHandler OnMoved;
@@ -146,12 +146,12 @@ namespace EveryonesHell.EntityManagment
         {
             get
             {
-                return healthbar;
+                return healthBar;
             }
 
             set
             {
-                healthbar = value;
+                healthBar = value;
             }
         }
 
@@ -163,13 +163,14 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed)
+        public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed, Gaugebar healthBar)
             : base(true, true, new Vector2f(0,0), size, animations.Sprite)
         {
             this.inventory = null;
             this.animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = new Vector2f(0, 0);
+            this.healthBar = healthBar;
             Speed = speed;
             velocity = new Vector2f(0, 0);
         }
@@ -184,7 +185,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Sprite gaugeBar, Sprite gaugeBarBorder)
+        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
             :base(true, true, position, size, animations.Sprite)
         {
             this.inventory = inventory;
@@ -195,7 +196,7 @@ namespace EveryonesHell.EntityManagment
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
             Health = 50;
-            Healthbar = new Gaugebar(Health, MaxHealth, Position, gaugeBar, gaugeBarBorder, new Vector2f(1.0f, 1.0f), Color.Red);
+            Healthbar = this.healthBar;
         }
 
 
@@ -210,7 +211,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Sprite gaugeBar, Sprite gaugeBarBorder)
+        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
             : base(true, true, tileRow, tileColumn, size, animations.Sprite)
         {
             this.inventory = inventory;
@@ -221,7 +222,7 @@ namespace EveryonesHell.EntityManagment
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
             Health = 50;
-            Healthbar = new Gaugebar(Health, MaxHealth, Position, gaugeBar, gaugeBarBorder, new Vector2f(1.0f, 1.0f), Color.Red);
+            this.healthBar = healthBar;
         }
 
         /// <summary>
@@ -386,7 +387,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed);
+            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, healthBar.Clone(healthBar.IsFixed));
         }
     }
 }
