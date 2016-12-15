@@ -19,6 +19,7 @@ namespace EveryonesHell
         private AreaSpread[] areaSpreads;
 
         private ContentManager content;
+        private HUD.HudManager hudManager;
         private Dictionary<int, Sprite> sprites;
 
         private EntityManager entities;
@@ -130,6 +131,8 @@ namespace EveryonesHell
             mapManager.GridChangeRequested += MapManager_GridChangeRequested;
             mapManager.GridGenerationIsSlow += MapManager_GridGenerationIsSlow;
             mapManager.Changelevel(Settings, areaSpreads, x, y, false);
+
+            hudManager = new HUD.HudManager();
         }
 
         /// <summary>
@@ -143,6 +146,7 @@ namespace EveryonesHell
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
             Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
             Sprite testPlayer = content.Load<Sprite, Texture>("4", "Content/Testplayer.png");
+            Sprite fireBall = content.Load<Sprite, Texture>("5", "Content/fireBall.png");
             Font font = content.GetValue<Font>("font");
             dialogs = content.Load<DialogCollection>("Content/testDialogs.xml");
 
@@ -155,12 +159,21 @@ namespace EveryonesHell
             sprites.Add(-1, red);
             sprites.Add(3, testNPC);
             sprites.Add(4, testPlayer);
-
+            
+            hudManager.RegistHud(dialog, true);
             Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog);
             TheMightyTester = new EntityManagment.NPC(NPCy,NPCx, new Vector2i(50, 50), testNPC, dialog);
             entities = new EntityManager();
             entities.Entities.Add(Player);
             entities.Entities.Add(TheMightyTester);
+
+            EntityFactory.EntityCreated += EntityFactory_EntityCreated;
+            EntityFactory.AddPrototype("Bullet", new InteractiveObject(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1));
+        }
+
+        private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
+        {
+            entities.Entities.Add(e.CreatedEntity);
         }
 
         /// <summary>
@@ -212,6 +225,11 @@ namespace EveryonesHell
                             if (Keyboard.IsKeyPressed(Keyboard.Key.F))
                             {
                                 Player.OnAction(this, null);
+                            }
+
+                            if(Keyboard.IsKeyPressed(Keyboard.Key.E))
+                            {
+                                Player.OnAttack(this, null);
                             }
 
                             if (Keyboard.IsKeyPressed(Keyboard.Key.H))
@@ -278,6 +296,8 @@ namespace EveryonesHell
             }
 
             entities.Draw(window);
+            hudManager.Draw(window);
+            hudManager.DrawFixed(window, zoomFactor);
         }      
 
         /// <summary>
