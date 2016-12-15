@@ -28,7 +28,8 @@ namespace EveryonesHell
 
         private Player player;
         private EntityManagment.NPC TheMightyTester;
-        private EntityManagment.NPC TheEvilTester;
+
+        private HUD.QuestTrackerWindow questTrackerWindow;
 
         //private Tile[] fieldsInView;
         private float elapsedTime;
@@ -138,20 +139,12 @@ namespace EveryonesHell
         /// </summary>
         public void LoadContent()
         { 
-            //Sprites for the Map
             Sprite blue = content.Load<Sprite, Texture>("1", "Content/testBlue.png");
             Sprite red = content.Load<Sprite, Texture>("-1", "Content/testRed.png");
             Sprite green = content.Load<Sprite, Texture>("0", "Content/testGreen.png");
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
-
-            //Sprites for the NPC's
             Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
             Sprite testPlayer = content.Load<Sprite, Texture>("4", "Content/Testplayer.png");
-
-            //Sprites for the Gaugebar
-            Sprite gaugebar = content.Load<Sprite, Texture>("5", "Content/gaugebar.png");
-            Sprite gaugebarborder = content.Load<Sprite, Texture>("6", "Content/gaugebarborder.png");
-
             Font font = content.GetValue<Font>("font");
             dialogs = content.Load<DialogCollection>("Content/testDialogs.xml");
 
@@ -164,17 +157,14 @@ namespace EveryonesHell
             sprites.Add(-1, red);
             sprites.Add(3, testNPC);
             sprites.Add(4, testPlayer);
-            sprites.Add(5, gaugebar);
-            sprites.Add(6, gaugebarborder);
 
-            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, gaugebar, gaugebarborder);
-            TheMightyTester = new EntityManagment.NPC(NPCy,NPCx, new Vector2i(50, 50), testNPC, dialog, gaugebar, gaugebarborder);
-            TheEvilTester = new EntityManagment.NPC(NPCy-10, NPCx-10, new Vector2i(50, 50), red, dialog, gaugebar, gaugebarborder); 
-
+            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog);
+            TheMightyTester = new EntityManagment.NPC(NPCy,NPCx, new Vector2i(50, 50), testNPC, dialog);
             entities = new EntityManager();
             entities.Entities.Add(Player);
             entities.Entities.Add(TheMightyTester);
-            entities.Entities.Add(TheEvilTester);
+
+            questTrackerWindow = new HUD.QuestTrackerWindow(font);
         }
 
         /// <summary>
@@ -187,6 +177,7 @@ namespace EveryonesHell
             mapManager.Update(Player.TileRow, Player.TileColumn);
             mapManager.Update(TheMightyTester.TileRow, TheMightyTester.TileColumn);
             //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));
+            questTrackerWindow.UpdatePosition(player);
         }
 
         /// <summary>
@@ -231,6 +222,11 @@ namespace EveryonesHell
                             if (Keyboard.IsKeyPressed(Keyboard.Key.H))
                             {
                                 Player.OnJetpack(this, null);
+                            }
+
+                            if (Keyboard.IsKeyPressed(Keyboard.Key.Q))
+                            {
+                                questTrackerWindow.OnQuestWindow(this, null);
                             }
                             
                             if (direction.X != 0 || direction.Y != 0)
@@ -290,7 +286,10 @@ namespace EveryonesHell
                     window.Draw(sprite);
                 }
             }
+
             entities.Draw(window);
+
+            questTrackerWindow.Draw(window);
         }      
 
         /// <summary>
