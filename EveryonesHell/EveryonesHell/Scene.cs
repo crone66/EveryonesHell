@@ -29,6 +29,8 @@ namespace EveryonesHell
         private Player player;
         private EntityManagment.NPC TheMightyTester;
 
+        private HUD.QuestTrackerWindow questTrackerWindow;
+
         //private Tile[] fieldsInView;
         private float elapsedTime;
         private int x = -657;
@@ -161,6 +163,8 @@ namespace EveryonesHell
             entities = new EntityManager();
             entities.Entities.Add(Player);
             entities.Entities.Add(TheMightyTester);
+
+            questTrackerWindow = new HUD.QuestTrackerWindow(font);
         }
 
         /// <summary>
@@ -173,6 +177,7 @@ namespace EveryonesHell
             mapManager.Update(Player.TileRow, Player.TileColumn);
             mapManager.Update(TheMightyTester.TileRow, TheMightyTester.TileColumn);
             //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));
+            questTrackerWindow.UpdatePosition(player);
         }
 
         /// <summary>
@@ -217,6 +222,11 @@ namespace EveryonesHell
                             if (Keyboard.IsKeyPressed(Keyboard.Key.H))
                             {
                                 Player.OnJetpack(this, null);
+                            }
+
+                            if (Keyboard.IsKeyPressed(Keyboard.Key.Q))
+                            {
+                                questTrackerWindow.OnQuestWindow(this, null);
                             }
                             
                             if (direction.X != 0 || direction.Y != 0)
@@ -278,6 +288,8 @@ namespace EveryonesHell
             }
 
             entities.Draw(window);
+
+            questTrackerWindow.Draw(window);
         }      
 
         /// <summary>
