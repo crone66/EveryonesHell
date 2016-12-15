@@ -69,24 +69,11 @@ namespace EveryonesHell.EntityManagment
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Command arguments</param>
-        public void OnMove(object sender, ExecuteCommandArgs e)
+        public override void OnMove(object sender, ExecuteCommandArgs e)
         {
             if (!dialog.IsVisable)
             {
-                if (ValidateArgs<Vector2i>(e.Args, 0))
-                {
-                    Vector2i direction = (Vector2i)e.Args[0];
-                    if (direction != lastDirection)
-                    {
-                        if (lastDirection.X != direction.X)
-                            direction.Y = 0;
-                        else
-                            direction.X = 0;
-                    }
-
-                    Velocity = new Vector2f(direction.X * Speed, direction.Y * Speed);
-                    lastDirection = direction;
-                }
+                base.OnMove(sender, e);
             }
         }
 
@@ -97,22 +84,12 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Command arguments</param>
         public void OnAction(object sender, ExecuteCommandArgs e)
         {
-            dialog.Open(0);
+            dialog.Open(0);//, Position + (new Vector2f(Size.X / 2, Size.Y / 2)));
             //TODO: Action tile location
             // => Get object on action tile
             // => if object exists Execute Action 
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void OnAttack(object sender, ExecuteCommandArgs e)
-        {
-
-        }
-
+    
         /// <summary>
         /// 
         /// </summary>
@@ -128,18 +105,6 @@ namespace EveryonesHell.EntityManagment
             {
                 IsCollidable = true;
             }
-        }
-
-        /// <summary>
-        /// Validates command args
-        /// </summary>
-        /// <typeparam name="T">Expected argument type</typeparam>
-        /// <param name="args">Array of arguments</param>
-        /// <param name="index">Array index</param>
-        /// <returns>Returns true when Argument equals the expected type</returns>
-        private bool ValidateArgs<T>(object[] args, int index)
-        {
-            return (args != null && args.Length > index && args[index] is T);
         }
     }
 }

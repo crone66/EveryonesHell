@@ -144,6 +144,25 @@ namespace EveryonesHell.EntityManagment
         /// <summary>
         /// Initzializes a new interactive object
         /// </summary>
+        /// <param name="size">Size of the interactive object</param>
+        /// <param name="animations">Animations of the interactive object</param>
+        /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
+        /// <param name="viewDirection">Indicates the view direction of the object</param>
+        /// <param name="speed">Indicates the movement speed of the object</param>
+        public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed)
+            : base(true, true, new Vector2f(0,0), size, animations.Sprite)
+        {
+            this.inventory = null;
+            this.animations = animations;
+            this.isMoveAble = isMoveAble;
+            this.viewDirection = new Vector2f(0, 0);
+            Speed = speed;
+            velocity = new Vector2f(0, 0);
+        }
+
+        /// <summary>
+        /// Initzializes a new interactive object
+        /// </summary>
         /// <param name="position">Spawn position of the object</param>
         /// <param name="size">Size of the interactive object</param>
         /// <param name="inventory">Inventory of the interactive object</param>
@@ -160,7 +179,6 @@ namespace EveryonesHell.EntityManagment
             this.viewDirection = viewDirection;
             Speed = speed;
             velocity = new Vector2f(0, 0);
-
         }
 
         /// <summary>
@@ -334,6 +352,11 @@ namespace EveryonesHell.EntityManagment
         public override void Draw(RenderWindow window)
         {
             base.Draw(window);
+        }
+
+        public override Entity Clone()
+        {
+            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed);
         }
     }
 }
