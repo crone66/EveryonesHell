@@ -24,6 +24,7 @@ namespace EveryonesHell.EntityManagment
         private Vector2f velocity;
         private Vector2f viewDirection;
         private float speed;
+        private int groupID;
 
         public event EventHandler OnSpawn;
         public event EventHandler OnMoved;
@@ -138,6 +139,14 @@ namespace EveryonesHell.EntityManagment
             protected set
             {
                 speed = value;
+            }
+        }
+
+        public int GroupID
+        {
+            get
+            {
+                return groupID;
             }
         }
 
