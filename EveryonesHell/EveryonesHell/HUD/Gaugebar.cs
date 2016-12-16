@@ -85,8 +85,10 @@ namespace EveryonesHell
         /// <summary>
         /// Updates the healthbar
         /// </summary>
-        public void Update(Vector2f position)
+        public void Update(Vector2f position, int currentValue, int maxValue)
         {
+            this.currentValue = currentValue;
+            this.maxValue = maxValue;
             calculateHealthPercent(currentValue, maxValue);
             if (OverallGaugeBarSize != null)
             {

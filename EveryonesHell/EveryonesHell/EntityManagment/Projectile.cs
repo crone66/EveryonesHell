@@ -25,7 +25,6 @@ namespace EveryonesHell.EntityManagment
         public Projectile(Vector2i size, AnimationManager animation, bool isMoveAble, float speed):
             base(size, animation, isMoveAble, speed, null)
         {
-            OnCollision += InteractiveObject_OnCollision;
         }
 
         protected override void InteractiveObject_OnCollision(object sender, CollisionArgs e)
@@ -42,8 +41,9 @@ namespace EveryonesHell.EntityManagment
                 {
                     InteractiveObject interactiveObject = otherObject as InteractiveObject;
                     int newHealth = interactiveObject.ChangeHealth(damage * -1, this);
-
-                    OnDoDamage?.Invoke(this, new VictimArgs(interactiveObject, damage, newHealth <= 0));                                        
+                    OnDoDamage?.Invoke(this, new VictimArgs(interactiveObject, damage, newHealth <= 0));
+                    OnCollision -= InteractiveObject_OnCollision;
+                    CallOnDestroyEvent();
                 }
                 //Do something with other object... otherwise just destroy projectile
                 //otherObject

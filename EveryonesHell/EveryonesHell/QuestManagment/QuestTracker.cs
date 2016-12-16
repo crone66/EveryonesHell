@@ -96,15 +96,7 @@ namespace EveryonesHell.QuestManagment
         /// <param name="quest">ID of the quest</param>
         private void EnemyQuest(int quest, EntityManagment.EntityManager entityManager)
         {
-            for (int i = 0; i < entityManager.Entities.Count; i++)
-            {
-                if (entityManager.Entities[i] is EntityManagment.InteractiveObject)
-                {
-                    EntityManagment.InteractiveObject npc = entityManager.Entities[i] as EntityManagment.InteractiveObject;
-
-                    
-                }
-            }
+           
         }
     }
 }

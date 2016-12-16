@@ -292,7 +292,7 @@ namespace EveryonesHell.EntityManagment
 
             if(Healthbar != null)
             {
-                Healthbar.Update(Position);
+                Healthbar.Update(Position, health, maxHealth);
             }
         }
 
@@ -354,7 +354,7 @@ namespace EveryonesHell.EntityManagment
             else if (objectCollision)
             {
                 Vector2f backwardVec = new Vector2f(0, 0);
-                Entity[] collidableEntities = GlobalReferences.MainGame.CurrentScene.Entities.Entities.Where(ent => ent.IsCollidable && ent != this && ent.OverlappingTiles.Contains(tileInfo)).ToArray();
+                Entity[] collidableEntities = GlobalReferences.MainGame.CurrentScene.Entities.GetEntities().Where(ent => ent.IsCollidable && ent != this && ent.OverlappingTiles.Contains(tileInfo)).ToArray();
                 foreach (Entity ent in collidableEntities)
                 {                
                     Vector2f backward = GetBackwardVector(ent.BoundingBox, moveVec);
@@ -378,9 +378,14 @@ namespace EveryonesHell.EntityManagment
             return new Vector2f(0, 0);
         }
 
-        public void CallCollisionEvent(CollisionArgs destArgs)
+        protected void CallCollisionEvent(CollisionArgs destArgs)
         {
             OnCollision?.Invoke(this, destArgs);
+        }
+
+        protected void CallOnKillEvent(AttackerArgs args)
+        {
+            OnKill?.Invoke(this, args);
         }
 
         /// <summary>

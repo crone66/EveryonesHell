@@ -382,6 +382,11 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        protected void CallOnDestroyEvent()
+        {
+            OnDestroy?.Invoke(this, null);
+        }
+
         /// <summary>
         /// Updates the current entity
         /// </summary>
