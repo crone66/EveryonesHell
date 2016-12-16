@@ -198,9 +198,9 @@ namespace EveryonesHell
 
             HudManager.RegistHud(dialog, true);
             entities = new EntityManager();
-            entities.Entities.Add(Player);
-            entities.Entities.Add(TheMightyTester);
-            entities.Entities.Add(TheEvilTester);
+            entities.AddEntity(Player);
+            entities.AddEntity(TheMightyTester);
+            entities.AddEntity(TheEvilTester);
 
             questTrackerWindow = new HUD.QuestTrackerWindow(font);
 
@@ -210,7 +210,7 @@ namespace EveryonesHell
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
         {
-            entities.Entities.Add(e.CreatedEntity);
+            entities.AddEntity(e.CreatedEntity);
         }
 
         /// <summary>

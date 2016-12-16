@@ -28,6 +28,7 @@ namespace EveryonesHell.EntityManagment
         {
             lastDirection = new Vector2i(0, 0);
             this.dialog = dialog;
+            OnShoot += Player_OnShoot;
         }
 
         /// <summary>
@@ -43,6 +44,16 @@ namespace EveryonesHell.EntityManagment
         {
             lastDirection = new Vector2i(0, 0);
             this.dialog = dialog;
+            OnShoot += Player_OnShoot;
+        }
+
+        private void Player_OnShoot(object sender, EventArgs e)
+        {
+            if(sender != null && sender is Projectile)
+            {
+                Projectile projectile = (sender as Projectile);
+                //projectile.OnDoDamage += questTracker.Projectile_OnDoDamage;
+            }
         }
 
         /// <summary>

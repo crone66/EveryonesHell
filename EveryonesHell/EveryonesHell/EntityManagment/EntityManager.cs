@@ -11,19 +11,6 @@ namespace EveryonesHell.EntityManagment
     {
         private List<Entity> entities;
 
-        public List<Entity> Entities
-        {
-            get
-            {
-                return entities;
-            }
-
-            set
-            {
-                entities = value;
-            }
-        }
-
         /// <summary>
         /// Initziaizes an entity manager
         /// </summary>
@@ -80,5 +67,18 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        private void Entity_OnSpawn(object sender, EventArgs e)
+        {
+            if(sender != null)
+            {
+                Entity ent = sender as Entity;
+                AddEntity(ent);
+            }
+        }
+
+        public Entity[] GetEntities()
+        {
+            return entities.ToArray();
+        }
     }
 }

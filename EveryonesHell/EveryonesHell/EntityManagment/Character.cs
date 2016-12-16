@@ -7,6 +7,7 @@
 using DebugConsole;
 using SFML.Graphics;
 using SFML.System;
+using System;
 
 namespace EveryonesHell.EntityManagment
 {
@@ -15,6 +16,8 @@ namespace EveryonesHell.EntityManagment
         private Vector2i lastDirection;
         private float attackDelay = 1f;
         private float elaspedAttackTime;
+        public event EventHandler OnShoot;
+
         public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
             :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID)
         {
@@ -75,6 +78,7 @@ namespace EveryonesHell.EntityManagment
                     Projectile projectile = ent as Projectile;
                     projectile.Position = Position + new Vector2f(20, 20);
                     projectile.ViewDirection = ViewDirection;
+                    OnShoot(projectile, null);
                 }
             }
         }
