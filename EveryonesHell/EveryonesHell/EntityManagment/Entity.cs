@@ -389,11 +389,24 @@ namespace EveryonesHell.EntityManagment
         {
             if (isVisable && currentSprite != null)
             {
-                currentSprite.Rotation = rotation;
+
                 currentSprite.Position = position;
                 currentSprite.TextureRect = spriteRect;
                 currentSprite.Scale = UIHelper.GetScale(currentSprite.TextureRect, boundingBox);
+                SetRotation();
                 window.Draw(currentSprite);
+            }
+        }
+
+        private void SetRotation()
+        {
+            currentSprite.Rotation = rotation;
+            if(rotation != 0)
+            {
+                Vector2f origin = new Vector2f(size.X / 2, size.Y / 2);
+                Vector2f offset = origin - currentSprite.Origin;
+                currentSprite.Origin = origin;
+                currentSprite.Position += offset;
             }
         }
 
