@@ -24,6 +24,7 @@ namespace EveryonesHell.EntityManagment
         private Vector2f velocity;
         private Vector2f viewDirection;
         private float speed;
+        private int groupID;
         private Gaugebar healthBar;
         
         public event EventHandler OnMoved;
@@ -160,6 +161,14 @@ namespace EveryonesHell.EntityManagment
             OnCollision += InteractiveObject_OnCollision;
         }
 
+        public int GroupID
+        {
+            get
+            {
+                return groupID;
+            }
+        }
+
         /// <summary>
         /// Initzializes a new interactive object
         /// </summary>
@@ -170,16 +179,18 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
-            : base(true, true, position, size, animations.Sprite)
+        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
+            :base(true, true, position, size, animations.Sprite)
         {
             this.inventory = inventory;
             this.animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
+            this.groupID = groupID;
             Speed = speed;
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
+
             health = 50;
             Healthbar = healthBar;
             OnCollision += InteractiveObject_OnCollision;
@@ -222,7 +233,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
+        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
             : base(true, true, tileRow, tileColumn, size, animations.Sprite)
         {
             this.inventory = inventory;
@@ -235,6 +246,7 @@ namespace EveryonesHell.EntityManagment
             health = 50;
             this.healthBar = healthBar;
             OnCollision += InteractiveObject_OnCollision;
+            this.groupID = groupID;
         }
 
         protected virtual void InteractiveObject_OnCollision(object sender, CollisionArgs e)

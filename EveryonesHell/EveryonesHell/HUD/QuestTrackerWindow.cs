@@ -26,7 +26,7 @@ namespace EveryonesHell.HUD
         private Font font;
         private Vector2f position;
         private uint characterSizeNames, characterSizeInformation;
-        private bool isVisible;
+        private bool isVisable;
 
         /// <summary>
         /// initialze questtrackerwindow
@@ -36,16 +36,18 @@ namespace EveryonesHell.HUD
         {
             questTracker = new QuestManagment.QuestTracker(inventory, null);
 
-            position = new Vector2f(-653, -340);
+            position = new Vector2f(-33000, -17000);
 
             background = new RectangleShape(new Vector2f(width, height));
-            background.FillColor = new SFML.Graphics.Color(0, 0, 0, 128);
-            background.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 200);
+            background.FillColor = new SFML.Graphics.Color(80, 80, 80, 128);
+            background.OutlineColor = new SFML.Graphics.Color(80, 80, 80, 200);
+            background.OutlineThickness = 2;
             background.Position = position;
 
             nameBackground = new RectangleShape(new Vector2f(nameWidth, height));
-            nameBackground.FillColor = new SFML.Graphics.Color(0, 0, 0, 50);
-            nameBackground.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 100);
+            nameBackground.FillColor = new SFML.Graphics.Color(80, 80, 80, 50);
+            nameBackground.OutlineColor = new SFML.Graphics.Color(80, 80, 80, 100);
+            nameBackground.OutlineThickness = 2;
             nameBackground.Position = position;
 
             width = 650;
@@ -60,12 +62,12 @@ namespace EveryonesHell.HUD
             characterSizeInformation = 13;
             lineSpacing = 12;
 
-            isVisible = false;
+            isVisable = false;
         }
 
         public void UpdatePosition(EntityManagment.Player player)
         {
-            position = player.Position;
+            position = player.Position - new Vector2f(300, 275);
 
             background.Position = position;
             nameBackground.Position = position;
@@ -77,7 +79,7 @@ namespace EveryonesHell.HUD
         /// <param name="window">window where everything is drawn</param>
         public void Draw(RenderWindow window)
         {
-            if (isVisible)
+            if (isVisable)
             {
                 window.Draw(background);
                 window.Draw(nameBackground);
@@ -153,7 +155,7 @@ namespace EveryonesHell.HUD
 
         public void OnQuestWindow(object sender, ExecuteCommandArgs e)
         {
-            isVisible = !isVisible;
+            isVisable = !isVisable;
         }
     }
 }

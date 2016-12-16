@@ -15,14 +15,13 @@ namespace EveryonesHell.EntityManagment
         private Vector2i lastDirection;
         private float attackDelay = 1f;
         private float elaspedAttackTime;
-
-        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
-            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar)
+        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
+            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID)
         {
         }
 
-        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
-            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar)
+        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
+            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID)
         {
         }
 

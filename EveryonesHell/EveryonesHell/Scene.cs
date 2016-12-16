@@ -191,9 +191,9 @@ namespace EveryonesHell
 
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
-            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, healthBar);
-            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, dialog, healthBar.Clone(false));
-            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, dialog, healthBar.Clone(false));
+            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, healthBar, 0);
+            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, dialog, healthBar.Clone(false), 1);
+            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, dialog, healthBar.Clone(false), 2);
 
 
             HudManager.RegistHud(dialog, true);
