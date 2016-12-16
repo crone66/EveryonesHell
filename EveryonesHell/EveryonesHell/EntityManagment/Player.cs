@@ -15,6 +15,7 @@ namespace EveryonesHell.EntityManagment
         private HUD.DialogSystem dialog;
         private bool jetpackActive = false;
 
+
         /// <summary>
         /// Initializes a new Player - outdated
         /// </summary>

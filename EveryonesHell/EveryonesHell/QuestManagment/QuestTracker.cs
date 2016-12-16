@@ -44,7 +44,7 @@ namespace EveryonesHell.QuestManagment
         /// <summary>
         /// checking the conditions of the active quests
         /// </summary>
-        public void CheckConditions(EntityManagment.EntityManager entityManager)
+        public void CheckConditions()
         {
             int questType = -1;
 
@@ -66,7 +66,7 @@ namespace EveryonesHell.QuestManagment
                         ItemQuest(i);
                         break;
                     case 1:
-                        EnemyQuest(i, entityManager);
+                        EnemyQuest(i);
                         break;
                     default:
                         break;
@@ -94,17 +94,9 @@ namespace EveryonesHell.QuestManagment
         /// checking quests where the player has to kill NPCs
         /// </summary>
         /// <param name="quest">ID of the quest</param>
-        private void EnemyQuest(int quest, EntityManagment.EntityManager entityManager)
+        private void EnemyQuest(int quest)
         {
-            for (int i = 0; i < entityManager.Entities.Count; i++)
-            {
-                if (entityManager.Entities[i] is EntityManagment.InteractiveObject)
-                {
-                    EntityManagment.InteractiveObject npc = entityManager.Entities[i] as EntityManagment.InteractiveObject;
 
-                    
-                }
-            }
         }
     }
 }

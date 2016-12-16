@@ -11,7 +11,7 @@ namespace EveryonesHell.EntityManagment
 {
     public class InteractiveObject : Entity
     {
-        private Inventory inventory;
+        protected Inventory inventory;
         protected AnimationManager animations;
 
         //TODO add Dialogs
@@ -140,6 +140,14 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        public int GroupID
+        {
+            get
+            {
+                return groupID;
+            }
+        }
+
         /// <summary>
         /// Initzializes a new interactive object
         /// </summary>
@@ -159,14 +167,6 @@ namespace EveryonesHell.EntityManagment
             Speed = speed;
             velocity = new Vector2f(0, 0);
             OnCollision += InteractiveObject_OnCollision;
-        }
-
-        public int GroupID
-        {
-            get
-            {
-                return groupID;
-            }
         }
 
         /// <summary>
