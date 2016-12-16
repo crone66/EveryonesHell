@@ -15,6 +15,7 @@ namespace EveryonesHell.EntityManagment
         private HUD.DialogSystem dialog;
         private bool jetpackActive = false;
 
+        private QuestManagment.QuestTracker questTracker;
 
         /// <summary>
         /// Initializes a new Player - outdated
@@ -23,12 +24,14 @@ namespace EveryonesHell.EntityManagment
         /// <param name="size">Size of the player</param>
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
-        public Player(Vector2f position, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID)
+        public Player(Vector2f position, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker)
             :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID)
         {
             lastDirection = new Vector2i(0, 0);
             this.dialog = dialog;
             OnShoot += Player_OnShoot;
+            this.questTracker = questTracker;
+            questTracker.inventory = Inventory;
         }
 
         /// <summary>
@@ -39,12 +42,14 @@ namespace EveryonesHell.EntityManagment
         /// <param name="size">Size of the player</param>
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
-        public Player(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID)
+        public Player(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker)
             : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID)
         {
             lastDirection = new Vector2i(0, 0);
             this.dialog = dialog;
             OnShoot += Player_OnShoot;
+            this.questTracker = questTracker;
+            questTracker.inventory = Inventory;
         }
 
         private void Player_OnShoot(object sender, EventArgs e)
@@ -52,7 +57,7 @@ namespace EveryonesHell.EntityManagment
             if(sender != null && sender is Projectile)
             {
                 Projectile projectile = (sender as Projectile);
-                //projectile.OnDoDamage += questTracker.Projectile_OnDoDamage;
+                projectile.OnDoDamage += questTracker.Projectile_OnDoDamage;
             }
         }
 
@@ -65,6 +70,7 @@ namespace EveryonesHell.EntityManagment
             base.Update(elapsedSeconds);
             dialog.Input(elapsedSeconds);
             dialog.Update(elapsedSeconds);
+            questTracker.ItemQuest();
         }
 
         /// <summary>

@@ -15,9 +15,9 @@ using FileDescriptions;
 
 namespace EveryonesHell.QuestManagment
 {
-    class QuestTracker
+    public class QuestTracker
     {
-        private InventorySystem.Inventory inventory;
+        public InventorySystem.Inventory inventory;
         private List<Quest> loadedQuests = new List<Quest>();
         public List<Quest> activeQuests = new List<Quest>();
 
@@ -42,61 +42,52 @@ namespace EveryonesHell.QuestManagment
         }
 
         /// <summary>
-        /// checking the conditions of the active quests
-        /// </summary>
-        public void CheckConditions()
-        {
-            int questType = -1;
-
-            for (int i = activeQuests.Count - 1; i >= 0; i--)
-            {
-                if (activeQuests[i].Questitem != -1)
-                {
-                    questType = 0;
-                }
-
-                if (activeQuests[i].Enemy != -1)
-                {
-                    questType = 1;
-                }
-
-                switch (questType)
-                {
-                    case 0:
-                        ItemQuest(i);
-                        break;
-                    case 1:
-                        EnemyQuest(i);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
         /// checking quests where the player has to require an item
         /// </summary>
         /// <param name="quest">ID of the quest</param>
-        private void ItemQuest(int quest)
+        public void ItemQuest()
         {
-            for (int i = 0; i < inventory.InventorySlots.Count; i++)
+            for (int i = 0; i < activeQuests.Count; i++)
             {
-                if (inventory.InventorySlots[i].ItemId == activeQuests[quest].RequiredItem)
+                if (activeQuests[i].Questitem != -1)
                 {
-                    activeQuests.RemoveAt(quest);
+                    for (int j = 0; i < inventory.InventorySlots.Count; i++)
+                    {
+                        if (inventory.InventorySlots[j].ItemId == activeQuests[i].RequiredItem)
+                        {
+                            activeQuests.RemoveAt(i);
+                        }
+                    }
                 }
             }
         }
-
 
         /// <summary>
         /// checking quests where the player has to kill NPCs
         /// </summary>
         /// <param name="quest">ID of the quest</param>
-        private void EnemyQuest(int quest)
+        private void EnemyQuest(int groupID)
         {
+            for (int i = 0; i < activeQuests.Count; i++)
+            {
+                if (activeQuests[i].Enemy == groupID)
+                {
+                    activeQuests[i] = new Quest(activeQuests[i].Name, activeQuests[i].QuestID, activeQuests[i].Questitem, activeQuests[i].BasedOnDialogue, activeQuests[i].RequiredItem, activeQuests[i].Enemy, activeQuests[i].EnemyCount - 1, activeQuests[i].Description);
+                }
+            }
+        }
 
+        public void Projectile_OnDoDamage(object sender, EntityManagment.VictimArgs e)
+        {
+            if (e.Victim is EntityManagment.InteractiveObject)
+            {
+                EntityManagment.InteractiveObject interativeObject = e.Victim as EntityManagment.InteractiveObject;
+
+                if (e.Killed)
+                {
+                    EnemyQuest(interativeObject.GroupID);
+                }
+            }
         }
     }
 }
