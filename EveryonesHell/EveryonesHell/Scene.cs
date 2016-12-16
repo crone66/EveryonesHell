@@ -205,7 +205,7 @@ namespace EveryonesHell
             questTrackerWindow = new HUD.QuestTrackerWindow(font);
 
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
-            EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1));
+            EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000));
         }
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)

@@ -46,6 +46,10 @@ namespace EveryonesHell.EntityManagment
             protected set
             {
                 velocity = value;
+                float x = velocity.X == 0 ? 0 : ((velocity.X / velocity.X) * (velocity.X < 0 ? -1 : 1));
+                float y = velocity.Y == 0 ? 0 : ((velocity.Y / velocity.Y) * (velocity.Y < 0 ? -1 : 1));
+                if (x != 0 || y != 0)              
+                    viewDirection = new Vector2f(x, y);
             }
         }
 
@@ -288,6 +292,7 @@ namespace EveryonesHell.EntityManagment
             {
                 Move(elapsedSeconds);
             }
+            
             Velocity = new Vector2f(0, 0);
 
             if(Healthbar != null)

@@ -14,7 +14,7 @@ namespace EveryonesHell.EntityManagment
     public class Character : InteractiveObject
     {
         private Vector2i lastDirection;
-        private float attackDelay = 1f;
+        private float attackDelay = 0.5f;
         private float elaspedAttackTime;
         public event EventHandler OnShoot;
 
@@ -76,8 +76,7 @@ namespace EveryonesHell.EntityManagment
                 if (ent is Projectile)
                 {
                     Projectile projectile = ent as Projectile;
-                    projectile.Position = Position + new Vector2f(20, 20);
-                    projectile.ViewDirection = ViewDirection;
+                    projectile.Init(Position, Size, ViewDirection);
                     OnShoot(projectile, null);
                 }
             }
