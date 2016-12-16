@@ -24,7 +24,8 @@ namespace EveryonesHell.EntityManagment
         private Vector2f velocity;
         private Vector2f viewDirection;
         private float speed;
-        private int groupID;
+        private int groupId;
+        private int factionId;
         private Gaugebar healthBar;
         
         public event EventHandler OnMoved;
@@ -148,7 +149,7 @@ namespace EveryonesHell.EntityManagment
         {
             get
             {
-                return groupID;
+                return groupId;
             }
         }
 
@@ -162,6 +163,19 @@ namespace EveryonesHell.EntityManagment
             protected set
             {
                 inventory = value;
+            }
+        }
+
+        public int FactionId
+        {
+            get
+            {
+                return factionId;
+            }
+
+            set
+            {
+                factionId = value;
             }
         }
 
@@ -203,7 +217,7 @@ namespace EveryonesHell.EntityManagment
             this.animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
-            this.groupID = groupID;
+            this.groupId = groupID;
             Speed = speed;
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
@@ -263,7 +277,7 @@ namespace EveryonesHell.EntityManagment
             health = 50;
             this.healthBar = healthBar;
             OnCollision += InteractiveObject_OnCollision;
-            this.groupID = groupID;
+            this.groupId = groupID;
         }
 
         protected virtual void InteractiveObject_OnCollision(object sender, CollisionArgs e)
@@ -343,7 +357,7 @@ namespace EveryonesHell.EntityManagment
                         backward += DoCollisionDetection(Velocity * elapsedSeconds, tileInfo, tileCollision, doObjectCollision);
                     }
 
-                    if(backward != new Vector2f(0, 0))
+                    if (backward != new Vector2f(0, 0))
                         Position += backward;
                 }
             }
@@ -470,7 +484,10 @@ namespace EveryonesHell.EntityManagment
                 health = maxHealth;
 
             if (maxHealth > 0 && health <= 0)
+            {
                 OnKill?.Invoke(this, new AttackerArgs(activator));
+                CallOnDestroyEvent();
+            }
 
             return health;
         }

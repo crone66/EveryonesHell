@@ -102,7 +102,7 @@ namespace EveryonesHell.EntityManagment
             set
             {
                 position = value;
-                boundingBox = new IntRect(Convert.ToInt32(position.X), Convert.ToInt32(position.Y), size.X, size.Y);
+                boundingBox = new IntRect(Convert.ToInt32(position.X), Convert.ToInt32(position.Y), boundingBox.Width, boundingBox.Height);
                 UpdateTileIndices();
             }
         }
@@ -145,8 +145,6 @@ namespace EveryonesHell.EntityManagment
             protected set
             {
                 boundingBox = value;
-                position = new Vector2f(boundingBox.Top, boundingBox.Top);
-                size = new Vector2i(boundingBox.Width, boundingBox.Height);
             }
         }
 
@@ -389,10 +387,9 @@ namespace EveryonesHell.EntityManagment
         {
             if (isVisable && currentSprite != null)
             {
-
                 currentSprite.Position = position;
                 currentSprite.TextureRect = spriteRect;
-                currentSprite.Scale = UIHelper.GetScale(currentSprite.TextureRect, boundingBox);
+                currentSprite.Scale = UIHelper.GetScale(currentSprite.TextureRect, new IntRect((int)position.X, (int)position.Y, size.X, size.Y));
                 SetRotation();
                 window.Draw(currentSprite);
             }

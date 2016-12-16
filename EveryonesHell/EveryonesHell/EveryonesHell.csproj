@@ -70,18 +70,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimationManager.cs" />
-    <Compile Include="DebugConsoleManager.cs" />
+    <Compile Include="CustomEventArgs\HudStateChangedArgs.cs" />
+    <Compile Include="HUD\DebugConsoleManager.cs" />
     <Compile Include="EntityManagment\Character.cs" />
     <Compile Include="ContentManager.cs" />
     <Compile Include="CustomExceptions\DuplicateKeyException.cs" />
-    <Compile Include="EntityManagment\CollisionArgs.cs" />
+    <Compile Include="CustomEventArgs\CollisionArgs.cs" />
     <Compile Include="EntityManagment\Entity.cs" />
     <Compile Include="EntityManagment\EntityFactory.cs" />
     <Compile Include="EntityManagment\EntityManager.cs" />
     <Compile Include="EntityManagment\InteractiveObject.cs" />
-    <Compile Include="EntityManagment\AttackerArgs.cs" />
+    <Compile Include="CustomEventArgs\AttackerArgs.cs" />
     <Compile Include="EntityManagment\Projectile.cs" />
-    <Compile Include="EntityManagment\VictimArgs.cs" />
+    <Compile Include="CustomEventArgs\VictimArgs.cs" />
     <Compile Include="Exceptionhandler.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameSettings.cs" />
@@ -195,6 +196,7 @@
       <Name>FileDescriptions</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

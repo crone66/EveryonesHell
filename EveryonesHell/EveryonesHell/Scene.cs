@@ -198,16 +198,13 @@ namespace EveryonesHell
             TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, dialog, healthBar.Clone(false), 1);
             TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, dialog, healthBar.Clone(false), 2);
 
-
-            HudManager.RegistHud(dialog, true);
-            hudManager.RegistHud(questTrackerWindow, true);
             entities = new EntityManager();
             entities.AddEntity(Player);
             entities.AddEntity(TheMightyTester);
             entities.AddEntity(TheEvilTester);
 
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
-            EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000));
+            EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000));
         }
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
@@ -223,9 +220,9 @@ namespace EveryonesHell
         {
             entities.Update(elapsedSeconds);
             mapManager.Update(Player.TileRow, Player.TileColumn);
-            mapManager.Update(TheMightyTester.TileRow, TheMightyTester.TileColumn);
-            //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));
-            
+            hudManager.Update(elapsedSeconds);
+            //mapManager.Update(TheMightyTester.TileRow, TheMightyTester.TileColumn);
+            //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));       
         }
 
         /// <summary>
@@ -240,50 +237,53 @@ namespace EveryonesHell
                     {
                         if (!GlobalReferences.MainGame.ConsoleManager.DebugConsole.IsOpen)
                         {
-                            Vector2i direction = new Vector2i(0, 0);
-
-                            if (Keyboard.IsKeyPressed(Keyboard.Key.W))
+                            if (!hudManager.HasOpenWindow)
                             {
-                                direction.Y -= 1;
-                            }
+                                Vector2i direction = new Vector2i(0, 0);
 
-                            if (Keyboard.IsKeyPressed(Keyboard.Key.S))
-                            {
-                                direction.Y += 1;
-                            }
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.W))
+                                {
+                                    direction.Y -= 1;
+                                }
 
-                            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
-                            {
-                                direction.X -= 1;
-                            }
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.S))
+                                {
+                                    direction.Y += 1;
+                                }
 
-                            if (Keyboard.IsKeyPressed(Keyboard.Key.D))
-                            {
-                                direction.X += 1;
-                            }
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+                                {
+                                    direction.X -= 1;
+                                }
 
-                            if (Keyboard.IsKeyPressed(Keyboard.Key.F))
-                            {
-                                Player.OnAction(this, null);
-                            }
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.D))
+                                {
+                                    direction.X += 1;
+                                }
 
-                            if(Keyboard.IsKeyPressed(Keyboard.Key.E))
-                            {
-                                Player.OnAttack(this, null);
-                            }
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.F))
+                                {
+                                    Player.OnAction(this, null);
+                                }
 
-                            if (Keyboard.IsKeyPressed(Keyboard.Key.H))
-                            {
-                                Player.OnJetpack(this, null);
-                            }
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
+                                {
+                                    Player.OnAttack(this, null);
+                                }
 
-                            if (Keyboard.IsKeyPressed(Keyboard.Key.Q))
-                            {
-                                questTrackerWindow.OnQuestWindow(this, null);
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.H))
+                                {
+                                    Player.OnJetpack(this, null);
+                                }
+
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.Q))
+                                {
+                                    questTrackerWindow.IsOpen = true;
+                                }
+
+                                if (direction.X != 0 || direction.Y != 0)
+                                    Player.OnMove(this, new DebugConsole.ExecuteCommandArgs(direction));
                             }
-                            
-                            if (direction.X != 0 || direction.Y != 0)
-                                Player.OnMove(this, new DebugConsole.ExecuteCommandArgs(direction));
                         }
                     }
                     break;
@@ -310,19 +310,6 @@ namespace EveryonesHell
 
             int rowCount = Convert.ToInt32((GlobalReferences.MainGame.WindowHeight * zoomFactor) / Settings.TileSize);
             int columnCount = Convert.ToInt32((GlobalReferences.MainGame.WindowWidth * zoomFactor) / Settings.TileSize);
-            /*for (int row = 0; row < rowCount; row++)
-            {
-                for (int column = -0; column < columnCount; column++)
-                {
-                    int id = fieldsInView[(row * columnCount) + column].Id;
-                    Sprite sprite = sprites[id];
-                    
-                    sprite.Position = new Vector2f(((player.TileColumn - (columnCount / 2)) + column) * settings.TileSize,
-                        ((player.TileRow - (rowCount / 2)) + row) * settings.TileSize);
-                    //sprite.Position = offset + new Vector2f((column * Settings.TileSize) - zoomWidth, (row * Settings.TileSize) - zoomHeight);
-                    window.Draw(sprite);
-                }
-            }*/
 
             int fromRow = (player.TileRow - (rowCount / 2)) - 2;
             int toRow = (player.TileRow + (rowCount / 2)) + 2;

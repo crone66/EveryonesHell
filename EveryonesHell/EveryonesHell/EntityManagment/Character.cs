@@ -76,7 +76,7 @@ namespace EveryonesHell.EntityManagment
                 if (ent is Projectile)
                 {
                     Projectile projectile = ent as Projectile;
-                    projectile.Init(Position, Size, ViewDirection);
+                    projectile.Init(Position, Size, ViewDirection, -1);
                     OnShoot(projectile, null);
                 }
             }
