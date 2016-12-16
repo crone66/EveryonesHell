@@ -68,8 +68,6 @@ namespace EveryonesHell.EntityManagment
         public override void Update(float elapsedSeconds)
         {
             base.Update(elapsedSeconds);
-            dialog.Input(elapsedSeconds);
-            dialog.Update(elapsedSeconds);
             questTracker.ItemQuest();
         }
 
@@ -80,20 +78,6 @@ namespace EveryonesHell.EntityManagment
         public override void Draw(RenderWindow window)
         {
             base.Draw(window);
-            dialog.Draw(window);
-        }
-
-        /// <summary>
-        /// Will be fired when one of the OnMove buttons is pressed
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Command arguments</param>
-        public override void OnMove(object sender, ExecuteCommandArgs e)
-        {
-            if (!dialog.IsVisable)
-            {
-                base.OnMove(sender, e);
-            }
         }
 
         /// <summary>

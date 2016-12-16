@@ -12,7 +12,8 @@ namespace EveryonesHell.HUD
     {
         private List<HudElement> hudElements;
         private List<HudElement> fixedHudElements;
-
+        private bool hasOpenWindow;
+        
         public List<HudElement> HudElements
         {
             get
@@ -29,6 +30,14 @@ namespace EveryonesHell.HUD
             }
         }
 
+        public bool HasOpenWindow
+        {
+            get
+            {
+                return hasOpenWindow;
+            }
+        }
+
         public HudManager()
         {
             fixedHudElements = new List<HudElement>();
@@ -37,22 +46,35 @@ namespace EveryonesHell.HUD
 
         public void RegistHud(HudElement hud, bool fixedHud)
         {
+            hud.OnClose += Hud_StateChanged;
+            hud.OnOpen += Hud_StateChanged;
             if (fixedHud)
                 fixedHudElements.Add(hud);
             else
                 hudElements.Add(hud);
         }
 
+        private void Hud_StateChanged(object sender, HudStateChangedArgs e)
+        {
+            HudElement hud = sender as HudElement;
+            if (hud.IsWindow && hud.IsOpen != e.PreviouseState)
+            {
+                hasOpenWindow = hud.IsOpen;
+            }
+        }
+
         public void Update(float elapsedSeconds)
         {
             foreach (HudElement item in HudElements)
             {
-                item.Update(elapsedSeconds);
+                if(item.IsOpen)
+                    item.Update(elapsedSeconds);
             }
 
             foreach (HudElement item in FixedHudElements)
             {
-                item.Update(elapsedSeconds);
+                if(item.IsOpen)
+                    item.Update(elapsedSeconds);
             }
         }
 
@@ -60,7 +82,8 @@ namespace EveryonesHell.HUD
         {
             foreach (HudElement item in HudElements)
             {
-                item.Draw(window);
+                if(item.IsOpen)
+                    item.Draw(window);
             }
         }
 
@@ -74,7 +97,8 @@ namespace EveryonesHell.HUD
 
             foreach (HudElement item in FixedHudElements)
             {
-                item.Draw(window);
+                if(item.IsOpen)
+                    item.Draw(window);
             }
         }
     }

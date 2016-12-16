@@ -25,13 +25,13 @@ namespace EveryonesHell.HUD
         private Font font;
         private Vector2f position;
         private uint characterSizeNames, characterSizeInformation;
-        private bool isVisable;
-
+        
         /// <summary>
         /// initialze questtrackerwindow
         /// </summary>
         /// <param name="font">font used to draw the text</param>
         public QuestTrackerWindow(Vector2f position, Font font, QuestManagment.QuestTracker questTracker)
+            :base(true, true)
         {
             this.questTracker = questTracker;
             this.position = position;
@@ -60,8 +60,6 @@ namespace EveryonesHell.HUD
             characterSizeNames = 16;
             characterSizeInformation = 13;
             lineSpacing = 12;
-
-            isVisable = false;
         }
 
         public override void Update(float elapsedSeconds)
@@ -74,15 +72,13 @@ namespace EveryonesHell.HUD
         /// <param name="window">window where everything is drawn</param>
         public override void Draw(RenderWindow window)
         {
-            if (isVisable)
-            {
-                window.Draw(background);
-                window.Draw(nameBackground);
+            window.Draw(background);
+            window.Draw(nameBackground);
 
-                DrawQuestnames(window);
-                DrawQuests(window);
-            }
-        }
+            DrawQuestnames(window);
+            DrawQuests(window);
+        } 
+        
 
         /// <summary>
         /// drawing all the questnames
@@ -146,11 +142,6 @@ namespace EveryonesHell.HUD
                 text = new Text(questTracker.activeQuests[i].Description, font, characterSizeInformation);
                 window.Draw(text);
             }
-        }
-
-        public void OnQuestWindow(object sender, ExecuteCommandArgs e)
-        {
-            isVisable = true;
         }
     }
 }

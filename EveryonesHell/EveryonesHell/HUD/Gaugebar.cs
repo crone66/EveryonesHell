@@ -37,6 +37,7 @@ namespace EveryonesHell
         }
 
         public Gaugebar(int currentvalue, int maxvalue, Vector2f gaugebarPosition, Sprite gaugeBar, Sprite gaugeBarBorder, Vector2f overallSize, Color gaugeColor, bool isFixed)
+            :base(false, isFixed, true)
         {
             currentValue = currentvalue;
             maxValue = maxvalue;

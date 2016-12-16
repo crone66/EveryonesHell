@@ -22,7 +22,6 @@ namespace EveryonesHell.HUD
         private const int answerCharacterSize = 16;
         private const int textCharacterSize = 18;
 
-        private bool isVisable;
         private Dialog currentDialog;
         private Dialog[] answers;
 
@@ -41,15 +40,6 @@ namespace EveryonesHell.HUD
         private Color textColor;
         private float elapsedTime;
 
-        public bool IsVisable
-        {
-            get
-            {
-                return isVisable;
-            }
-        }
-
-
         /// <summary>
         /// Initzializes a dialog system to handle and draw dialogs
         /// </summary>
@@ -60,6 +50,7 @@ namespace EveryonesHell.HUD
         /// <param name="textColor">Text color</param>
         /// <param name="selectionColor">Color of selected answer</param>
         public DialogSystem(DialogCollection dialogs, Vector2f position, Vector2f size, Font font, Color textColor, Color selectionColor)
+            : base(true, true)
         {
             this.dialogs = dialogs;
             this.position = position;
@@ -81,22 +72,20 @@ namespace EveryonesHell.HUD
         /// </summary>
         public override void Update(float elapsedSeconds)
         {
-            if (isVisable)
+            Input(elapsedSeconds);
+            elapsedTime -= elapsedSeconds;
+            for (int i = 0; i < dialogLines.Length; i++)
             {
-                elapsedTime -= elapsedSeconds;
-                for (int i = 0; i < dialogLines.Length; i++)
-                {
-                    dialogLines[i].Position = new Vector2f(position.X + padding, position.Y + (i * lineSpacing) + padding);
-                }
+                dialogLines[i].Position = new Vector2f(position.X + padding, position.Y + (i * lineSpacing) + padding);
+            }
 
-                for (int i = 0; i < answerLines.Length; i++)
+            for (int i = 0; i < answerLines.Length; i++)
+            {
+                int count = 0;
+                for (int j = 0; j < answerLines[i].Length; j++)
                 {
-                    int count = 0;
-                    for (int j = 0; j < answerLines[i].Length; j++)
-                    {
-                        answerLines[i][j].Position = new Vector2f(position.X + padding, position.Y + ((i + 2) * answerSpacing) + (count * lineSpacing));
-                        count++;
-                    }
+                    answerLines[i][j].Position = new Vector2f(position.X + padding, position.Y + ((i + 2) * answerSpacing) + (count * lineSpacing));
+                    count++;
                 }
             }
         }
@@ -106,13 +95,10 @@ namespace EveryonesHell.HUD
         /// </summary>
         public void SelectionUp()
         {
-            if (isVisable)
+            if (elapsedTime <= 0)
             {
-                if (elapsedTime <= 0)
-                {
-                    ChangeSelection(selectedAnswer - 1);
-                    elapsedTime = selectionDelay;
-                }
+                ChangeSelection(selectedAnswer - 1);
+                elapsedTime = selectionDelay;
             }
         }
 
@@ -121,22 +107,20 @@ namespace EveryonesHell.HUD
         /// </summary>
         public void SelectionDown()
         {
-            if (isVisable)
+            if (elapsedTime <= 0)
             {
-                if (elapsedTime <= 0)
-                {
-                    ChangeSelection(selectedAnswer + 1);
-                    elapsedTime = selectionDelay;
-                }
+                ChangeSelection(selectedAnswer + 1);
+                elapsedTime = selectionDelay;
             }
         }
+    
 
         /// <summary>
         /// Handles next dialog step
         /// </summary>
         public void Next()
-        {       
-            if (IsVisable && elapsedTime <= selectionDelay * -1)
+        {
+            if (elapsedTime <= selectionDelay * -1)
             {
                 elapsedTime = selectionDelay;
                 if (answers != null && answers.Length > 0)
@@ -149,7 +133,7 @@ namespace EveryonesHell.HUD
                 }
                 else
                 {
-                    isVisable = false;
+                    IsOpen = false;
                 }
             }
         }
@@ -158,20 +142,17 @@ namespace EveryonesHell.HUD
         /// </summary>
         public void Input(float elapsedSeconds)
         {
-            if (isVisable)
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
             {
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
-                {
-                    SelectionUp();
-                }
-                else if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
-                {
-                    SelectionDown();
-                }
-                else if(Keyboard.IsKeyPressed(Keyboard.Key.Return))
-                {
-                    Next();
-                }
+                SelectionUp();
+            }
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+            {
+                SelectionDown();
+            }
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Return))
+            {
+                Next();
             }
         }
 
@@ -180,24 +161,22 @@ namespace EveryonesHell.HUD
         /// </summary>
         public override void Draw(RenderWindow window)
         {
-            if(isVisable)
-            {            
-                window.Draw(shape);
+            window.Draw(shape);
 
-                for (int i = 0; i < dialogLines.Length; i++)
-                {
-                    window.Draw(dialogLines[i]);
-                }
+            for (int i = 0; i < dialogLines.Length; i++)
+            {
+                window.Draw(dialogLines[i]);
+            }
 
-                for (int i = 0; i < answerLines.Length; i++)
+            for (int i = 0; i < answerLines.Length; i++)
+            {
+                for (int j = 0; j < answerLines[i].Length; j++)
                 {
-                    for (int j = 0; j < answerLines[i].Length; j++)
-                    {
-                        window.Draw(answerLines[i][j]);
-                    }
+                    window.Draw(answerLines[i][j]);
                 }
             }
         }
+    
 
         /// <summary>
         /// Opens a dialog window
@@ -205,18 +184,22 @@ namespace EveryonesHell.HUD
         /// <param name="dialogId">Indicates which dialog should be displayed</param>
         public void Open(int dialogId)
         {
-            isVisable = false;
             try
             {
                 if (dialogId >= 0)
                 {
                     Open(dialogs.Dialogs.First(d => d.DialogID == dialogId));
                 }
+                else
+                {
+                    IsOpen = false;
+                }
             }
             catch(Exception ex)
             {
                 GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog ID: " + dialogId.ToString(), 255, 0, 0);
                 GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
+                IsOpen = false;
             }
         }
 
@@ -246,7 +229,7 @@ namespace EveryonesHell.HUD
             Text baseDialogText = new Text(currentDialog.DialogText, font, textCharacterSize);
             baseDialogText.Color = textColor;
             dialogLines = UIHelper.LineWrap(baseDialogText, Convert.ToInt32(size.X) - (padding * 2));
-
+            IsOpen = true;
             if (currentDialog.DialogAnswerIds != null)
             {
                 answers = new Dialog[currentDialog.DialogAnswerIds.Length];
@@ -267,7 +250,6 @@ namespace EveryonesHell.HUD
                     }
                 }
             }
-            isVisable = true;
         }
 
         /// <summary>
