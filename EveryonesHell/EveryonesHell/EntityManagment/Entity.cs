@@ -15,6 +15,7 @@ namespace EveryonesHell.EntityManagment
         private int id;
         private bool isVisable;
         private bool isCollidable;
+        private float rotation;
 
         private int tileRow;
         private int tileColumn;
@@ -167,6 +168,19 @@ namespace EveryonesHell.EntityManagment
             get
             {
                 return overlappingTiles;
+            }
+        }
+
+        public float Rotation
+        {
+            get
+            {
+                return rotation;
+            }
+
+            protected set
+            {
+                rotation = value;
             }
         }
 
@@ -375,6 +389,7 @@ namespace EveryonesHell.EntityManagment
         {
             if (isVisable && currentSprite != null)
             {
+                currentSprite.Rotation = rotation;
                 currentSprite.Position = position;
                 currentSprite.TextureRect = spriteRect;
                 currentSprite.Scale = UIHelper.GetScale(currentSprite.TextureRect, boundingBox);
