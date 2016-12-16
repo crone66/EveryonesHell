@@ -188,9 +188,9 @@ namespace EveryonesHell
             sprites.Add(4, testPlayer);
             sprites.Add(5, gaugebar);
             sprites.Add(6, gaugebarborder);
-
-            questTrackerWindow = new QuestTrackerWindow(font);
+            
             questTracker = new QuestManagment.QuestTracker(null, null);
+            questTrackerWindow = new QuestTrackerWindow(new Vector2f(25, 25), font, questTracker);
 
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
@@ -200,6 +200,7 @@ namespace EveryonesHell
 
 
             HudManager.RegistHud(dialog, true);
+            hudManager.RegistHud(questTrackerWindow, true);
             entities = new EntityManager();
             entities.AddEntity(Player);
             entities.AddEntity(TheMightyTester);
@@ -224,7 +225,7 @@ namespace EveryonesHell
             mapManager.Update(Player.TileRow, Player.TileColumn);
             mapManager.Update(TheMightyTester.TileRow, TheMightyTester.TileColumn);
             //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));
-            questTrackerWindow.UpdatePosition(player);
+            
         }
 
         /// <summary>
@@ -342,7 +343,6 @@ namespace EveryonesHell
             entities.Draw(window);
             HudManager.Draw(window);
             HudManager.DrawFixed(window, zoomFactor);
-            questTrackerWindow.Draw(window);
         }      
 
         /// <summary>

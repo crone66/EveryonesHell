@@ -15,13 +15,12 @@ using DebugConsole;
 
 namespace EveryonesHell.HUD
 {
-    class QuestTrackerWindow
+    public class QuestTrackerWindow : HudElement
     {
         private RectangleShape background;
         private RectangleShape nameBackground;
-        private int width, height, nameWidth, lineSpacing;
+        private int width , height, nameWidth, lineSpacing;
         private Text text;
-        private InventorySystem.Inventory inventory = new InventorySystem.Inventory();
         private QuestManagment.QuestTracker questTracker;
         private Font font;
         private Vector2f position;
@@ -32,11 +31,14 @@ namespace EveryonesHell.HUD
         /// initialze questtrackerwindow
         /// </summary>
         /// <param name="font">font used to draw the text</param>
-        public QuestTrackerWindow(Font font)
+        public QuestTrackerWindow(Vector2f position, Font font, QuestManagment.QuestTracker questTracker)
         {
-            questTracker = new QuestManagment.QuestTracker(inventory, null);
+            this.questTracker = questTracker;
+            this.position = position;
 
-            position = new Vector2f(-33000, -17000);
+            width = 650;
+            height = 400;
+            nameWidth = 250;
 
             background = new RectangleShape(new Vector2f(width, height));
             background.FillColor = new SFML.Graphics.Color(80, 80, 80, 128);
@@ -50,9 +52,6 @@ namespace EveryonesHell.HUD
             nameBackground.OutlineThickness = 2;
             nameBackground.Position = position;
 
-            width = 650;
-            height = 400;
-            nameWidth = 250;
 
             this.font = font;
             text = new Text("", font, 16);
@@ -65,19 +64,15 @@ namespace EveryonesHell.HUD
             isVisable = false;
         }
 
-        public void UpdatePosition(EntityManagment.Player player)
+        public override void Update(float elapsedSeconds)
         {
-            position = player.Position - new Vector2f(300, 275);
-
-            background.Position = position;
-            nameBackground.Position = position;
         }
 
         /// <summary>
         /// drawing all the information of the active quests
         /// </summary>
         /// <param name="window">window where everything is drawn</param>
-        public void Draw(RenderWindow window)
+        public override void Draw(RenderWindow window)
         {
             if (isVisable)
             {
@@ -155,7 +150,7 @@ namespace EveryonesHell.HUD
 
         public void OnQuestWindow(object sender, ExecuteCommandArgs e)
         {
-            isVisable = !isVisable;
+            isVisable = true;
         }
     }
 }
