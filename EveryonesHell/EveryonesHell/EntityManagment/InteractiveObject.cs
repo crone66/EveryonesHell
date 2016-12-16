@@ -11,7 +11,7 @@ namespace EveryonesHell.EntityManagment
 {
     public class InteractiveObject : Entity
     {
-        protected Inventory inventory;
+        private Inventory inventory;
         protected AnimationManager animations;
 
         //TODO add Dialogs
@@ -145,6 +145,19 @@ namespace EveryonesHell.EntityManagment
             get
             {
                 return groupID;
+            }
+        }
+
+        public Inventory Inventory
+        {
+            get
+            {
+                return inventory;
+            }
+
+            protected set
+            {
+                inventory = value;
             }
         }
 

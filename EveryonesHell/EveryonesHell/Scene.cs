@@ -32,7 +32,7 @@ namespace EveryonesHell
         private EntityManagment.NPC TheMightyTester;
         private EntityManagment.NPC TheEvilTester;
 
-
+        private QuestManagment.QuestTracker questTracker;
         private HUD.QuestTrackerWindow questTrackerWindow;
 
         //private Tile[] fieldsInView;
@@ -189,9 +189,12 @@ namespace EveryonesHell
             sprites.Add(5, gaugebar);
             sprites.Add(6, gaugebarborder);
 
+            questTrackerWindow = new QuestTrackerWindow(font);
+            questTracker = new QuestManagment.QuestTracker(null, null);
+
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
-            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, healthBar, 0);
+            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, healthBar, 0, questTracker);
             TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, dialog, healthBar.Clone(false), 1);
             TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, dialog, healthBar.Clone(false), 2);
 
@@ -201,8 +204,6 @@ namespace EveryonesHell
             entities.AddEntity(Player);
             entities.AddEntity(TheMightyTester);
             entities.AddEntity(TheEvilTester);
-
-            questTrackerWindow = new HUD.QuestTrackerWindow(font);
 
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
             EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1));
