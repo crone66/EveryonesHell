@@ -12,7 +12,7 @@ namespace EveryonesHell.EntityManagment
     public class InteractiveObject : Entity
     {
         private Inventory inventory;
-        private AnimationManager animations;
+        protected AnimationManager animations;
 
         //TODO add Dialogs
 
@@ -25,14 +25,14 @@ namespace EveryonesHell.EntityManagment
         private Vector2f viewDirection;
         private float speed;
         private Gaugebar healthBar;
-
-        public event EventHandler OnSpawn;
+        
         public event EventHandler OnMoved;
         public event EventHandler OnMoving;
-        public event EventHandler OnKill;
-        public event EventHandler OnReceiveDamage;
-        public event EventHandler OnReceiveHealth;
-        public event EventHandler OnCollision;
+        public event EventHandler OnSpawn;
+        public event EventHandler<AttackerArgs> OnKill;
+        public event EventHandler<AttackerArgs> OnReceiveDamage;
+        public event EventHandler<AttackerArgs> OnReceiveHealth;
+        public event EventHandler<CollisionArgs> OnCollision;
 
 
         public Vector2f Velocity
@@ -68,7 +68,7 @@ namespace EveryonesHell.EntityManagment
                 return viewDirection;
             }
 
-            protected set
+            set
             {
                 viewDirection = value;
             }
@@ -82,22 +82,6 @@ namespace EveryonesHell.EntityManagment
             get
             {
                 return health;
-            }
-
-            protected set
-            {
-                if (value < health)
-                    OnReceiveDamage?.Invoke(this, EventArgs.Empty);
-                else if (value > health)
-                    OnReceiveHealth?.Invoke(this, EventArgs.Empty);
-
-                health = value;
-
-                if (health > maxHealth)
-                    health = maxHealth;
-
-                if (maxHealth > 0 && health <= 0)
-                    OnKill?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -164,7 +148,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
         public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed, Gaugebar healthBar)
-            : base(true, true, new Vector2f(0,0), size, animations.Sprite)
+            : base(true, true, new Vector2f(0, 0), size, animations.Sprite)
         {
             this.inventory = null;
             this.animations = animations;
@@ -173,6 +157,7 @@ namespace EveryonesHell.EntityManagment
             this.healthBar = healthBar;
             Speed = speed;
             velocity = new Vector2f(0, 0);
+            OnCollision += InteractiveObject_OnCollision;
         }
 
         /// <summary>
@@ -186,7 +171,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
         public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
-            :base(true, true, position, size, animations.Sprite)
+            : base(true, true, position, size, animations.Sprite)
         {
             this.inventory = inventory;
             this.animations = animations;
@@ -195,8 +180,34 @@ namespace EveryonesHell.EntityManagment
             Speed = speed;
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
-            Health = 50;
-            Healthbar = this.healthBar;
+            health = 50;
+            Healthbar = healthBar;
+            OnCollision += InteractiveObject_OnCollision;
+        }
+
+        /// <summary>
+        /// Initzializes a new interactive object
+        /// </summary>
+        /// <param name="position">Spawn position of the object</param>
+        /// <param name="size">Size of the interactive object</param>
+        /// <param name="inventory">Inventory of the interactive object</param>
+        /// <param name="animations">Animations of the interactive object</param>
+        /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
+        /// <param name="viewDirection">Indicates the view direction of the object</param>
+        /// <param name="speed">Indicates the movement speed of the object</param>
+        public InteractiveObject(Vector2f position, Vector2i size, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed)
+            : base(true, true, position, size, animations.Sprite)
+        {
+            this.animations = animations;
+            this.isMoveAble = isMoveAble;
+            this.viewDirection = viewDirection;
+            Speed = speed;
+            velocity = new Vector2f(0, 0);
+            MaxHealth = 100;
+            health = 50;
+            Healthbar = null;
+            inventory = null;
+            OnCollision += InteractiveObject_OnCollision;
         }
 
 
@@ -221,9 +232,38 @@ namespace EveryonesHell.EntityManagment
             Speed = speed;
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
-            Health = 50;
+            health = 50;
             this.healthBar = healthBar;
+            OnCollision += InteractiveObject_OnCollision;
         }
+
+        protected virtual void InteractiveObject_OnCollision(object sender, CollisionArgs e)
+        {
+            Entity otherObject = null;
+            if (e.CollisionObjectDest != null && e.CollisionObjectDest != this)
+                otherObject = e.CollisionObjectDest;            
+            else if (e.CollisionObjectSource != null && e.CollisionObjectSource != this)
+                otherObject = e.CollisionObjectSource;
+            
+
+            if (otherObject != null)
+            {
+                //Do something with other object... otherwise just destroy projectile
+                //otherObject
+            }
+            else
+            {
+                //Tile Collision
+                if(this is Projectile)
+                {
+                    OnKill?.Invoke(this, null);
+                    isMoveAble = false;
+                    IsCollidable = false;
+                    Visable = false;
+                }
+            }
+        }
+    
 
         /// <summary>
         /// Updates the interactive object
@@ -270,36 +310,13 @@ namespace EveryonesHell.EntityManagment
                         bool tileCollision = (tile.Flags & GlobalReferences.FlagCollision) == GlobalReferences.FlagCollision;
                         bool doObjectCollision = tile.Flags - (tileCollision ? 1 : 0) > 2;
 
-                        if(!prevOverlappingTiles.Contains(tileInfo))
-                            SetFlags(tile, tileInfo.Y, tileInfo.X, 2);
-                        
                         backward += DoCollisionDetection(Velocity * elapsedSeconds, tileInfo, tileCollision, doObjectCollision);
                     }
 
                     if(backward != new Vector2f(0, 0))
                         Position += backward;
-
-                    foreach (Vector2i tileInfo in prevOverlappingTiles)
-                    {
-                        TileMapSystem.Tile tile = GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X);
-                        if (!OverlappingTiles.Contains(tileInfo))
-                            SetFlags(tile, tileInfo.Y, tileInfo.X, -2);
-                    }
                 }
             }
-        }
-
-        /// <summary>
-        /// Set Tile flags
-        /// </summary>
-        /// <param name="tile">Tile object</param>
-        /// <param name="tileRow">Tile row index</param>
-        /// <param name="tileColumn">Tile column index</param>
-        /// <param name="value">Value to add to the current flag</param>
-        private void SetFlags(TileMapSystem.Tile tile, int tileRow, int tileColumn, int value)
-        {
-            tile.Flags = (byte)(tile.Flags + value);
-            GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.SetTileValue(tileRow, tileColumn, tile);
         }
 
         /// <summary>
@@ -315,7 +332,11 @@ namespace EveryonesHell.EntityManagment
             if (tileCollision)
             {
                 IntRect tileBox = GetTileBoundingBox(tileInfo);
-                OnCollision?.Invoke(this, EventArgs.Empty);
+                CollisionArgs args = new CollisionArgs(this, null);
+                OnCollision?.Invoke(this, args);
+                if (args.CancelBackward)
+                    return new Vector2f(0, 0);
+                
                 return GetBackwardVector(tileBox, moveVec);
             }
             else if (objectCollision)
@@ -323,17 +344,31 @@ namespace EveryonesHell.EntityManagment
                 Vector2f backwardVec = new Vector2f(0, 0);
                 Entity[] collidableEntities = GlobalReferences.MainGame.CurrentScene.Entities.Entities.Where(ent => ent.IsCollidable && ent != this && ent.OverlappingTiles.Contains(tileInfo)).ToArray();
                 foreach (Entity ent in collidableEntities)
-                {
+                {                
                     Vector2f backward = GetBackwardVector(ent.BoundingBox, moveVec);
                     if (backward != new Vector2f(0, 0))
                     {
-                        backwardVec += backward;
-                        OnCollision?.Invoke(this, EventArgs.Empty);
+                        CollisionArgs sourceArgs = new CollisionArgs(this, ent);
+                        CollisionArgs destArgs = new CollisionArgs(ent, this);
+                        OnCollision?.Invoke(this, new CollisionArgs(this, ent));
+                       
+                        if (ent is InteractiveObject)
+                        {
+                            (ent as InteractiveObject).CallCollisionEvent(destArgs);
+                        }
+
+                        if (!sourceArgs.CancelBackward && !destArgs.CancelBackward)
+                            backwardVec += backward;
                     }
                 }
                 return backwardVec;
             }
             return new Vector2f(0, 0);
+        }
+
+        public void CallCollisionEvent(CollisionArgs destArgs)
+        {
+            OnCollision?.Invoke(this, destArgs);
         }
 
         /// <summary>
@@ -385,9 +420,29 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        public int ChangeHealth(int healthValue, Entity activator)
+        {
+            int value = health + healthValue;
+             
+            if (value < health)
+                OnReceiveDamage?.Invoke(this, new AttackerArgs(activator));
+            else if (value > health)
+                OnReceiveHealth?.Invoke(this, new AttackerArgs(activator));
+
+            health = value;
+
+            if (health > maxHealth)
+                health = maxHealth;
+
+            if (maxHealth > 0 && health <= 0)
+                OnKill?.Invoke(this, new AttackerArgs(activator));
+
+            return health;
+        }
+
         public override Entity Clone()
         {
-            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, healthBar.Clone(healthBar.IsFixed));
+            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, healthBar?.Clone(healthBar.IsFixed));
         }
     }
 }

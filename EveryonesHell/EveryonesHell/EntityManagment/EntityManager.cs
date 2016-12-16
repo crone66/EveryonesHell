@@ -55,5 +55,30 @@ namespace EveryonesHell.EntityManagment
                 entities[i].Draw(window);
             }
         }
+
+        public void AddEntity(Entity entity)
+        {
+            if (entity != null)
+            {
+                entity.OnDestroy += Entity_OnDestroy;
+                entities.Add(entity);
+            }
+        }
+
+        public void RemoveEntity(Entity entity)
+        {
+            Entity_OnDestroy(entity, null);
+        }
+
+        private void Entity_OnDestroy(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                Entity ent = sender as Entity;
+                ent.OnDestroy -= Entity_OnDestroy;
+                entities.Remove(sender as Entity);
+            }
+        }
+
     }
 }

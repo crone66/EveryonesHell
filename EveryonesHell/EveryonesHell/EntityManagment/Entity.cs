@@ -24,6 +24,8 @@ namespace EveryonesHell.EntityManagment
         private Sprite currentSprite;
         private IntRect spriteRect;
         private IntRect boundingBox;
+        
+        public event EventHandler OnDestroy;
 
         private List<Vector2i> overlappingTiles;
 
@@ -304,16 +306,50 @@ namespace EveryonesHell.EntityManagment
         {
             int tileColumnCount = Convert.ToInt32(Math.Ceiling(boundingBox.Width / (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
             int tileRowCount = Convert.ToInt32(Math.Ceiling(boundingBox.Height / (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
-
+            List<Vector2i> prevOverlappings = overlappingTiles.ToList();
             overlappingTiles.Clear();
             for (int r = tileRow - tileRowCount; r < tileRow + tileRowCount + 1; r++)
             {
                 for (int c = tileColumn - tileColumnCount; c < tileColumn + tileColumnCount + 1; c++)
                 {
-                    if(boundingBox.Intersects(GetTileBoundingBox(new Vector2i(c, r))))
+                    if (boundingBox.Intersects(GetTileBoundingBox(new Vector2i(c, r))))
                         overlappingTiles.Add(new Vector2i(c, r));
                 }
             }
+
+            UpdateFlags(prevOverlappings);
+        }
+
+        protected void UpdateFlags(List<Vector2i> prevOverlappingTiles)
+        {
+            foreach (Vector2i tileInfo in OverlappingTiles)
+            {
+                TileMapSystem.Tile tile = GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X);
+                
+                if (!prevOverlappingTiles.Contains(tileInfo))
+                    SetFlags(tile, tileInfo.Y, tileInfo.X, 2);
+            }
+
+            foreach (Vector2i tileInfo in prevOverlappingTiles)
+            {
+                TileMapSystem.Tile tile = GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X);
+                if (!OverlappingTiles.Contains(tileInfo))
+                    SetFlags(tile, tileInfo.Y, tileInfo.X, -2);
+            }
+        }
+
+
+        /// <summary>
+        /// Set Tile flags
+        /// </summary>
+        /// <param name="tile">Tile object</param>
+        /// <param name="tileRow">Tile row index</param>
+        /// <param name="tileColumn">Tile column index</param>
+        /// <param name="value">Value to add to the current flag</param>
+        private void SetFlags(TileMapSystem.Tile tile, int tileRow, int tileColumn, int value)
+        {
+            tile.Flags = (byte)(tile.Flags + value);
+            GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.SetTileValue(tileRow, tileColumn, tile);
         }
 
         /// <summary>
@@ -353,6 +389,5 @@ namespace EveryonesHell.EntityManagment
         public abstract void Update(float elapsedSeconds);
 
         public abstract Entity Clone();
-
     }
 }

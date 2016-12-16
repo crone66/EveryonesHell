@@ -13,6 +13,9 @@ namespace EveryonesHell.EntityManagment
     public class Character : InteractiveObject
     {
         private Vector2i lastDirection;
+        private float attackDelay = 1f;
+        private float elaspedAttackTime;
+
         public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar)
             :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar)
         {
@@ -23,9 +26,10 @@ namespace EveryonesHell.EntityManagment
         {
         }
 
-        public override void Update(float elapsedMilliseconds)
+        public override void Update(float elapsedSeconds)
         {
-            base.Update(elapsedMilliseconds);
+            elaspedAttackTime += elapsedSeconds;
+            base.Update(elapsedSeconds);
         }
 
         public override void Draw(RenderWindow window)
@@ -63,8 +67,17 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e"></param>
         public void OnAttack(object sender, ExecuteCommandArgs e)
         {
-            Entity ent = EntityFactory.Clone("Bullet");
-            ent.Position = Position + new Vector2f(20, 20);
+            if (elaspedAttackTime > attackDelay)
+            {
+                elaspedAttackTime = 0f;
+                Entity ent = EntityFactory.Clone("Bullet");
+                if (ent is Projectile)
+                {
+                    Projectile projectile = ent as Projectile;
+                    projectile.Position = Position + new Vector2f(20, 20);
+                    projectile.ViewDirection = ViewDirection;
+                }
+            }
         }
 
         /// <summary>
