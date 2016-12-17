@@ -110,6 +110,7 @@ namespace EveryonesHell
                     }
                 }
             }
+
             if (velocity.X > 0)
             {
                 currentFrame = (countX * 2) + columnFrame;
