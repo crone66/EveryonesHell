@@ -31,7 +31,6 @@ namespace EveryonesHell.EntityManagment
         
         public event EventHandler OnMoved;
         public event EventHandler OnMoving;
-        public event EventHandler OnSpawn;
         public event EventHandler<AttackerArgs> OnKill;
         public event EventHandler<AttackerArgs> OnReceiveDamage;
         public event EventHandler<AttackerArgs> OnReceiveHealth;

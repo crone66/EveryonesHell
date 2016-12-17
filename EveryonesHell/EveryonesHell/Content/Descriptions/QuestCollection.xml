@@ -5,11 +5,21 @@
       <Name>Er muss weg!</Name>
       <QuestID>0</QuestID>
       <Questitem>-1</Questitem>
-      <BasedOnDialogue>3</BasedOnDialogue>
+      <BasedOnDialogue>1</BasedOnDialogue>
       <RequiredItem>-1</RequiredItem>
       <Enemy>2</Enemy>
       <EnemyCount>1</EnemyCount>
       <Description>Töte ein Subat... es muss weg!</Description>
+    </Quest>
+    <Quest>
+      <Name>Blumen pflücken</Name>
+      <QuestID>1</QuestID>
+      <Questitem>0</Questitem>
+      <BasedOnDialogue>8</BasedOnDialogue>
+      <RequiredItem>-1</RequiredItem>
+      <Enemy>-1</Enemy>
+      <EnemyCount>-1</EnemyCount>
+      <Description>Finde eine dieser seltenen, blauen Blumen.</Description>
     </Quest>
   </Quests>
 </QuestCollection>

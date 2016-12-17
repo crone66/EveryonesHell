@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<DialogCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Dialogs>
+    <Dialog>
+      <DialogID>0</DialogID>
+      <DialogText>Bock auf ne Quest?</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds>
+        <int>1</int>
+        <int>2</int>
+      </DialogAnswerIds>
+    </Dialog>
+    <Dialog>
+      <DialogID>2</DialogID>
+      <DialogText>Fuck you!</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>1</DialogID>
+      <DialogText>Wenns sein muss...</DialogText>
+      <NextDialogId>3</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>3</DialogID>
+      <DialogText>Töte ein wildes Subat.</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>4</DialogID>
+      <DialogText>Hallo Fremder...</DialogText>
+      <NextDialogId>5</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>5</DialogID>
+      <DialogText>Ich könnte deine Hilfe brauchen.</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds>
+        <int>6</int>
+        <int>7</int>
+      </DialogAnswerIds>
+    </Dialog>
+    <Dialog>
+      <DialogID>6</DialogID>
+      <DialogText>Na klar... </DialogText>
+      <NextDialogId>8</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>7</DialogID>
+      <DialogText>Und warum sollte mich das interessieren...</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>8</DialogID>
+      <DialogText>Finde eine blaue Blume.</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+  </Dialogs>
+</DialogCollection>
