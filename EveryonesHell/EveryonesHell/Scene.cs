@@ -165,7 +165,7 @@ namespace EveryonesHell
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/hill.png");
 
             //Sprites for the Characters's
-            Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
+            Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/NPCAnimation.png");
             Sprite testPlayer = content.Load<Sprite, Texture>("4", "Content/Testplayer.png");
             Sprite playerSpriteSheet = content.Load<Sprite, Texture>("-2", "Content/PlayerSpriteSheet.png");
 
