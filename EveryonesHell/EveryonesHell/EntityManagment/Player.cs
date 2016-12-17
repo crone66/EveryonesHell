@@ -11,9 +11,10 @@ namespace EveryonesHell.EntityManagment
 {
     public class Player : Character
     {
-        private Vector2i lastDirection;
+        private Vector2f lastDirection;
         private HUD.DialogSystem dialog;
         private bool jetpackActive = false;
+        private Entity lastCollisionObject;
 
         private QuestManagment.QuestTracker questTracker;
 
@@ -24,14 +25,15 @@ namespace EveryonesHell.EntityManagment
         /// <param name="size">Size of the player</param>
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
-        public Player(Vector2f position, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker)
-            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID)
+        public Player(Vector2f position, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
+            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
         {
-            lastDirection = new Vector2i(0, 0);
+            lastDirection = new Vector2f(0, 0);
             this.dialog = dialog;
             OnShoot += Player_OnShoot;
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
+            OnCollision += InteractiveObject_OnCollision;
         }
 
         /// <summary>
@@ -42,14 +44,15 @@ namespace EveryonesHell.EntityManagment
         /// <param name="size">Size of the player</param>
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
-        public Player(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID)
+        public Player(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
         {
-            lastDirection = new Vector2i(0, 0);
+            lastDirection = new Vector2f(0, 0);
             this.dialog = dialog;
             OnShoot += Player_OnShoot;
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
+            OnCollision += InteractiveObject_OnCollision;
         }
 
         private void Player_OnShoot(object sender, EventArgs e)
@@ -61,6 +64,22 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        private void InteractiveObject_OnCollision(object sender, CollisionArgs e)
+        {
+            Entity otherObject = null;
+            if (e.CollisionObjectDest != null && e.CollisionObjectDest != this)
+                otherObject = e.CollisionObjectDest;
+            else if (e.CollisionObjectSource != null && e.CollisionObjectSource != this)
+                otherObject = e.CollisionObjectSource;
+
+            if (otherObject != null)
+            {
+                lastCollisionObject = otherObject;
+                Console.WriteLine("Set");
+                //Interaction key pressed?
+            }
+        }
+
         /// <summary>
         /// Updates the player
         /// </summary>
@@ -68,7 +87,16 @@ namespace EveryonesHell.EntityManagment
         public override void Update(float elapsedSeconds)
         {
             base.Update(elapsedSeconds);
+            if (lastDirection != ViewDirection)
+               lastCollisionObject = null;
+           
             questTracker.ItemQuest();
+        }
+
+        public override void OnMove(object sender, ExecuteCommandArgs e)
+        {
+            lastDirection = ViewDirection;
+            base.OnMove(sender, e);
         }
 
         /// <summary>
@@ -87,12 +115,16 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Command arguments</param>
         public void OnAction(object sender, ExecuteCommandArgs e)
         {
-            dialog.Open(0);//, Position + (new Vector2f(Size.X / 2, Size.Y / 2)));
+            if (lastCollisionObject != null)
+            {
+                dialog.Open(0);
+            }
+            //dialog.Open(0);//, Position + (new Vector2f(Size.X / 2, Size.Y / 2)));
             //TODO: Action tile location
             // => Get object on action tile
             // => if object exists Execute Action 
         }
-    
+
         /// <summary>
         /// 
         /// </summary>
