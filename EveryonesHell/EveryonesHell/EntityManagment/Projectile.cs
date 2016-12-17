@@ -14,6 +14,7 @@ namespace EveryonesHell.EntityManagment
         private int damage = 10;
         private int maxDistance;
         private int distanceTravelled;
+        private int spawnerId;
         private float damageReductionRate;
         private float teamDamageReductionRate;
 
@@ -55,18 +56,19 @@ namespace EveryonesHell.EntityManagment
         public event EventHandler<VictimArgs> OnDoDamage;
         
 
-        public Projectile(Vector2i size, AnimationManager animation, bool isMoveAble, float speed, int maxDistance):
-            base(size, animation, isMoveAble, speed, null)
+        public Projectile(Vector2i size, AnimationManager animation, bool isMoveAble, float speed, int maxDistance, int groupId)
+            :base(size, animation, isMoveAble, speed, null, groupId, -1)
         {
-            doTeamDamage = true;
+            doTeamDamage = false;
             teamDamageReductionRate = 0f;
             damageReductionRate = 0f;
             FactionId = -1;
             this.maxDistance = maxDistance;
         }
 
-        public void Init(Vector2f sourcePosition, Vector2i sourceSize, Vector2f viewDirection, int factionId)
+        public void Init(Vector2f sourcePosition, Vector2i sourceSize, Vector2f viewDirection, int factionId, int spawnerId)
         {
+            this.spawnerId = spawnerId;
             FactionId = factionId;
             Vector2f spawn = CalculateSpawnPosition(viewDirection, sourceSize);         
             Vector2f offset = SetupRotation(viewDirection, sourceSize);
@@ -76,6 +78,7 @@ namespace EveryonesHell.EntityManagment
             Position = spawn;
             spawnPosition = Position;
             ViewDirection = viewDirection;
+            OnCollision += InteractiveObject_OnCollision;
             BoundingBox = new IntRect(BoundingBox.Left, BoundingBox.Top, (int)rotatedSize.X, (int)rotatedSize.Y);
         }
 
@@ -100,14 +103,15 @@ namespace EveryonesHell.EntityManagment
         {
             Vector2f spawn = new Vector2f(0, 0);
             Vector2f rotatedSize = GetRotatedSize(viewDirection);
+            float offset = 0;
             if (viewDirection.X > 0)
-                spawn.X = viewDirection.X * (sourceSize.X + rotatedSize.X);
+                spawn.X = viewDirection.X * (sourceSize.X + rotatedSize.X + offset);
             else if (viewDirection.X < 0)
-                spawn.X = viewDirection.X * rotatedSize.X;
+                spawn.X = viewDirection.X * (rotatedSize.X + offset);
             if (viewDirection.Y > 0)
-                spawn.Y = viewDirection.Y * (sourceSize.Y + rotatedSize.Y);
+                spawn.Y = viewDirection.Y * (sourceSize.Y + rotatedSize.Y + offset);
             else if (viewDirection.Y < 0)
-                spawn.Y = viewDirection.Y * rotatedSize.Y;
+                spawn.Y = viewDirection.Y * (rotatedSize.Y + offset);
 
             return spawn;
         }
@@ -162,7 +166,7 @@ namespace EveryonesHell.EntityManagment
             base.Draw(window);
         }
 
-        protected override void InteractiveObject_OnCollision(object sender, CollisionArgs e)
+        private void InteractiveObject_OnCollision(object sender, CollisionArgs e)
         {
             Entity otherObject = null;
             if (e.CollisionObjectDest != null && e.CollisionObjectDest != this)
@@ -174,17 +178,22 @@ namespace EveryonesHell.EntityManagment
             {
                 if (otherObject is InteractiveObject)
                 {
-                    e.CancelBackward = true; 
-                    InteractiveObject interactiveObject = otherObject as InteractiveObject;
-                    if (doTeamDamage || FactionId != interactiveObject.FactionId)
+                    e.CancelBackward = true;
+                    if (otherObject.Id != spawnerId)
                     {
-                        int newHealth = interactiveObject.ChangeHealth(CalculateDamage(FactionId == interactiveObject.FactionId), this);
-                        OnDoDamage?.Invoke(this, new VictimArgs(interactiveObject, damage, newHealth <= 0));
+                        InteractiveObject interactiveObject = otherObject as InteractiveObject;
+                        if (doTeamDamage || FactionId != interactiveObject.FactionId)
+                        {
+                            int newHealth = interactiveObject.ChangeHealth(CalculateDamage(FactionId == interactiveObject.FactionId), this);
+                            OnDoDamage?.Invoke(this, new VictimArgs(interactiveObject, damage, newHealth <= 0));
+                        }
+                        OnCollision -= InteractiveObject_OnCollision;
                     }
-                    OnCollision -= InteractiveObject_OnCollision;
                 }
             }
-            CallOnDestroyEvent();
+
+            if(otherObject == null || otherObject.Id != spawnerId)
+                CallOnDestroyEvent();
         }
 
         private int CalculateDamage(bool teamAttack)
@@ -203,7 +212,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new Projectile(Size, animations.Clone(), IsMoveAble, Speed, maxDistance);
+            return new Projectile(Size, animations.Clone(), IsMoveAble, Speed, maxDistance, GroupID);
         }
     }
 }
