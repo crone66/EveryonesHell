@@ -189,7 +189,7 @@ namespace EveryonesHell
             sprites.Add(5, gaugebar);
             sprites.Add(6, gaugebarborder);
 
-            quests = content.Load<QuestCollection>("C:/Users/Lukas/Documents/SRH/Programmierung 2/QuestCollection.xml");
+            quests = content.Load<QuestCollection>("Content/QuestCollection.xml");
             
             questTracker = new QuestManagment.QuestTracker(null, quests);
             questTrackerWindow = new QuestTrackerWindow(new Vector2f(75, 100), font, questTracker);

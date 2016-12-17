@@ -77,6 +77,11 @@ namespace EveryonesHell.QuestManagment
             }
         }
 
+        /// <summary>
+        /// checking whether a killed npc is part of a quest or not
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void Projectile_OnDoDamage(object sender, EntityManagment.VictimArgs e)
         {
             if (e.Victim is EntityManagment.InteractiveObject)

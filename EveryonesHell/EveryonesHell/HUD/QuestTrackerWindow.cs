@@ -5,12 +5,8 @@
  */
 
 using SFML.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SFML.System;
+using SFML.Window;
 
 namespace EveryonesHell.HUD
 {
@@ -18,13 +14,14 @@ namespace EveryonesHell.HUD
     {
         private RectangleShape background;
         private RectangleShape nameBackground;
-        private int width , height, nameWidth, lineSpacing;
+        private int width, height, nameWidth, lineSpacing, displayedQuestCount;
         private Text text;
         private QuestManagment.QuestTracker questTracker;
         private Font font;
         private Vector2f position;
         private uint characterSizeNames, characterSizeInformation;
-        
+        private float elapsedTime;
+        private const float keyDelay = 0.1f;
         /// <summary>
         /// initialze questtrackerwindow
         /// </summary>
@@ -54,15 +51,36 @@ namespace EveryonesHell.HUD
 
             this.font = font;
             text = new Text("", font, 16);
-            text.Color = new SFML.Graphics.Color(250, 250, 250);
 
             characterSizeNames = 16;
             characterSizeInformation = 13;
             lineSpacing = 12;
+            displayedQuestCount = 0;
+            elapsedTime = 0;
         }
 
         public override void Update(float elapsedSeconds)
         {
+            elapsedTime += elapsedSeconds;
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
+            {
+                IsOpen = false;
+            }
+
+            if (elapsedTime >= keyDelay)
+            {
+                elapsedTime = 0f;
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Down) && (displayedQuestCount + 1 < questTracker.activeQuests.Count))
+                {
+                    displayedQuestCount++;
+                }
+
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Up) && (displayedQuestCount > 0))
+                {
+                    displayedQuestCount--;
+                }
+            }
         }
 
         /// <summary>
@@ -103,43 +121,76 @@ namespace EveryonesHell.HUD
         /// <param name="window">window where everything is drawn</param>
         private void DrawQuests(RenderWindow window)
         {
-            Vector2f textPosition = new Vector2f(position.X + 265, position.Y);
-
+            /*
             for (int i = 0; i < questTracker.activeQuests.Count; i++)
             {
+                Vector2f textPosition = new Vector2f(position.X + 265, position.Y + 115 * i);
+
+                textPosition.Y += 15;
+
                 text = new Text(questTracker.activeQuests[i].Name, font, characterSizeNames);
-                if (i == 0)
-                {
-                    text.Position += new Vector2f(0, 15);
-                }
-                else
-                {
-                    text.Position += new Vector2f(0, 15 + characterSizeInformation);
-                }
+                text.Position = new Vector2f(textPosition.X, textPosition.Y);
                 window.Draw(text);
+                textPosition.Y += characterSizeNames + lineSpacing;
 
                 if (questTracker.activeQuests[i].Questitem != -1)
                 {
-                    text = new Text(questTracker.activeQuests[i].Questitem.ToString(), font, characterSizeInformation);
-                    text.Position += new Vector2f(0, lineSpacing + characterSizeNames);
+                    text = new Text("Questitem: " + questTracker.activeQuests[i].Questitem.ToString(), font, characterSizeInformation);
+                    text.Position = new Vector2f(textPosition.X, textPosition.Y);
                     window.Draw(text);
+                    textPosition.Y += characterSizeInformation + lineSpacing;
                 }
 
                 if (questTracker.activeQuests[i].Enemy != -1)
                 {
-                    text = new Text(questTracker.activeQuests[i].Enemy.ToString(), font, characterSizeInformation);
-                    text.Position += new Vector2f(0, lineSpacing + characterSizeNames);
+                    text = new Text("Gegner-ID:   " + questTracker.activeQuests[i].Enemy.ToString(), font, characterSizeInformation);
+                    text.Position = new Vector2f(textPosition.X, textPosition.Y);
                     window.Draw(text);
+                    textPosition.Y += characterSizeInformation + lineSpacing;
 
-                    text = new Text(questTracker.activeQuests[i].EnemyCount.ToString(), font, characterSizeInformation);
-                    text.Position += new Vector2f(0, lineSpacing + characterSizeInformation);
+                    text = new Text("Anzahl an zu tötenden Gegnern:   " + questTracker.activeQuests[i].EnemyCount.ToString(), font, characterSizeInformation);
+                    text.Position = new Vector2f(textPosition.X, textPosition.Y);
                     window.Draw(text);
+                    textPosition.Y += characterSizeInformation + lineSpacing;
                 }
 
-                text = new Text(questTracker.activeQuests[i].Description, font, characterSizeInformation);
-                text.Position += new Vector2f(0, lineSpacing + characterSizeInformation);
+                text = new Text("Questbeschreibung:   " + questTracker.activeQuests[i].Description, font, characterSizeInformation);
+                text.Position = new Vector2f(textPosition.X, textPosition.Y);
                 window.Draw(text);
             }
+            */
+
+            Vector2f textPosition = new Vector2f(position.X + 265, position.Y +15);
+
+            text = new Text(questTracker.activeQuests[displayedQuestCount].Name, font, characterSizeNames);
+            text.Position = new Vector2f(textPosition.X, textPosition.Y);
+            window.Draw(text);
+            textPosition.Y += characterSizeNames + lineSpacing;
+
+            if (questTracker.activeQuests[displayedQuestCount].Questitem != -1)
+            {
+                text = new Text("Questitem: " + questTracker.activeQuests[displayedQuestCount].Questitem.ToString(), font, characterSizeInformation);
+                text.Position = new Vector2f(textPosition.X, textPosition.Y);
+                window.Draw(text);
+                textPosition.Y += characterSizeInformation + lineSpacing;
+            }
+
+            if (questTracker.activeQuests[displayedQuestCount].Enemy != -1)
+            {
+                text = new Text("Gegner-ID:   " + questTracker.activeQuests[displayedQuestCount].Enemy.ToString(), font, characterSizeInformation);
+                text.Position = new Vector2f(textPosition.X, textPosition.Y);
+                window.Draw(text);
+                textPosition.Y += characterSizeInformation + lineSpacing;
+
+                text = new Text("Anzahl an zu tötenden Gegnern:   " + questTracker.activeQuests[displayedQuestCount].EnemyCount.ToString(), font, characterSizeInformation);
+                text.Position = new Vector2f(textPosition.X, textPosition.Y);
+                window.Draw(text);
+                textPosition.Y += characterSizeInformation + lineSpacing;
+            }
+
+            text = new Text("Questbeschreibung:   " + questTracker.activeQuests[displayedQuestCount].Description, font, characterSizeInformation);
+            text.Position = new Vector2f(textPosition.X, textPosition.Y);
+            window.Draw(text);
         }
     }
 }
