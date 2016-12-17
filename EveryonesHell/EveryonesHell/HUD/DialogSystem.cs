@@ -136,6 +136,8 @@ namespace EveryonesHell.HUD
                 else
                 {
                     IsOpen = false;
+
+                    OnDialogChanged?.Invoke(this, new DialogChangedArgs(-1, currentDialog.DialogID));
                 }
             }
         }
@@ -195,6 +197,9 @@ namespace EveryonesHell.HUD
                 else
                 {
                     IsOpen = false;
+
+                    OnDialogChanged?.Invoke(this, new DialogChangedArgs(-1 ,currentDialog.DialogID));
+
                 }
             }
             catch(Exception ex)
@@ -202,6 +207,8 @@ namespace EveryonesHell.HUD
                 GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine("Couldn't load dialog ID: " + dialogId.ToString(), 255, 0, 0);
                 GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(ex.Message, 255, 0, 0);
                 IsOpen = false;
+
+                OnDialogChanged?.Invoke(this, new DialogChangedArgs(-1, currentDialog.DialogID));
             }
         }
 

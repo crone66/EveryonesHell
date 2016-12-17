@@ -38,16 +38,6 @@ namespace EveryonesHell.EntityManagment
             OnCollision += InteractiveObject_OnCollision;
         }
 
-        private void Dialog_OnDialogChanged(object sender, DialogChangedArgs e)
-        {
-            if (GlobalReferences.MainGame.CurrentScene.Quests.Quests.ToList().Exists(q => q.BasedOnDialogue == e.PrevDialogId))
-            {
-                FileDescriptions.Quest quest = GlobalReferences.MainGame.CurrentScene.Quests.Quests.First(q => q.BasedOnDialogue == e.PrevDialogId);
-                questTracker.ActivateQuest(quest.QuestID);
-                Console.WriteLine("Quest activated");
-            }
-        }
-
         /// <summary>
         /// Initializes a new Player
         /// </summary>
@@ -61,10 +51,20 @@ namespace EveryonesHell.EntityManagment
         {
             lastDirection = new Vector2f(0, 0);
             this.dialog = dialog;
+            this.dialog.OnDialogChanged += Dialog_OnDialogChanged;
             OnShoot += Player_OnShoot;
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
             OnCollision += InteractiveObject_OnCollision;
+        }
+
+        private void Dialog_OnDialogChanged(object sender, DialogChangedArgs e)
+        {
+            if (GlobalReferences.MainGame.CurrentScene.Quests.Quests.ToList().Exists(q => q.BasedOnDialogue == e.PrevDialogId))
+            {
+                FileDescriptions.Quest quest = GlobalReferences.MainGame.CurrentScene.Quests.Quests.First(q => q.BasedOnDialogue == e.PrevDialogId);
+                questTracker.ActivateQuest(quest.QuestID);
+            }
         }
 
         private void Player_OnShoot(object sender, EventArgs e)
