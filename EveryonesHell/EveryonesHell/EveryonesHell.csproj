@@ -144,6 +144,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>OpenTK.dll</TargetPath>
     </ContentWithTargetPath>
+    <Content Include="Content\DialogCollection.xml" />
     <Content Include="Content\gaugebar.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -151,9 +152,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\fireBall.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\QuestCollection.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\PlayerSpriteSheet.png">
@@ -165,6 +163,7 @@
     <Content Include="Content\hill.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\QuestCollection.xml" />
     <Content Include="Content\TestDialogs.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

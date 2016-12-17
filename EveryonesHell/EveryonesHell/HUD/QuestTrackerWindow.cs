@@ -126,46 +126,7 @@ namespace EveryonesHell.HUD
         /// <param name="window">window where everything is drawn</param>
         private void DrawQuests(RenderWindow window)
         {
-            /*
-            for (int i = 0; i < questTracker.activeQuests.Count; i++)
-            {
-                Vector2f textPosition = new Vector2f(position.X + 265, position.Y + 115 * i);
-
-                textPosition.Y += 15;
-
-                text = new Text(questTracker.activeQuests[i].Name, font, characterSizeNames);
-                text.Position = new Vector2f(textPosition.X, textPosition.Y);
-                window.Draw(text);
-                textPosition.Y += characterSizeNames + lineSpacing;
-
-                if (questTracker.activeQuests[i].Questitem != -1)
-                {
-                    text = new Text("Questitem: " + questTracker.activeQuests[i].Questitem.ToString(), font, characterSizeInformation);
-                    text.Position = new Vector2f(textPosition.X, textPosition.Y);
-                    window.Draw(text);
-                    textPosition.Y += characterSizeInformation + lineSpacing;
-                }
-
-                if (questTracker.activeQuests[i].Enemy != -1)
-                {
-                    text = new Text("Gegner-ID:   " + questTracker.activeQuests[i].Enemy.ToString(), font, characterSizeInformation);
-                    text.Position = new Vector2f(textPosition.X, textPosition.Y);
-                    window.Draw(text);
-                    textPosition.Y += characterSizeInformation + lineSpacing;
-
-                    text = new Text("Anzahl an zu tötenden Gegnern:   " + questTracker.activeQuests[i].EnemyCount.ToString(), font, characterSizeInformation);
-                    text.Position = new Vector2f(textPosition.X, textPosition.Y);
-                    window.Draw(text);
-                    textPosition.Y += characterSizeInformation + lineSpacing;
-                }
-
-                text = new Text("Questbeschreibung:   " + questTracker.activeQuests[i].Description, font, characterSizeInformation);
-                text.Position = new Vector2f(textPosition.X, textPosition.Y);
-                window.Draw(text);
-            }
-            */
-
-            Vector2f textPosition = new Vector2f(position.X + 265, position.Y +15);
+            Vector2f textPosition = new Vector2f(position.X + nameWidth + 15, position.Y +15);
 
             text = new Text(questTracker.activeQuests[displayedQuestCount].Name, font, characterSizeNames);
             text.Position = new Vector2f(textPosition.X, textPosition.Y);
