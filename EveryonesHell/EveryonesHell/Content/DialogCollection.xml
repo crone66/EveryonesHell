@@ -28,5 +28,38 @@
       <NextDialogId>-1</NextDialogId>
       <DialogAnswerIds />
     </Dialog>
+    <Dialog>
+      <DialogID>4</DialogID>
+      <DialogText>Hallo Fremder...</DialogText>
+      <NextDialogId>5</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>5</DialogID>
+      <DialogText>Ich könnte deine Hilfe brauchen.</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds>
+        <int>6</int>
+        <int>7</int>
+      </DialogAnswerIds>
+    </Dialog>
+    <Dialog>
+      <DialogID>6</DialogID>
+      <DialogText>Na klar... </DialogText>
+      <NextDialogId>8</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>7</DialogID>
+      <DialogText>Und warum sollte mich das interessieren...</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
+    <Dialog>
+      <DialogID>8</DialogID>
+      <DialogText>Finde eine blaue Blume.</DialogText>
+      <NextDialogId>-1</NextDialogId>
+      <DialogAnswerIds />
+    </Dialog>
   </Dialogs>
 </DialogCollection>
