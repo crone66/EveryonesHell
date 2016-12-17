@@ -318,6 +318,8 @@ namespace EveryonesHell.EntityManagment
             if(isMoveAble && !Freeze)
             {
                 Move(elapsedSeconds);
+                animations.Update(elapsedSeconds, Velocity);
+                SpriteRect = animations.SpriteRect;
             }
             
             Velocity = new Vector2f(0, 0);

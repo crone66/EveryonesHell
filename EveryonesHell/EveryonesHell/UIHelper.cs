@@ -104,7 +104,7 @@ namespace EveryonesHell
         /// <returns>Returns a scale vector</returns>
         public static Vector2f GetScale(IntRect sourceSize, IntRect distinationSize)
         {
-            return new Vector2f(distinationSize.Width / sourceSize.Width, distinationSize.Height / sourceSize.Height);
+            return new Vector2f(distinationSize.Width / (float)sourceSize.Width, distinationSize.Height / (float)sourceSize.Height);
         }
     }
 }

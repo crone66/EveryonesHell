@@ -164,9 +164,10 @@ namespace EveryonesHell
             Sprite green = content.Load<Sprite, Texture>("0", "Content/testGreen.png");
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
 
-            //Sprites for the NPC's
+            //Sprites for the Characters's
             Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
             Sprite testPlayer = content.Load<Sprite, Texture>("4", "Content/Testplayer.png");
+            Sprite playerSpriteSheet = content.Load<Sprite, Texture>("-2", "Content/PlayerSpriteSheet.png");
 
 
             //Sprites for the Gaugebar
@@ -200,7 +201,7 @@ namespace EveryonesHell
 
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
-            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, healthBar, 0, questTracker);
+            Player = new Player(y, x, new Vector2i(43, 50), playerSpriteSheet, dialog, healthBar, 0, questTracker);
             TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, dialog, healthBar.Clone(false), 1);
             TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, dialog, healthBar.Clone(false), 2);
 
@@ -227,6 +228,7 @@ namespace EveryonesHell
             entities.Update(elapsedSeconds);
             mapManager.Update(Player.TileRow, Player.TileColumn);
             hudManager.Update(elapsedSeconds);
+            
             //mapManager.Update(TheMightyTester.TileRow, TheMightyTester.TileColumn);
             //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));       
         }
