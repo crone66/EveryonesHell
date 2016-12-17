@@ -21,7 +21,7 @@ namespace EveryonesHell.HUD
         private Vector2f position;
         private uint characterSizeNames, characterSizeInformation;
         private float elapsedTime;
-        private const float keyDelay = 0.1f;
+        private const float keyDelay = 0.15f;
         /// <summary>
         /// initialze questtrackerwindow
         /// </summary>
@@ -32,8 +32,8 @@ namespace EveryonesHell.HUD
             this.questTracker = questTracker;
             this.position = position;
 
-            width = 650;
-            height = 400;
+            width = 600;
+            height = 300;
             nameWidth = 250;
 
             background = new RectangleShape(new Vector2f(width, height));
@@ -108,6 +108,11 @@ namespace EveryonesHell.HUD
             for (int i = 0; i < questTracker.activeQuests.Count; i++)
             {
                 text = new Text(questTracker.activeQuests[i].Name, font, characterSizeNames);
+
+                if (i == displayedQuestCount)
+                {
+                    text.Color =  Color.Yellow;
+                }
 
                 text.Position = new Vector2f(textPosition.X, textPosition.Y + ((lineSpacing + characterSizeNames) * i));
 

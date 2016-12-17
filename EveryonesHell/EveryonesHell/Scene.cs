@@ -193,7 +193,7 @@ namespace EveryonesHell
             quests = content.Load<QuestCollection>("Content/QuestCollection.xml");
             
             questTracker = new QuestManagment.QuestTracker(null, quests);
-            questTrackerWindow = new QuestTrackerWindow(new Vector2f(75, 100), font, questTracker);
+            questTrackerWindow = new QuestTrackerWindow(new Vector2f(100, 150), font, questTracker);
 
             questTracker.ActivateQuest(0);
             questTracker.ActivateQuest(2);
