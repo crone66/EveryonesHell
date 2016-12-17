@@ -26,14 +26,26 @@ namespace EveryonesHell.EntityManagment
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
         public Player(Vector2f position, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
-            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
+            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId, null)
         {
             lastDirection = new Vector2f(0, 0);
             this.dialog = dialog;
+            this.dialog.OnDialogChanged += Dialog_OnDialogChanged;
             OnShoot += Player_OnShoot;
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
+
             OnCollision += InteractiveObject_OnCollision;
+        }
+
+        private void Dialog_OnDialogChanged(object sender, DialogChangedArgs e)
+        {
+            if (GlobalReferences.MainGame.CurrentScene.Quests.Quests.ToList().Exists(q => q.BasedOnDialogue == e.PrevDialogId))
+            {
+                FileDescriptions.Quest quest = GlobalReferences.MainGame.CurrentScene.Quests.Quests.First(q => q.BasedOnDialogue == e.PrevDialogId);
+                questTracker.ActivateQuest(quest.QuestID);
+                Console.WriteLine("Quest activated");
+            }
         }
 
         /// <summary>
@@ -45,7 +57,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
         public Player(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId, null)
         {
             lastDirection = new Vector2f(0, 0);
             this.dialog = dialog;
@@ -75,7 +87,7 @@ namespace EveryonesHell.EntityManagment
             if (otherObject != null)
             {
                 lastCollisionObject = otherObject;
-                Console.WriteLine("Set");
+                
                 //Interaction key pressed?
             }
         }
@@ -115,9 +127,10 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Command arguments</param>
         public void OnAction(object sender, ExecuteCommandArgs e)
         {
-            if (lastCollisionObject != null)
+            if (lastCollisionObject != null && lastCollisionObject is InteractiveObject)
             {
-                dialog.Open(0);
+                InteractiveObject io = lastCollisionObject as InteractiveObject;
+                dialog.Open(io.GetDialog());
             }
             //dialog.Open(0);//, Position + (new Vector2f(Size.X / 2, Size.Y / 2)));
             //TODO: Action tile location

@@ -202,8 +202,8 @@ namespace EveryonesHell
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
             Player = new Player(y, x, new Vector2i(50, 50), playerSpriteSheet, dialog, healthBar, 1, questTracker, 1);
-            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, healthBar.Clone(false), 2, 1);
-            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, healthBar.Clone(false), 3, 2);
+            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, healthBar.Clone(false), 2, 1, new int[] { 0 });
+            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, healthBar.Clone(false), 3, 2 , null);
 
             entities = new EntityManager();
             entities.AddEntity(Player);

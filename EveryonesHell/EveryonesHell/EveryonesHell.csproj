@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimationManager.cs" />
+    <Compile Include="CustomEventArgs\DialogChangedArgs.cs" />
     <Compile Include="CustomEventArgs\HudStateChangedArgs.cs" />
     <Compile Include="HUD\DebugConsoleManager.cs" />
     <Compile Include="EntityManagment\Character.cs" />

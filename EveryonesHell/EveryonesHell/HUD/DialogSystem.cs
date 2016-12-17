@@ -40,6 +40,8 @@ namespace EveryonesHell.HUD
         private Color textColor;
         private float elapsedTime;
 
+        public event EventHandler<DialogChangedArgs> OnDialogChanged;
+
         /// <summary>
         /// Initzializes a dialog system to handle and draw dialogs
         /// </summary>
@@ -222,6 +224,7 @@ namespace EveryonesHell.HUD
         /// <param name="dialog">Dialog to start with</param>
         public void Open(Dialog dialog)
         {
+            OnDialogChanged?.Invoke(this, new DialogChangedArgs(dialog.DialogID, currentDialog.DialogID));
             elapsedTime = selectionDelay;
             currentDialog = dialog;
             selectedAnswer = 0;
