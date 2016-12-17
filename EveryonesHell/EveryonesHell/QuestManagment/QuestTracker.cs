@@ -18,7 +18,7 @@ namespace EveryonesHell.QuestManagment
     public class QuestTracker
     {
         public InventorySystem.Inventory inventory;
-        private List<Quest> loadedQuests = new List<Quest>();
+        private QuestCollection loadedQuests = new QuestCollection();
         public List<Quest> activeQuests = new List<Quest>();
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace EveryonesHell.QuestManagment
         /// </summary>
         /// <param name="inventory">invetorysystem to check wether the player gained a required item or not</param>
         /// <param name="path">path of the xml-file containing all the quests</param>
-        public QuestTracker(InventorySystem.Inventory inventory, List<Quest> loadedQuests)
+        public QuestTracker(InventorySystem.Inventory inventory, QuestCollection loadedQuests)
         {
             this.inventory = inventory;
             this.loadedQuests = loadedQuests;
@@ -38,7 +38,7 @@ namespace EveryonesHell.QuestManagment
         /// <param name="questID">ID of the quest you want to activate</param>
         public void ActivateQuest(int questID)
         {
-            activeQuests.Add(loadedQuests[questID]);
+            activeQuests.Add(loadedQuests.Quests[questID]);
         }
 
         /// <summary>

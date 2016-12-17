@@ -11,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SFML.System;
-using DebugConsole;
 
 namespace EveryonesHell.HUD
 {
@@ -41,14 +40,14 @@ namespace EveryonesHell.HUD
             nameWidth = 250;
 
             background = new RectangleShape(new Vector2f(width, height));
-            background.FillColor = new SFML.Graphics.Color(80, 80, 80, 128);
-            background.OutlineColor = new SFML.Graphics.Color(80, 80, 80, 200);
+            background.FillColor = new SFML.Graphics.Color(0, 0, 0, 128);
+            background.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 200);
             background.OutlineThickness = 2;
             background.Position = position;
 
             nameBackground = new RectangleShape(new Vector2f(nameWidth, height));
-            nameBackground.FillColor = new SFML.Graphics.Color(80, 80, 80, 50);
-            nameBackground.OutlineColor = new SFML.Graphics.Color(80, 80, 80, 100);
+            nameBackground.FillColor = new SFML.Graphics.Color(0, 0, 0, 50);
+            nameBackground.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 100);
             nameBackground.OutlineThickness = 2;
             nameBackground.Position = position;
 
@@ -90,9 +89,9 @@ namespace EveryonesHell.HUD
 
             for (int i = 0; i < questTracker.activeQuests.Count; i++)
             {
-                text.Position += new Vector2f(0, (lineSpacing + characterSizeNames) * i);
-
                 text = new Text(questTracker.activeQuests[i].Name, font, characterSizeNames);
+
+                text.Position = new Vector2f(textPosition.X, textPosition.Y + ((lineSpacing + characterSizeNames) * i));
 
                 window.Draw(text);
             }
@@ -108,6 +107,7 @@ namespace EveryonesHell.HUD
 
             for (int i = 0; i < questTracker.activeQuests.Count; i++)
             {
+                text = new Text(questTracker.activeQuests[i].Name, font, characterSizeNames);
                 if (i == 0)
                 {
                     text.Position += new Vector2f(0, 15);
@@ -116,30 +116,28 @@ namespace EveryonesHell.HUD
                 {
                     text.Position += new Vector2f(0, 15 + characterSizeInformation);
                 }
-
-                text = new Text(questTracker.activeQuests[i].Name, font, characterSizeNames);
                 window.Draw(text);
 
                 if (questTracker.activeQuests[i].Questitem != -1)
                 {
-                    text.Position += new Vector2f(0, lineSpacing + characterSizeNames);
                     text = new Text(questTracker.activeQuests[i].Questitem.ToString(), font, characterSizeInformation);
+                    text.Position += new Vector2f(0, lineSpacing + characterSizeNames);
                     window.Draw(text);
                 }
 
                 if (questTracker.activeQuests[i].Enemy != -1)
                 {
-                    text.Position += new Vector2f(0, lineSpacing + characterSizeNames);
                     text = new Text(questTracker.activeQuests[i].Enemy.ToString(), font, characterSizeInformation);
+                    text.Position += new Vector2f(0, lineSpacing + characterSizeNames);
                     window.Draw(text);
 
-                    text.Position += new Vector2f(0, lineSpacing + characterSizeInformation);
                     text = new Text(questTracker.activeQuests[i].EnemyCount.ToString(), font, characterSizeInformation);
+                    text.Position += new Vector2f(0, lineSpacing + characterSizeInformation);
                     window.Draw(text);
                 }
 
-                text.Position += new Vector2f(0, lineSpacing + characterSizeInformation);
                 text = new Text(questTracker.activeQuests[i].Description, font, characterSizeInformation);
+                text.Position += new Vector2f(0, lineSpacing + characterSizeInformation);
                 window.Draw(text);
             }
         }
