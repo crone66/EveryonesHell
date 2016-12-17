@@ -10,18 +10,17 @@ namespace EveryonesHell.EntityManagment
 {
     public class NPC : Character
     {
-        private HUD.DialogSystem dialog;
 
-        public NPC(Vector2f position, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID)
-            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new SFML.System.Vector2f(1, 0), 1, healthBar, groupID)
+        public NPC(Vector2f position, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId)
+            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new SFML.System.Vector2f(1, 0), 1, healthBar, groupID,factionId)
         {
 
         }
 
-        public NPC(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID)
+        public NPC(int tileRow, int tileColumn, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
         {
-            this.dialog = dialog;
+            
         }
 
         /// <summary>

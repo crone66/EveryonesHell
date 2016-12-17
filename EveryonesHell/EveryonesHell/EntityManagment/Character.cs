@@ -18,13 +18,13 @@ namespace EveryonesHell.EntityManagment
         private float elaspedAttackTime;
         public event EventHandler OnShoot;
 
-        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
-            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID)
+        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID, int factionId)
+            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID, factionId)
         {
         }
 
-        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
-            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID)
+        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID, int factionId)
+            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID, factionId)
         {
         }
 
@@ -76,7 +76,7 @@ namespace EveryonesHell.EntityManagment
                 if (ent is Projectile)
                 {
                     Projectile projectile = ent as Projectile;
-                    projectile.Init(Position, Size, ViewDirection, -1);
+                    projectile.Init(Position, Size, ViewDirection, FactionId, Id);
                     OnShoot(projectile, null);
                 }
             }

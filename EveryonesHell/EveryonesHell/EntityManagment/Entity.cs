@@ -336,17 +336,30 @@ namespace EveryonesHell.EntityManagment
         {
             foreach (Vector2i tileInfo in OverlappingTiles)
             {
-                TileMapSystem.Tile tile = GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X);
-                
-                if (!prevOverlappingTiles.Contains(tileInfo))
-                    SetFlags(tile, tileInfo.Y, tileInfo.X, 2);
+                TileMapSystem.Tile tile;
+                if (GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X, out tile))
+                {
+                    if (!prevOverlappingTiles.Contains(tileInfo))
+                        SetFlags(tile, tileInfo.Y, tileInfo.X, 2);
+                }
+                else
+                {
+                    GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine("Tile out of range detected");
+                }
             }
 
             foreach (Vector2i tileInfo in prevOverlappingTiles)
             {
-                TileMapSystem.Tile tile = GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X);
-                if (!OverlappingTiles.Contains(tileInfo))
-                    SetFlags(tile, tileInfo.Y, tileInfo.X, -2);
+                TileMapSystem.Tile tile;
+                if (GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X, out tile))
+                {
+                    if (!OverlappingTiles.Contains(tileInfo))
+                        SetFlags(tile, tileInfo.Y, tileInfo.X, -2);
+                }
+                else
+                {
+                    GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine("Tile out of range detected");
+                }
             }
         }
 

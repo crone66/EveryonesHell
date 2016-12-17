@@ -187,7 +187,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed, Gaugebar healthBar)
+        public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed, Gaugebar healthBar, int groupId, int factionId)
             : base(true, true, new Vector2f(0, 0), size, animations.Sprite)
         {
             this.inventory = null;
@@ -195,9 +195,10 @@ namespace EveryonesHell.EntityManagment
             this.isMoveAble = isMoveAble;
             this.viewDirection = new Vector2f(0, 0);
             this.healthBar = healthBar;
+            this.groupId = groupId;
+            this.factionId = factionId;
             Speed = speed;
             velocity = new Vector2f(0, 0);
-            OnCollision += InteractiveObject_OnCollision;
         }
 
         /// <summary>
@@ -210,21 +211,21 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
+        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupId, int factionId)
             :base(true, true, position, size, animations.Sprite)
         {
             this.inventory = inventory;
             this.animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
-            this.groupId = groupID;
+            this.groupId = groupId;
+            this.factionId = factionId;
             Speed = speed;
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
 
             health = 50;
             Healthbar = healthBar;
-            OnCollision += InteractiveObject_OnCollision;
         }
 
         /// <summary>
@@ -237,7 +238,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2f position, Vector2i size, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed)
+        public InteractiveObject(Vector2f position, Vector2i size, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int groupId, int factionId)
             : base(true, true, position, size, animations.Sprite)
         {
             this.animations = animations;
@@ -249,7 +250,6 @@ namespace EveryonesHell.EntityManagment
             health = 50;
             Healthbar = null;
             inventory = null;
-            OnCollision += InteractiveObject_OnCollision;
         }
 
 
@@ -264,7 +264,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID)
+        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupId, int factionId)
             : base(true, true, tileRow, tileColumn, size, animations.Sprite)
         {
             this.inventory = inventory;
@@ -276,37 +276,9 @@ namespace EveryonesHell.EntityManagment
             MaxHealth = 100;
             health = 50;
             this.healthBar = healthBar;
-            OnCollision += InteractiveObject_OnCollision;
-            this.groupId = groupID;
-        }
-
-        protected virtual void InteractiveObject_OnCollision(object sender, CollisionArgs e)
-        {
-            Entity otherObject = null;
-            if (e.CollisionObjectDest != null && e.CollisionObjectDest != this)
-                otherObject = e.CollisionObjectDest;            
-            else if (e.CollisionObjectSource != null && e.CollisionObjectSource != this)
-                otherObject = e.CollisionObjectSource;
-            
-
-            if (otherObject != null)
-            {
-                //Do something with other object... otherwise just destroy projectile
-                //otherObject
-            }
-            else
-            {
-                //Tile Collision
-                if(this is Projectile)
-                {
-                    OnKill?.Invoke(this, null);
-                    isMoveAble = false;
-                    IsCollidable = false;
-                    Visable = false;
-                }
-            }
-        }
-    
+            this.groupId = groupId;
+            this.factionId = factionId;
+        } 
 
         /// <summary>
         /// Updates the interactive object
@@ -336,7 +308,6 @@ namespace EveryonesHell.EntityManagment
         {
             if (Velocity.X != 0 || Velocity.Y != 0)
             {
-                TileMapSystem.Tile prevTile = GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(TileRow, TileColumn);
                 int prevTileRow = TileRow;
                 int prevTileColumn = TileColumn;
                 Vector2i[] prevOverlappingTiles = OverlappingTiles.ToArray();
@@ -350,11 +321,14 @@ namespace EveryonesHell.EntityManagment
                     Vector2f backward = new Vector2f(0, 0);
                     foreach (Vector2i tileInfo in OverlappingTiles)
                     {
-                        TileMapSystem.Tile tile = GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X);
-                        bool tileCollision = (tile.Flags & GlobalReferences.FlagCollision) == GlobalReferences.FlagCollision;
-                        bool doObjectCollision = tile.Flags - (tileCollision ? 1 : 0) > 2;
+                        TileMapSystem.Tile tile;
+                        if (GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(tileInfo.Y, tileInfo.X, out tile))
+                        {
+                            bool tileCollision = (tile.Flags & GlobalReferences.FlagCollision) == GlobalReferences.FlagCollision;
+                            bool doObjectCollision = tile.Flags - (tileCollision ? 1 : 0) > 2;
 
-                        backward += DoCollisionDetection(Velocity * elapsedSeconds, tileInfo, tileCollision, doObjectCollision);
+                            backward += DoCollisionDetection(Velocity * elapsedSeconds, tileInfo, tileCollision, doObjectCollision);
+                        }
                     }
 
                     if (backward != new Vector2f(0, 0))
@@ -494,7 +468,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, healthBar?.Clone(healthBar.IsFixed));
+            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, healthBar?.Clone(healthBar.IsFixed), groupId, factionId);
         }
     }
 }
