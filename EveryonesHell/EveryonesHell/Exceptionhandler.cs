@@ -40,13 +40,13 @@ namespace EveryonesHell
             GlobalReferences.State = GameState.Exit;
         }
 
-        private void writeLog(String Message, String StackTrace)
+        private void writeLog(string Message, string StackTrace)
         {
             try
             {
                 File.AppendAllText(path, Message + Environment.NewLine + StackTrace);
             }
-            catch(Exception e)
+            catch
             {
                 createMessageBox(Message, StackTrace);
             }

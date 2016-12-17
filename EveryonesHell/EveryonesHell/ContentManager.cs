@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
 namespace EveryonesHell
@@ -101,9 +100,20 @@ namespace EveryonesHell
                 }
             }
 
-            object obj = Activator.CreateInstance(typeof(T), path);
-            Add(key, obj);
-            return (T)obj;
+            try
+            {
+                object obj = Activator.CreateInstance(typeof(T), path);
+                Add(key, obj);
+                return (T)obj;
+            }
+            catch (Exception e)
+            {
+                GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(e.Message, 255, 0, 0);
+                if (Exists(typeof(T), "error"))
+                    return (T)content[typeof(T)]["error"];
+                else
+                    throw e;
+            }
         }
 
         /// <summary>
@@ -118,9 +128,20 @@ namespace EveryonesHell
             if (Exists(typeof(T), key))
                 throw new DuplicateKeyException("Key already exists!");
 
-            object obj = Activator.CreateInstance(typeof(T), values);
-            Add(key, obj);
-            return (T)obj;
+            try
+            {
+                object obj = Activator.CreateInstance(typeof(T), values);
+                Add(key, obj);
+                return (T)obj;
+            }
+            catch (Exception e)
+            {
+                GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(e.Message, 255, 0, 0);
+                if (Exists(typeof(T), "error"))
+                    return (T)content[typeof(T)]["error"];
+                else
+                    throw e;
+            }
         }
 
         /// <summary>
@@ -136,11 +157,22 @@ namespace EveryonesHell
             if (Exists(typeof(T), key) || Exists(typeof(R), path))
                 throw new DuplicateKeyException("Key already exists!");
 
-            object obj = Activator.CreateInstance(typeof(R), path);
-            object result = Activator.CreateInstance(typeof(T), obj);
-            Add(path, obj);
-            Add(key, result);
-            return (T)result;
+            try
+            {
+                object obj = Activator.CreateInstance(typeof(R), path);
+                object result = Activator.CreateInstance(typeof(T), obj);
+                Add(path, obj);
+                Add(key, result);
+                return (T)result;
+            }
+            catch(Exception e)
+            {
+                GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(e.Message, 255, 0, 0);
+                if (Exists(typeof(T), "error"))
+                    return (T)content[typeof(T)]["error"];
+                else
+                    throw e;
+            }
         }
 
         /// <summary>
