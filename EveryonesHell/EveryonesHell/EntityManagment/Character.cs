@@ -18,13 +18,13 @@ namespace EveryonesHell.EntityManagment
         private float elaspedAttackTime;
         public event EventHandler OnShoot;
 
-        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID, int factionId)
-            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID, factionId)
+        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
+            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID, factionId, dialogIds)
         {
         }
 
-        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID, int factionId)
-            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID, factionId)
+        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
+            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID, factionId, dialogIds)
         {
         }
 

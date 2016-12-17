@@ -10,14 +10,15 @@ namespace EveryonesHell.EntityManagment
 {
     public class NPC : Character
     {
-        public NPC(Vector2f position, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId)
-            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 1, healthBar, groupID,factionId)
+        
+        public NPC(Vector2f position, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
+            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 1, healthBar, groupID,factionId, dialogIds)
         {
 
         }
 
-        public NPC(int tileRow, int tileColumn, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
+        public NPC(int tileRow, int tileColumn, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId, dialogIds)
         {
             
         }
@@ -28,6 +29,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="elapsedSeconds"></param>
         public override void Update(float elapsedSeconds)
         {
+
             base.Update(elapsedSeconds);
         }
 
