@@ -26,7 +26,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
         public Player(Vector2f position, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
-            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
+            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
         {
             lastDirection = new Vector2f(0, 0);
             this.dialog = dialog;
@@ -45,7 +45,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
         public Player(int tileRow, int tileColumn, Vector2i size, Sprite sprite, HUD.DialogSystem dialog, Gaugebar healthBar, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 1, 1, 1, 1, 0), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 620, healthBar, groupID, factionId)
         {
             lastDirection = new Vector2f(0, 0);
             this.dialog = dialog;

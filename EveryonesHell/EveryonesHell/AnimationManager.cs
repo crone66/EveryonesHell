@@ -13,7 +13,7 @@ namespace EveryonesHell
     public class AnimationManager
     {
         private Sprite sprite;
-        private int countX, countY, width, height, currentFrame;
+        private int countX, countY, width, height, currentFrame, columnFrame;
         private float frameTime, currentanimationTime;
         private List<IntRect> spriteList;
 
@@ -27,6 +27,17 @@ namespace EveryonesHell
             set
             {
                 sprite = value;
+            }
+        }
+
+        public IntRect SpriteRect
+        {
+            get
+            {
+                if (spriteList.Count > 0)
+                    return spriteList[currentFrame];
+                else
+                    return sprite.TextureRect;
             }
         }
 
@@ -81,32 +92,40 @@ namespace EveryonesHell
         /// <summary>
         /// changing between the rectangles in the list
         /// </summary>
-        /// <param name="gameTime">elapsed time in the game</param>
-        public void Update(Time gameTime)
+        /// <param name="elapsedSeconds">elapsed time in the game</param>
+        public void Update(float elapsedSeconds, Vector2f velocity)
         {
-            currentanimationTime += gameTime.AsMilliseconds();
-
-            if (currentanimationTime >= frameTime)
+            if (velocity != new Vector2f(0,0))
             {
-                currentanimationTime = 0.0f;
-                currentFrame++;
+                currentanimationTime += elapsedSeconds;
 
-                if (currentFrame >= spriteList.Count)
+                if (currentanimationTime >= frameTime)
                 {
-                    currentFrame = 0;
+                    currentanimationTime = 0.0f;
+                    columnFrame++;
+
+                    if (columnFrame >= countX)
+                    {
+                        columnFrame = 0;
+                    }
                 }
             }
-
-            Sprite.TextureRect = spriteList[currentFrame];
-        }
-
-        /// <summary>
-        /// drawing the current frame
-        /// </summary>
-        /// <param name="window">where you draw the frame</param>
-        public void Draw(RenderWindow window)
-        {
-            window.Draw(Sprite);
+            if (velocity.X > 0)
+            {
+                currentFrame = (countX * 2) + columnFrame;
+            }
+            if (velocity.X < 0)
+            {
+                currentFrame = countX + columnFrame;
+            }
+            if (velocity.Y > 0)
+            {
+                currentFrame = columnFrame;
+            }
+            if (velocity.Y < 0)
+            {
+                currentFrame = (countX * 3) + columnFrame;
+            }
         }
 
         public AnimationManager Clone()

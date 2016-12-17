@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<QuestCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Quests>
+    <Quest>
+      <Name>Aufs Maul!!</Name>
+      <QuestID>0</QuestID>
+      <Questitem>-1</Questitem>
+      <BasedOnDialogue>3</BasedOnDialogue>
+      <RequiredItem>-1</RequiredItem>
+      <Enemy>2</Enemy>
+      <EnemyCount>5</EnemyCount>
+      <Description>Töte 5 Subats.</Description>
+    </Quest>
+    <Quest>
+      <Name>Blumen pflücken...</Name>
+      <QuestID>1</QuestID>
+      <Questitem>5</Questitem>
+      <BasedOnDialogue>2</BasedOnDialogue>
+      <RequiredItem>3</RequiredItem>
+      <Enemy>-1</Enemy>
+      <EnemyCount>-1</EnemyCount>
+      <Description>Sammle eine gelbe Blume.</Description>
+    </Quest>
+    <Quest>
+      <Name>Er muss weg!</Name>
+      <QuestID>2</QuestID>
+      <Questitem>-1</Questitem>
+      <BasedOnDialogue>3</BasedOnDialogue>
+      <RequiredItem>7</RequiredItem>
+      <Enemy>4</Enemy>
+      <EnemyCount>1</EnemyCount>
+      <Description>Töte Marcel... er muss weg!</Description>
+    </Quest>
+  </Quests>
+</QuestCollection>

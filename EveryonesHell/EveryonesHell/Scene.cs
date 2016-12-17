@@ -164,9 +164,10 @@ namespace EveryonesHell
             Sprite green = content.Load<Sprite, Texture>("0", "Content/grass.png");
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/hill.png");
 
-            //Sprites for the NPC's
+            //Sprites for the Characters's
             Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
             Sprite testPlayer = content.Load<Sprite, Texture>("4", "Content/Testplayer.png");
+            Sprite playerSpriteSheet = content.Load<Sprite, Texture>("-2", "Content/PlayerSpriteSheet.png");
 
 
             //Sprites for the Gaugebar
@@ -188,9 +189,15 @@ namespace EveryonesHell
             sprites.Add(4, testPlayer);
             sprites.Add(5, gaugebar);
             sprites.Add(6, gaugebarborder);
+
+            quests = content.Load<QuestCollection>("Content/QuestCollection.xml");
             
-            questTracker = new QuestManagment.QuestTracker(null, null);
-            questTrackerWindow = new QuestTrackerWindow(new Vector2f(25, 25), font, questTracker);
+            questTracker = new QuestManagment.QuestTracker(null, quests);
+            questTrackerWindow = new QuestTrackerWindow(new Vector2f(75, 100), font, questTracker);
+
+            questTracker.ActivateQuest(0);
+            questTracker.ActivateQuest(2);
+            questTracker.ActivateQuest(1);
 
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
@@ -221,6 +228,7 @@ namespace EveryonesHell
             entities.Update(elapsedSeconds);
             mapManager.Update(Player.TileRow, Player.TileColumn);
             hudManager.Update(elapsedSeconds);
+            
             //mapManager.Update(TheMightyTester.TileRow, TheMightyTester.TileColumn);
             //fieldsInView = MapManager.CurrentLevel.GetTileMapInScreen(Convert.ToInt32((GlobalReferences.MainGame.WindowWidth) * zoomFactor), Convert.ToInt32((GlobalReferences.MainGame.WindowHeight) * zoomFactor));       
         }
