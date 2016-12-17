@@ -25,7 +25,7 @@ namespace EveryonesHell
 
         private EntityManager entities;
         private DialogCollection dialogs;
-        private ItemCollection items;
+        //private ItemCollection items;
         private QuestCollection quests;
 
         private Player player;
@@ -34,9 +34,7 @@ namespace EveryonesHell
 
         private QuestManagment.QuestTracker questTracker;
         private HUD.QuestTrackerWindow questTrackerWindow;
-
-        //private Tile[] fieldsInView;
-        private float elapsedTime;
+        
         private int x = -657;
         private int y = -340; 
         private int NPCx = -655;
@@ -59,13 +57,13 @@ namespace EveryonesHell
             }
         }
 
-        public ItemCollection Items
+        /*public ItemCollection Items
         {
             get
             {
                 return items;
             }
-        }
+        }*/
 
         public QuestCollection Quests
         {
@@ -159,24 +157,26 @@ namespace EveryonesHell
         public void LoadContent()
         {
             //Sprites for the Map
-            Sprite blue = content.Load<Sprite, Texture>("1", "Content/water.png");
-            Sprite red = content.Load<Sprite, Texture>("-1", "Content/testRed.png");
-            Sprite green = content.Load<Sprite, Texture>("0", "Content/grass.png");
-            Sprite gray = content.Load<Sprite, Texture>("2", "Content/hill.png");
+            content.Load<Sprite, Texture>("error", "Content/error.png");
+            Sprite green = content.Load<Sprite, Texture>("0", "Content/Enviroment/grass.png");
+            Sprite gray = content.Load<Sprite, Texture>("2", "Content/Enviroment/hill.png");
+            Sprite blue = content.Load<Sprite, Texture>("1", "Content/Enviroment/water.png");
 
             //Sprites for the Characters's
-            Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/NPCAnimation.png");
-            Sprite testPlayer = content.Load<Sprite, Texture>("4", "Content/Testplayer.png");
+            Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/Npc/NPCAnimation.png");
             Sprite playerSpriteSheet = content.Load<Sprite, Texture>("-2", "Content/PlayerSpriteSheet.png");
+            Sprite red = content.Load<Sprite, Texture>("-1", "Content/Npc/testRed.png");
 
 
             //Sprites for the Gaugebar
-            Sprite gaugebar = content.Load<Sprite, Texture>("5", "Content/gaugebar.png");
-            Sprite gaugebarborder = content.Load<Sprite, Texture>("6", "Content/gaugebarborder.png");
+            Sprite gaugebar = content.Load<Sprite, Texture>("5", "Content/Hud/gaugebar.png");
+            Sprite gaugebarborder = content.Load<Sprite, Texture>("6", "Content/Hud/gaugebarborder.png");
             Sprite fireBall = content.Load<Sprite, Texture>("7", "Content/fireBall.png");
 
             Font font = content.GetValue<Font>("font");
-            dialogs = content.Load<DialogCollection>("Content/DialogCollection.xml");
+            dialogs = content.Load<DialogCollection>("Content/Descriptions/DialogCollection.xml");
+
+            quests = content.Load<QuestCollection>("Content/Descriptions/QuestCollection.xml");
 
             HUD.DialogSystem dialog = new HUD.DialogSystem(Dialogs, new Vector2f(0, GlobalReferences.MainGame.WindowHeight - 200), new Vector2f(GlobalReferences.MainGame.WindowWidth, 200), font, Color.White, Color.Yellow);
 
@@ -186,20 +186,11 @@ namespace EveryonesHell
             sprites.Add(2, gray);
             sprites.Add(-1, red);
             sprites.Add(3, testNPC);
-            sprites.Add(4, testPlayer);
             sprites.Add(5, gaugebar);
             sprites.Add(6, gaugebarborder);
-
-            quests = content.Load<QuestCollection>("Content/QuestCollection.xml");
             
             questTracker = new QuestManagment.QuestTracker(null, quests);
             questTrackerWindow = new QuestTrackerWindow(new Vector2f(100, 150), font, questTracker);
-
-            /*
-            questTracker.ActivateQuest(0);
-            questTracker.ActivateQuest(2);
-            questTracker.ActivateQuest(1);
-            */
 
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
