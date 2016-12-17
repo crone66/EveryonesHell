@@ -159,10 +159,10 @@ namespace EveryonesHell
         public void LoadContent()
         {
             //Sprites for the Map
-            Sprite blue = content.Load<Sprite, Texture>("1", "Content/testBlue.png");
+            Sprite blue = content.Load<Sprite, Texture>("1", "Content/water.png");
             Sprite red = content.Load<Sprite, Texture>("-1", "Content/testRed.png");
-            Sprite green = content.Load<Sprite, Texture>("0", "Content/testGreen.png");
-            Sprite gray = content.Load<Sprite, Texture>("2", "Content/testGray.png");
+            Sprite green = content.Load<Sprite, Texture>("0", "Content/grass.png");
+            Sprite gray = content.Load<Sprite, Texture>("2", "Content/hill.png");
 
             //Sprites for the NPC's
             Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/TheMightyTester.png");
@@ -194,9 +194,9 @@ namespace EveryonesHell
 
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
-            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, healthBar, 0, questTracker);
-            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, dialog, healthBar.Clone(false), 1);
-            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, dialog, healthBar.Clone(false), 2);
+            Player = new Player(y, x, new Vector2i(43, 50), testPlayer, dialog, healthBar, 1, questTracker, 1);
+            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, healthBar.Clone(false), 2, 1);
+            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, healthBar.Clone(false), 3, 2);
 
             entities = new EntityManager();
             entities.AddEntity(Player);
@@ -204,7 +204,7 @@ namespace EveryonesHell
             entities.AddEntity(TheEvilTester);
 
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
-            EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000));
+            EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000, 0));
         }
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
@@ -319,11 +319,14 @@ namespace EveryonesHell
             {
                 for (int c = fromCol; c < toCol; c++)
                 {
-                    Tile t = mapManager.CurrentLevel.GetTileValue(r, c);
-                    Sprite sprite = sprites[t.Id];
-                    sprite.Position = new Vector2f(c * settings.TileSize, r * settings.TileSize);
+                    Tile tile;
+                    if (mapManager.CurrentLevel.GetTileValue(r, c, out tile))
+                    {
+                        Sprite sprite = sprites[tile.Id];
+                        sprite.Position = new Vector2f(c * settings.TileSize, r * settings.TileSize);
 
-                    window.Draw(sprite);
+                        window.Draw(sprite);
+                    }
                 }
             }
 
