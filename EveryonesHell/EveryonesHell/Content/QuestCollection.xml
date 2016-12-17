@@ -7,9 +7,9 @@
       <Questitem>-1</Questitem>
       <BasedOnDialogue>3</BasedOnDialogue>
       <RequiredItem>-1</RequiredItem>
-      <Enemy>2</Enemy>
+      <Enemy>3</Enemy>
       <EnemyCount>1</EnemyCount>
-      <Description>Töte ein Subat... es muss weg!</Description>
+      <Description>Töte ein Subat... es muss weg</Description>
     </Quest>
   </Quests>
 </QuestCollection>
