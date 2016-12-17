@@ -18,7 +18,7 @@ namespace EveryonesHell.QuestManagment
         /// <summary>
         /// initialize the questtracker
         /// </summary>
-        /// <param name="inventory">invetorysystem to check wether the player gained a required item or not</param>
+        /// <param name="inventory">inventorysystem to check wether the player gained a required item or not</param>
         /// <param name="path">path of the xml-file containing all the quests</param>
         public QuestTracker(InventorySystem.Inventory inventory, QuestCollection loadedQuests)
         {
