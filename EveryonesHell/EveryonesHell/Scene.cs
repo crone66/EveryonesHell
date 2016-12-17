@@ -276,7 +276,7 @@ namespace EveryonesHell
                                     Player.OnAction(this, null);
                                 }
 
-                                if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && Player.JetpackActive == false)
                                 {
                                     Player.OnAttack(this, null);
                                 }

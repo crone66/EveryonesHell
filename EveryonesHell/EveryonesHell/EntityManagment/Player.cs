@@ -18,6 +18,19 @@ namespace EveryonesHell.EntityManagment
 
         private QuestManagment.QuestTracker questTracker;
 
+        public bool JetpackActive
+        {
+            get
+            {
+                return jetpackActive;
+            }
+
+            set
+            {
+                jetpackActive = value;
+            }
+        }
+
         /// <summary>
         /// Initializes a new Player - outdated
         /// </summary>
@@ -69,7 +82,7 @@ namespace EveryonesHell.EntityManagment
 
         private void Player_OnShoot(object sender, EventArgs e)
         {
-            if(sender != null && sender is Projectile)
+            if (sender != null && sender is Projectile)
             {
                 Projectile projectile = (sender as Projectile);
                 projectile.OnDoDamage += questTracker.Projectile_OnDoDamage;
@@ -145,9 +158,9 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e"></param>
         public void OnJetpack(object sender, ExecuteCommandArgs e)
         {
-            jetpackActive = !jetpackActive;
+            JetpackActive = !JetpackActive;
 
-            if (jetpackActive)
+            if (JetpackActive)
             {
                 IsCollidable = false;
             }
