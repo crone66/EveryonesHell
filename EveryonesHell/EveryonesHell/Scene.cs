@@ -195,15 +195,10 @@ namespace EveryonesHell
             questTracker = new QuestManagment.QuestTracker(null, quests);
             questTrackerWindow = new QuestTrackerWindow(new Vector2f(100, 150), font, questTracker);
 
-            /*
-            questTracker.ActivateQuest(0);
-            questTracker.ActivateQuest(2);
-            questTracker.ActivateQuest(1);
-            */
-
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
 
             Player = new Player(y, x, new Vector2i(50, 50), playerSpriteSheet, dialog, healthBar, 1, questTracker, 1);
+            Player.OnDestroy += Player_OnDestroy;
             TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, healthBar.Clone(false), 2, 1, new int[] { 0 });
             TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, healthBar.Clone(false), 3, 2 , null);
 
@@ -214,6 +209,12 @@ namespace EveryonesHell
 
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
             EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000, 0));
+        }
+
+        private void Player_OnDestroy(object sender, EventArgs e)
+        {
+            player.Initialize();
+            entities.AddEntity(player);
         }
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
