@@ -22,6 +22,7 @@ namespace EveryonesHell.HUD
         private uint characterSizeNames, characterSizeInformation;
         private float elapsedTime;
         private const float keyDelay = 0.15f;
+
         /// <summary>
         /// initialze questtrackerwindow
         /// </summary>

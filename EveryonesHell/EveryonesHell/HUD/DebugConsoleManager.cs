@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using DebugConsole;
 using SFML.Window;
 using SFML.Graphics;
-using System.Text;
 
-namespace EveryonesHell
+namespace EveryonesHell.HUD
 {
     public class DebugConsoleManager
     {

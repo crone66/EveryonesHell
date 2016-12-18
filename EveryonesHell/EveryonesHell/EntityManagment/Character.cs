@@ -8,7 +8,7 @@ using DebugConsole;
 using SFML.Graphics;
 using SFML.System;
 using System;
-
+using EveryonesHell.HUD;
 namespace EveryonesHell.EntityManagment
 {
     public class Character : InteractiveObject
@@ -77,7 +77,7 @@ namespace EveryonesHell.EntityManagment
                 {
                     Projectile projectile = ent as Projectile;
                     projectile.Init(Position, Size, ViewDirection, FactionId, Id);
-                    OnShoot(projectile, null);
+                    OnShoot?.Invoke(projectile, null);
                 }
             }
         }

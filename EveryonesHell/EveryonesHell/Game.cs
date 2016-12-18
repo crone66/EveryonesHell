@@ -8,8 +8,7 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using System;
-using TileMapSystem;
-using System.Collections.Generic;
+using EveryonesHell.HUD;
 
 namespace EveryonesHell
 {

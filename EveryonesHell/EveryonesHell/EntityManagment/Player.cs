@@ -3,6 +3,7 @@ using System.Linq;
 using SFML.Graphics;
 using DebugConsole;
 using SFML.System;
+using EveryonesHell.HUD;
 
 namespace EveryonesHell.EntityManagment
 {

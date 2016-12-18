@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EveryonesHell
+namespace EveryonesHell.HUD
 {
     public class HudStateChangedArgs : EventArgs
     {
