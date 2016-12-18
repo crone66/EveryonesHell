@@ -109,8 +109,8 @@ namespace EveryonesHell
         {
             gaugebar.Position = position;
             gaugebarBorder.Position = position;
+            gaugebarBorder.Scale = OverallGaugeBarSize;
             gaugebar.Scale = scale;
-            gaugebarBorder.Scale = scale;
             gaugebar.Color = color;
 
             window.Draw(gaugebar);
