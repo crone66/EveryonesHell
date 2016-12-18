@@ -13,7 +13,7 @@ namespace EveryonesHell
     /// </summary>
     public static class GlobalReferences
     {
-        public static Random Randomizer;
+        public static Random Randomizer = new Random();
         public static GameSettings Settings;
         public static GameState State;
         public static Game MainGame;
