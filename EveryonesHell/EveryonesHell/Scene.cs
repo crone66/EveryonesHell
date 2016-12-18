@@ -14,7 +14,7 @@ namespace EveryonesHell
     /// 
     /// </summary>
     public class Scene
-    {
+    {        
         private TileMapManager mapManager;
         private GeneratorSettings settings;
         private AreaSpread[] areaSpreads;
@@ -192,7 +192,8 @@ namespace EveryonesHell
             questTracker = new QuestManagment.QuestTracker(null, quests);
             questTrackerWindow = new QuestTrackerWindow(new Vector2f(100, 150), font, questTracker);
 
-            Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, 0), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
+            Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, GlobalReferences.MainGame.WindowHeight - gaugebarborder.Texture.Size.Y), gaugebar, gaugebarborder, new Vector2f(1, 1), Color.Red, true);
+            Gaugebar ammunition = new Gaugebar(30, 30, new Vector2f(GlobalReferences.MainGame.WindowWidth - (gaugebarborder.Texture.Size.X * 0.6f), GlobalReferences.MainGame.WindowHeight - (gaugebarborder.Texture.Size.Y * gaugebar.Scale.Y)), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Blue, true);
 
             Player = new Player(y, x, new Vector2i(50, 50), playerSpriteSheet, dialog, healthBar, 1, questTracker, 1);
             TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, healthBar.Clone(false), 2, 1, new int[] { 0 });
@@ -275,6 +276,7 @@ namespace EveryonesHell
                                 if (Keyboard.IsKeyPressed(Keyboard.Key.H))
                                 {
                                     Player.OnJetpack(this, null);
+
                                 }
 
                                 if (Keyboard.IsKeyPressed(Keyboard.Key.Q))

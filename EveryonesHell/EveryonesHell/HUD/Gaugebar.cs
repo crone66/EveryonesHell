@@ -110,6 +110,7 @@ namespace EveryonesHell
             gaugebar.Position = position;
             gaugebarBorder.Position = position;
             gaugebar.Scale = scale;
+            gaugebarBorder.Scale = scale;
             gaugebar.Color = color;
 
             window.Draw(gaugebar);
