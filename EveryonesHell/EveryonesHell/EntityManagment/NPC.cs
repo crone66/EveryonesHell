@@ -1,10 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using EveryonesHell.HUD;
 
 namespace EveryonesHell.EntityManagment
 {
@@ -20,6 +16,8 @@ namespace EveryonesHell.EntityManagment
 
         private float directionTime;
         private float elapsedDirectionTime;
+        
+        private Player enemy;
 
         public NPC(Vector2f position, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
             :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 220, healthBar, groupID,factionId, dialogIds)
@@ -49,7 +47,15 @@ namespace EveryonesHell.EntityManagment
         {
             if (IsMoveAble && !Freeze)
             {
-                Do(elapsedSeconds);
+                if (IsEnemyInRange())
+                {
+                    Hunt();
+                }
+                else
+                {
+                    Do(elapsedSeconds);
+                }
+
                 SetVelocity();
             }
             base.Update(elapsedSeconds);
@@ -113,8 +119,89 @@ namespace EveryonesHell.EntityManagment
                     x = 0;
             }
 
-            ViewDirection = new Vector2f(x, y);
-            Velocity = new Vector2f(x, y) * Speed;
+            if (x != 0 || y != 0)
+            {
+                ViewDirection = new Vector2f(x, y);
+                Velocity = new Vector2f(x, y) * Speed;
+            }
+        }
+
+        private bool IsEnemyInRange()
+        {
+            //player can be replaced with all entities/NPCS
+            int width = (int)GlobalReferences.MainGame.WindowWidth;
+            int height = (int)GlobalReferences.MainGame.WindowHeight;
+            Player player = GlobalReferences.MainGame.CurrentScene.Player;
+            if (player != null && player.FactionId != this.FactionId && player.Visable)
+            {
+                IntRect boundingBox = new IntRect(new Vector2i((int)Position.X - (height / 2), (int)Position.Y - (height / 2)), new Vector2i(width, height));
+                if (player.BoundingBox.Intersects(boundingBox))
+                {
+                    enemy = player;
+                    return true;
+                }
+                else
+                {
+                    enemy = null;
+                }
+            }
+            return false;
+        }
+
+        private void Hunt()
+        {
+            y = 0;
+            x = 0;
+            int distance = 300;
+
+            float xDiff = enemy.Position.X - Position.X;
+            float yDiff = enemy.Position.Y - Position.Y;
+
+            if (!(Between(xDiff, -1, 1) && (yDiff <= distance && yDiff >= -distance)) && !(Between(yDiff, -1, 1) && (xDiff <= distance && xDiff >= -distance)))
+            {
+                if ((xDiff < 0 ? xDiff * -1 : xDiff) < (yDiff < 0 ? yDiff * -1 : yDiff) || Between(yDiff, -1, 1))
+                {
+                    if (Between(yDiff, -1, 1) && (xDiff > distance || xDiff < -distance))
+                    {
+                        x = xDiff > 0 ? 1 : -1;
+                    }
+                    else if (!Between(yDiff, -1, 1))
+                    {
+                        x = xDiff > 0 ? 1 : -1;
+                    }
+                }
+                else
+                {
+                    if (Between(xDiff, -1, 1) || (yDiff > distance || yDiff < -distance))
+                    {
+                        y = yDiff > 0 ? 1 : -1;
+                    }
+                    else if (!Between(xDiff, -1, 1))
+                    {
+                        y = yDiff > 0 ? 1 : -1;
+                    }
+                }
+
+                SetVelocity();
+            }
+            else
+            {
+                ViewDirection = new Vector2f(Between(xDiff, -1, 1) ? 0 : xDiff > 0 ? 1 : -1, Between(yDiff, -1, 1) ? 0 : yDiff > 0 ? 1 : -1);
+            }
+
+            if (Between(xDiff, -1, 1) || Between(yDiff, -1, 1))
+                Attack();
+        }
+
+        private void Attack()
+        {
+            //attack when in view
+            OnAttack(this, null);
+        }
+
+        private bool Between(float value, float min, float max)
+        {
+            return value >= min && value <= max;
         }
 
         /// <summary>

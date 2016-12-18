@@ -1,64 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 
 namespace EveryonesHell
 {
-    class Exceptionhandler
+    public class ExceptionHandler
     {
-        private const String errorReportPath = "";
-        public event EventHandler ExceptionHandled;
-        private string path;
+        private string errorReportPath;
 
-        Exceptionhandler(String path)
+        public ExceptionHandler(string path)
         {
-            this.path = path;
+            this.errorReportPath = path;
         }
 
-        public void handleException(Exception e)
+        public void HandleException(Exception e)
         {
-
-            if(e is NullReferenceException)
-            {
-
-            }
-
-            if (ExceptionHandled != null)
-                ExceptionHandled(this,EventArgs.Empty);
-
-
+            if (WriteLog(e.Message, e.StackTrace))
+                CreateMessageBox();
         }
 
-        private void CloseProgram(String Message, String StackTrace)
-        {
-            createMessageBox(Message, StackTrace);
-            //End Program
-            GlobalReferences.State = GameState.Exit;
-        }
-
-        private void writeLog(string Message, string StackTrace)
+        private bool WriteLog(string Message, string StackTrace)
         {
             try
             {
-                File.AppendAllText(path, Message + Environment.NewLine + StackTrace);
+                File.AppendAllText(errorReportPath, Message + Environment.NewLine + StackTrace);
+
+                return true;
             }
             catch
             {
-                createMessageBox(Message, StackTrace);
+                return false;
             }
         }
 
-        private void createMessageBox(String Message, String StackTrace)
+        private void CreateMessageBox()
         {
-            File.WriteAllText(errorReportPath + ".txt", "Message: " + Message + Environment.NewLine + "StackTrace: " + StackTrace);
-            
+            GlobalReferences.State = GameState.Exit;
             //Start Program
             Process.Start(errorReportPath + ".exe");
-
         }
     }
 }
