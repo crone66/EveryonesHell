@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SFML.Graphics;
 using DebugConsole;
 using SFML.System;
@@ -15,6 +12,7 @@ namespace EveryonesHell.EntityManagment
         private HUD.DialogSystem dialog;
         private bool jetpackActive = false;
         private Entity lastCollisionObject;
+        private float elapsedTime, delay;
 
         private QuestManagment.QuestTracker questTracker;
 
@@ -47,6 +45,7 @@ namespace EveryonesHell.EntityManagment
             OnShoot += Player_OnShoot;
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
+            delay = 3.0f;
 
             OnCollision += InteractiveObject_OnCollision;
         }
@@ -68,6 +67,8 @@ namespace EveryonesHell.EntityManagment
             OnShoot += Player_OnShoot;
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
+            delay = 3.0f;
+
             OnCollision += InteractiveObject_OnCollision;
         }
 
@@ -111,6 +112,16 @@ namespace EveryonesHell.EntityManagment
         /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public override void Update(float elapsedSeconds)
         {
+            if (!Visable)
+            {
+                elapsedTime += elapsedSeconds;
+
+                if (elapsedTime >= delay)
+                {
+                    Respawn();
+                }
+            }
+
             base.Update(elapsedSeconds);
             if (lastDirection != ViewDirection)
                lastCollisionObject = null;
@@ -168,6 +179,18 @@ namespace EveryonesHell.EntityManagment
             {
                 IsCollidable = true;
             }
+        }
+
+        public void Initialize()
+        {
+            elapsedTime = 0;
+            Visable = false;
+        }
+
+        private void Respawn()
+        {
+            ChangeHealth(MaxHealth, this);
+            Visable = true;
         }
     }
 }
