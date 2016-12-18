@@ -19,8 +19,8 @@ namespace EveryonesHell.EntityManagment
         
         private Player enemy;
 
-        public NPC(Vector2f position, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
-            :base(position, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 220, healthBar, groupID,factionId, dialogIds)
+        public NPC(Vector2f position, Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds)
+            :base(position, size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID,factionId, dialogIds)
         {
             moveTime = 2.5f;
             idleTime = 5f;
@@ -29,8 +29,8 @@ namespace EveryonesHell.EntityManagment
             idle = true;
         }
 
-        public NPC(int tileRow, int tileColumn, Vector2i size, Sprite sprite, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), new AnimationManager(sprite, 3, 4, 50, 50, 0.16f), true, new Vector2f(1, 0), 220, healthBar, groupID, factionId, dialogIds)
+        public NPC(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, dialogIds)
         {
             moveTime = 2.5f;
             idleTime = 5f;

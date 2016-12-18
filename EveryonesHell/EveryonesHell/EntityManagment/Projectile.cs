@@ -7,7 +7,7 @@ namespace EveryonesHell.EntityManagment
     public class Projectile : InteractiveObject
     {
         private Vector2f spawnPosition;
-        private int damage = 10;
+        private int damage;
         private int maxDistance;
         private int distanceTravelled;
         private int spawnerId;
@@ -52,9 +52,10 @@ namespace EveryonesHell.EntityManagment
         public event EventHandler<VictimArgs> OnDoDamage;
         
 
-        public Projectile(Vector2i size, AnimationManager animation, bool isMoveAble, float speed, int maxDistance, int groupId)
-            :base(size, animation, isMoveAble, speed, null, groupId, -1)
+        public Projectile(Vector2i size, AnimationManager animation, bool isMoveAble, float speed, int maxDistance, int groupId, int damage)
+            :base(size, animation, isMoveAble, speed, 0, null, groupId, -1)
         {
+            this.damage = damage;
             doTeamDamage = false;
             teamDamageReductionRate = 0f;
             damageReductionRate = 0f;
@@ -175,7 +176,7 @@ namespace EveryonesHell.EntityManagment
                 if (otherObject is InteractiveObject)
                 {
                     e.CancelBackward = true;
-                    if (otherObject.Id != spawnerId)
+                    if (otherObject.Id != spawnerId && !(otherObject is Projectile))
                     {
                         InteractiveObject interactiveObject = otherObject as InteractiveObject;
                         if (doTeamDamage || FactionId != interactiveObject.FactionId)
@@ -188,7 +189,7 @@ namespace EveryonesHell.EntityManagment
                 }
             }
 
-            if(otherObject == null || otherObject.Id != spawnerId)
+            if((otherObject == null || otherObject.Id != spawnerId) && !(otherObject is Projectile))
                 CallOnDestroyEvent();
         }
 
@@ -208,7 +209,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new Projectile(Size, animations.Clone(), IsMoveAble, Speed, maxDistance, GroupID);
+            return new Projectile(Size, animations.Clone(), IsMoveAble, Speed, maxDistance, GroupID, damage);
         }
     }
 }

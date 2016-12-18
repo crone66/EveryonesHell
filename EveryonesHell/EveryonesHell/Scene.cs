@@ -29,8 +29,6 @@ namespace EveryonesHell
         private QuestCollection quests;
 
         private Player player;
-        private EntityManagment.NPC TheMightyTester;
-        private EntityManagment.NPC TheEvilTester;
 
         private QuestManagment.QuestTracker questTracker;
         private HUD.QuestTrackerWindow questTrackerWindow;
@@ -99,18 +97,6 @@ namespace EveryonesHell
             set
             {
                 player = value;
-            }
-        }
-        
-        public EntityManagment.NPC NPC
-        {
-            get
-            {
-                return NPC;
-            }
-            set
-            {
-                TheMightyTester = value;
             }
         }
 
@@ -195,10 +181,10 @@ namespace EveryonesHell
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, GlobalReferences.MainGame.WindowHeight - gaugebarborder.Texture.Size.Y), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Red, true);
             Gaugebar ammunition = new Gaugebar(30, 30, new Vector2f(GlobalReferences.MainGame.WindowWidth - (gaugebarborder.Texture.Size.X * 0.6f), GlobalReferences.MainGame.WindowHeight - (gaugebarborder.Texture.Size.Y * gaugebar.Scale.Y)), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Yellow, true);
 
-            Player = new Player(y, x, new Vector2i(50, 50), playerSpriteSheet, dialog, healthBar, ammunition, 1, questTracker, 1);
+            Player = new Player(y, x, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(playerSpriteSheet, 3, 4, 50, 50, 0.16f), dialog, healthBar, ammunition, 620, 100, 0.5f, 1, questTracker, 1);
             Player.OnDestroy += Player_OnDestroy;
-            TheMightyTester = new EntityManagment.NPC(NPCy, NPCx, new Vector2i(50, 50), testNPC, healthBar.Clone(false), 2, 1, new int[] { 0 });
-            TheEvilTester = new EntityManagment.NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), red, healthBar.Clone(false), 3, 2 , null);
+            NPC TheMightyTester = new NPC(NPCy, NPCx, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(testNPC, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 100, 0.5f, 2, 1, new int[] { 0 });
+            NPC TheEvilTester = new NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(red, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 50, 0.5f, 3, 2 , null);
 
             entities = new EntityManager();
             entities.AddEntity(Player);
@@ -206,7 +192,7 @@ namespace EveryonesHell
             entities.AddEntity(TheEvilTester);
 
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
-            EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000, 0));
+            EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000, 0, 10));
         }
 
         private void Player_OnDestroy(object sender, EventArgs e)

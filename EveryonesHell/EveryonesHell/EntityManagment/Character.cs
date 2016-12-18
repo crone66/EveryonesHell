@@ -14,18 +14,20 @@ namespace EveryonesHell.EntityManagment
     public class Character : InteractiveObject
     {
         private Vector2i lastDirection;
-        protected float attackDelay = 0.5f;
+        protected float fireRate;
         protected float elaspedAttackTime;
         public event EventHandler OnShoot;
 
-        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
-            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID, factionId, dialogIds)
+        public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, float fireRate, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
+            :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, maxHealth, healthBar, groupID, factionId, dialogIds)
         {
+            this.fireRate = fireRate;
         }
 
-        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
-            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, healthBar, groupID, factionId, dialogIds)
+        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, float fireRate, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
+            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, maxHealth, healthBar, groupID, factionId, dialogIds)
         {
+            this.fireRate = fireRate;
         }
 
         public override void Update(float elapsedSeconds)
@@ -69,7 +71,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e"></param>
         public virtual void OnAttack(object sender, ExecuteCommandArgs e)
         {
-            if (elaspedAttackTime > attackDelay)
+            if (elaspedAttackTime > fireRate)
             {
                 elaspedAttackTime = 0f;
                 Entity ent = EntityFactory.Clone("Bullet");

@@ -186,7 +186,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed, Gaugebar healthBar, int groupId, int factionId)
+        public InteractiveObject(Vector2i size, AnimationManager animations, bool isMoveAble, float speed, int maxHealth, Gaugebar healthBar, int groupId, int factionId)
             : base(true, true, new Vector2f(0, 0), size, animations.Sprite)
         {
             this.inventory = null;
@@ -198,6 +198,8 @@ namespace EveryonesHell.EntityManagment
             dialogIds = new List<int>();
             this.factionId = factionId;
             Speed = speed;
+            this.maxHealth = maxHealth;
+            this.health = maxHealth;
             velocity = new Vector2f(0, 0);
         }
 
@@ -211,7 +213,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupId, int factionId, int[] dialogIds)
+        public InteractiveObject(Vector2f position, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, Gaugebar healthBar, int groupId, int factionId, int[] dialogIds)
             :base(true, true, position, size, animations.Sprite)
         {
             this.inventory = inventory;
@@ -225,9 +227,8 @@ namespace EveryonesHell.EntityManagment
                 this.dialogIds.AddRange(dialogIds);
             Speed = speed;
             velocity = new Vector2f(0, 0);
-            MaxHealth = 100;
-
-            health = 50;
+            this.maxHealth = maxHealth;
+            this.health = maxHealth;
             Healthbar = healthBar;
         }
 
@@ -241,7 +242,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(Vector2f position, Vector2i size, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int groupId, int factionId)
+        public InteractiveObject(Vector2f position, Vector2i size, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, int groupId, int factionId)
             : base(true, true, position, size, animations.Sprite)
         {
             this.animations = animations;
@@ -250,8 +251,9 @@ namespace EveryonesHell.EntityManagment
             Speed = speed;
             velocity = new Vector2f(0, 0);
             dialogIds = new List<int>();
-            MaxHealth = 100;
-            health = 50;
+
+            this.maxHealth = maxHealth;
+            this.health = maxHealth;
             Healthbar = null;
             inventory = null;
         }
@@ -268,7 +270,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
         /// <param name="viewDirection">Indicates the view direction of the object</param>
         /// <param name="speed">Indicates the movement speed of the object</param>
-        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, Gaugebar healthBar, int groupId, int factionId, int[] dialogIds)
+        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, Gaugebar healthBar, int groupId, int factionId, int[] dialogIds)
             : base(true, true, tileRow, tileColumn, size, animations.Sprite)
         {
             this.inventory = inventory;
@@ -282,8 +284,8 @@ namespace EveryonesHell.EntityManagment
 
             Speed = speed;
             velocity = new Vector2f(0, 0);
-            MaxHealth = 100;
-            health = 50;
+            this.maxHealth = maxHealth;
+            this.health = maxHealth;
             this.healthBar = healthBar;
             this.groupId = groupId;
             this.factionId = factionId;
@@ -494,7 +496,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, healthBar?.Clone(healthBar.IsFixed), groupId, factionId);
+            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, maxHealth, healthBar?.Clone(healthBar.IsFixed), groupId, factionId);
         }
     }
 }
