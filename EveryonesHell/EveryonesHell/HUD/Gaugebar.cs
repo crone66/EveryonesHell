@@ -83,6 +83,7 @@ namespace EveryonesHell
         {
             
         }
+
         /// <summary>
         /// Updates the healthbar
         /// </summary>
@@ -102,6 +103,24 @@ namespace EveryonesHell
         }
 
         /// <summary>
+        /// Updates the healthbar
+        /// </summary>
+        public void Update(int currentValue, int maxValue)
+        {
+            this.currentValue = currentValue;
+            this.maxValue = maxValue;
+            calculateHealthPercent(currentValue, maxValue);
+            if (OverallGaugeBarSize != null)
+            {
+                scale = new Vector2f(OverallGaugeBarSize.X * gaugePercent, OverallGaugeBarSize.Y);
+            }
+            else
+            {
+                scale = new Vector2f(gaugePercent, 1.0f);
+            }
+        }
+
+        /// <summary>
         /// Draws the Healthbar and the border
         /// </summary>
         /// <param name="window"></param>
@@ -110,12 +129,11 @@ namespace EveryonesHell
             gaugebar.Position = position;
             gaugebarBorder.Position = position;
             gaugebar.Scale = scale;
-            gaugebarBorder.Scale = scale;
+            gaugebarBorder.Scale = OverallGaugeBarSize;
             gaugebar.Color = color;
 
             window.Draw(gaugebar);
             window.Draw(gaugebarBorder);
-
         }
 
         public Gaugebar Clone(bool isFixed)
