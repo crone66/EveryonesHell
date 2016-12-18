@@ -192,7 +192,7 @@ namespace EveryonesHell.EntityManagment
             this.inventory = null;
             this.animations = animations;
             this.isMoveAble = isMoveAble;
-            this.viewDirection = new Vector2f(0, 0);
+            this.viewDirection = new Vector2f(1, 0);
             this.healthBar = healthBar;
             this.groupId = groupId;
             dialogIds = new List<int>();
@@ -289,7 +289,34 @@ namespace EveryonesHell.EntityManagment
             this.healthBar = healthBar;
             this.groupId = groupId;
             this.factionId = factionId;
-        } 
+        }
+
+        /// <summary>
+        /// Initzializes a new interactive object
+        /// </summary>
+        /// <param name="position">Spawn position of the object</param>
+        /// <param name="size">Size of the interactive object</param>
+        /// <param name="inventory">Inventory of the interactive object</param>
+        /// <param name="animations">Animations of the interactive object</param>
+        /// <param name="isMoveAble">Inidcates whenther the interactive object is moveable or not</param>
+        /// <param name="viewDirection">Indicates the view direction of the object</param>
+        /// <param name="speed">Indicates the movement speed of the object</param>
+        public InteractiveObject(int tileRow, int tileColumn, Vector2i size, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, int groupId, int factionId)
+            : base(true, true, tileRow, tileColumn, size, animations.Sprite)
+        {
+            this.animations = animations;
+            this.isMoveAble = isMoveAble;
+            this.viewDirection = viewDirection;
+            this.groupId = groupId;
+            Speed = speed;
+            velocity = new Vector2f(0, 0);
+            dialogIds = new List<int>();
+
+            this.maxHealth = maxHealth;
+            this.health = maxHealth;
+            Healthbar = null;
+            inventory = null;
+        }
 
         /// <summary>
         /// Updates the interactive object

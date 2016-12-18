@@ -58,6 +58,8 @@ namespace EveryonesHell.QuestManagment
                         if (inventory.InventorySlots[j].ItemId == activeQuests[i].RequiredItem)
                         {
                             activeQuests.RemoveAt(i);
+                            inventory.InventorySlots.RemoveAt(j);
+                            OnQuestFinished?.Invoke(this, null);
                         }
                     }
                 }

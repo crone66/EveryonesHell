@@ -7,6 +7,7 @@ using TileMapSystem;
 using FileDescriptions;
 using EveryonesHell.EntityManagment;
 using EveryonesHell.HUD;
+using EveryonesHell.EntityManagment.Items;
 
 namespace EveryonesHell
 {
@@ -147,7 +148,6 @@ namespace EveryonesHell
             Sprite green = content.Load<Sprite, Texture>("0", "Content/Enviroment/grass.png");
             Sprite gray = content.Load<Sprite, Texture>("2", "Content/Enviroment/hill.png");
             Sprite blue = content.Load<Sprite, Texture>("1", "Content/Enviroment/water.png");
-
             //Sprites for the Characters's
             Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/Npc/NPCAnimation.png");
             Sprite playerSpriteSheet = content.Load<Sprite, Texture>("-2", "Content/PlayerSpriteSheet.png");
@@ -158,6 +158,10 @@ namespace EveryonesHell
             Sprite gaugebar = content.Load<Sprite, Texture>("5", "Content/Hud/gaugebar.png");
             Sprite gaugebarborder = content.Load<Sprite, Texture>("6", "Content/Hud/gaugebarborder.png");
             Sprite fireBall = content.Load<Sprite, Texture>("7", "Content/fireBall.png");
+
+
+            Sprite flower = content.Load<Sprite, Texture>("8", "Content/Items/healthflower.png");
+            Sprite qFlower = content.Load<Sprite, Texture>("9", "Content/Items/questflower.png");
 
             Font font = content.GetValue<Font>("font");
             dialogs = content.Load<DialogCollection>("Content/Descriptions/DialogCollection.xml");
@@ -183,13 +187,17 @@ namespace EveryonesHell
 
             Player = new Player(y, x, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(playerSpriteSheet, 3, 4, 50, 50, 0.16f), dialog, healthBar, ammunition, 620, 100, 0.5f, 1, questTracker, 1);
             Player.OnDestroy += Player_OnDestroy;
-            NPC TheMightyTester = new NPC(NPCy, NPCx, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(testNPC, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 100, 0.5f, 2, 1, new int[] { 0 });
+            NPC TheMightyTester = new NPC(NPCy, NPCx, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(testNPC, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 100, 0.5f, 2, 1, new int[] { 4 });
             NPC TheEvilTester = new NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(red, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 50, 0.5f, 3, 2 , null);
+            HealFlower healFlower = new HealFlower(y + 5, x - 5, new Vector2i(50, 50), new AnimationManager(flower, 1, 1, 50, 50, 0.16f), 1);
+            QuestFlower questFlower = new QuestFlower(y - 10, x + 10, new Vector2i(50, 50), new AnimationManager(qFlower, 1, 1, 50, 50, 0.16f), 1);
 
             entities = new EntityManager();
             entities.AddEntity(Player);
             entities.AddEntity(TheMightyTester);
             entities.AddEntity(TheEvilTester);
+            entities.AddEntity(healFlower);
+            entities.AddEntity(questFlower);
 
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
             EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000, 0, 10));

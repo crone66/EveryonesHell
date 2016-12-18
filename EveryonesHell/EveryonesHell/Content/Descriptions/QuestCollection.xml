@@ -16,7 +16,7 @@
       <QuestID>1</QuestID>
       <Questitem>0</Questitem>
       <BasedOnDialogue>8</BasedOnDialogue>
-      <RequiredItem>-1</RequiredItem>
+      <RequiredItem>6</RequiredItem>
       <Enemy>-1</Enemy>
       <EnemyCount>-1</EnemyCount>
       <Description>Finde eine dieser seltenen, blauen Blumen.</Description>

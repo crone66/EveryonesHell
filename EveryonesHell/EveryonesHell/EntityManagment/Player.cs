@@ -4,6 +4,7 @@ using SFML.Graphics;
 using DebugConsole;
 using SFML.System;
 using EveryonesHell.HUD;
+using EveryonesHell.EntityManagment.Items;
 
 namespace EveryonesHell.EntityManagment
 {
@@ -179,8 +180,21 @@ namespace EveryonesHell.EntityManagment
         {
             if (lastCollisionObject != null)
             {
-                lastCollisionObject.Freeze = true;
-                dialog.Open(lastCollisionObject.GetDialog());
+                if (lastCollisionObject is Item)
+                {
+                    Item item = lastCollisionObject as Item;
+                    if (!item.PickUp(this))
+                        item.Use(this);
+                }
+                else
+                {
+                    int id = lastCollisionObject.GetDialog();
+                    if (id > -1)
+                    {
+                        lastCollisionObject.Freeze = true;
+                        dialog.Open(lastCollisionObject.GetDialog());
+                    }
+                }
             }
             //dialog.Open(0);//, Position + (new Vector2f(Size.X / 2, Size.Y / 2)));
             //TODO: Action tile location
