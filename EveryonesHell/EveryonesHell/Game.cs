@@ -27,6 +27,9 @@ namespace EveryonesHell
         private float zoomFactor = 1f;
 
         private Scene currentScene;
+        private DebugConsoleManager consoleManager;
+        private GameState prevState;
+
         public Scene CurrentScene
         {
             get
@@ -34,8 +37,7 @@ namespace EveryonesHell
                 return currentScene;
             }
         }
-
-        private DebugConsoleManager consoleManager;
+        
         public DebugConsoleManager ConsoleManager
         {
             get
@@ -76,11 +78,31 @@ namespace EveryonesHell
         public Game()
         {
             GlobalReferences.MainGame = this;
-            window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "test");
+            window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "Everyones-Hell");
+            window.Closed += Window_Closed;
+            window.LostFocus += Window_LostFocus;
+            window.GainedFocus += Window_GainedFocus;
+            
             view = window.GetView();
             view.Zoom(zoomFactor);
             window.SetView(view);
             LoadContent();
+        }
+
+        private void Window_GainedFocus(object sender, EventArgs e)
+        {
+            GlobalReferences.State = prevState;
+        }
+
+        private void Window_LostFocus(object sender, EventArgs e)
+        {
+            prevState = GlobalReferences.State;
+            GlobalReferences.State = GameState.Pause;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            window.Close();
         }
 
         /// <summary>
