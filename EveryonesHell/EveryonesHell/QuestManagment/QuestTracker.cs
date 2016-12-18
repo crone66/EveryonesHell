@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using FileDescriptions;
+using System;
 
 namespace EveryonesHell.QuestManagment
 {
@@ -14,7 +15,8 @@ namespace EveryonesHell.QuestManagment
         public InventorySystem.Inventory inventory;
         private QuestCollection loadedQuests = new QuestCollection();
         public List<Quest> activeQuests = new List<Quest>();
-
+        public event EventHandler OnQuestFinished;
+        
         /// <summary>
         /// initialize the questtracker
         /// </summary>
@@ -30,9 +32,15 @@ namespace EveryonesHell.QuestManagment
         /// adding the new gained quest to the according list 
         /// </summary>
         /// <param name="questID">ID of the quest you want to activate</param>
-        public void ActivateQuest(int questID)
+        public bool ActivateQuest(int questID)
         {
-            activeQuests.Add(loadedQuests.Quests[questID]);
+            if (!activeQuests.Exists(q => q.QuestID == questID))
+            {
+                activeQuests.Add(loadedQuests.Quests[questID]);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -66,7 +74,15 @@ namespace EveryonesHell.QuestManagment
             {
                 if (activeQuests[i].Enemy == groupID)
                 {
-                    activeQuests[i] = new Quest(activeQuests[i].Name, activeQuests[i].QuestID, activeQuests[i].Questitem, activeQuests[i].BasedOnDialogue, activeQuests[i].RequiredItem, activeQuests[i].Enemy, activeQuests[i].EnemyCount - 1, activeQuests[i].Description);
+                    if (activeQuests[i].EnemyCount - 1 <= 0)
+                    {
+                        activeQuests.RemoveAt(i);
+                        OnQuestFinished?.Invoke(this, null);
+                    }
+                    else
+                        activeQuests[i] = new Quest(activeQuests[i].Name, activeQuests[i].QuestID, activeQuests[i].Questitem, activeQuests[i].BasedOnDialogue, activeQuests[i].RequiredItem, activeQuests[i].Enemy, activeQuests[i].EnemyCount - 1, activeQuests[i].Description);
+
+                    break;
                 }
             }
         }

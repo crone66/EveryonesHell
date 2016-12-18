@@ -27,7 +27,7 @@ namespace EveryonesHell.EntityManagment
         private int groupId;
         private int factionId;
         private Gaugebar healthBar;
-        private int[] dialogIds;
+        private List<int> dialogIds;
         
         public event EventHandler OnMoved;
         public event EventHandler OnMoving;
@@ -113,7 +113,7 @@ namespace EveryonesHell.EntityManagment
                 return freeze;
             }
 
-            protected set
+            set
             {
                 freeze = value;
             }
@@ -196,6 +196,7 @@ namespace EveryonesHell.EntityManagment
             this.viewDirection = new Vector2f(0, 0);
             this.healthBar = healthBar;
             this.groupId = groupId;
+            dialogIds = new List<int>();
             this.factionId = factionId;
             Speed = speed;
             velocity = new Vector2f(0, 0);
@@ -220,7 +221,9 @@ namespace EveryonesHell.EntityManagment
             this.viewDirection = viewDirection;
             this.groupId = groupId;
             this.factionId = factionId;
-            this.dialogIds = dialogIds;
+            this.dialogIds = new List<int>();
+            if(dialogIds != null)
+                this.dialogIds.AddRange(dialogIds);
             Speed = speed;
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
@@ -247,6 +250,7 @@ namespace EveryonesHell.EntityManagment
             this.viewDirection = viewDirection;
             Speed = speed;
             velocity = new Vector2f(0, 0);
+            dialogIds = new List<int>();
             MaxHealth = 100;
             health = 50;
             Healthbar = null;
@@ -272,7 +276,11 @@ namespace EveryonesHell.EntityManagment
             this.animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
-            this.dialogIds = dialogIds;
+
+            this.dialogIds = new List<int>();
+            if (dialogIds != null)
+                this.dialogIds.AddRange(dialogIds);
+
             Speed = speed;
             velocity = new Vector2f(0, 0);
             MaxHealth = 100;
@@ -289,7 +297,7 @@ namespace EveryonesHell.EntityManagment
         public override void Update(float elapsedSeconds)
         {
             //TODO update animation and spriteRect
-            if(isMoveAble && !Freeze)
+            if (isMoveAble && !Freeze)
             {
                 Move(elapsedSeconds);
                 animations.Update(elapsedSeconds, Velocity);
@@ -400,10 +408,17 @@ namespace EveryonesHell.EntityManagment
 
         public int GetDialog()
         {
-            if(dialogIds != null)
+            if (dialogIds != null && dialogIds.Count > 0)
+            {
                 return dialogIds[0];
-
+            }
             return -1;
+        }
+
+        public void RemoveDialog()
+        {
+            if(dialogIds.Count > 0)
+                dialogIds.RemoveAt(0);
         }
 
         /// <summary>
