@@ -52,8 +52,8 @@ namespace EveryonesHell.EntityManagment
         public event EventHandler<VictimArgs> OnDoDamage;
         
 
-        public Projectile(Vector2i size, AnimationManager animation, bool isMoveAble, float speed, int maxDistance, int groupId, int damage)
-            :base(size, animation, isMoveAble, speed, 0, null, groupId, -1)
+        public Projectile(Vector2i size, AnimationManager animation, bool isMoveAble, float speed, int maxDistance, int groupId, int damage, bool isPrototyp)
+            :base(size, animation, isMoveAble, speed, 0, null, groupId, -1, isPrototyp)
         {
             this.damage = damage;
             doTeamDamage = false;
@@ -209,7 +209,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new Projectile(Size, animations.Clone(), IsMoveAble, Speed, maxDistance, GroupID, damage);
+            return new Projectile(Size, animations.Clone(), IsMoveAble, Speed, maxDistance, GroupID, damage, false);
         }
     }
 }

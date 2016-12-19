@@ -24,8 +24,14 @@ namespace EveryonesHell.EntityManagment
             this.fireRate = fireRate;
         }
 
-        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, float fireRate, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
-            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, maxHealth, healthBar, groupID, factionId, dialogIds)
+        public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, float fireRate, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
+            : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, maxHealth, healthBar, groupID, factionId, dialogIds, isPrototyp)
+        {
+            this.fireRate = fireRate;
+        }
+
+        public Character(Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, float fireRate, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
+            : base(size, inventory, animations, isMoveAble, viewDirection, speed, maxHealth, healthBar, groupID, factionId, dialogIds, isPrototyp)
         {
             this.fireRate = fireRate;
         }

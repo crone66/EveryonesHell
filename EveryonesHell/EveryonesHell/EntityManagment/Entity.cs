@@ -12,6 +12,7 @@ namespace EveryonesHell.EntityManagment
     {
         private static int Count = 0;
 
+        private bool isPrototyp;
         private int id;
         private bool isVisable;
         private bool isCollidable;
@@ -21,6 +22,7 @@ namespace EveryonesHell.EntityManagment
         private int tileColumn;
 
         private Vector2f position;
+        private Vector2f drawPosition;
         private Vector2i size;
         private Sprite currentSprite;
         private IntRect spriteRect;
@@ -229,16 +231,36 @@ namespace EveryonesHell.EntityManagment
         /// </summary>
         /// <param name="visable">Indicates whenther the entity is visable or not</param>
         /// <param name="collidable">Indicates whenther the entity is collidable or not</param>
-        /// <param name="tileRow">Tile row index</param>
-        /// <param name="tileColumn">Tile column index</param>
         /// <param name="size">Size of entity</param>
         /// <param name="currentSprite">Sprite of entity</param>
-        public Entity(bool visable, bool collidable, int tileRow, int tileColumn, Vector2i size, Sprite currentSprite)
+        public Entity(bool visable, bool collidable, Vector2i size, Sprite currentSprite, bool isPrototyp)
         {
             id = Count++;
             Visable = visable;
             IsCollidable = collidable;
             overlappingTiles = new List<Vector2i>();
+            this.isPrototyp = isPrototyp;
+            Size = size;
+            CurrentSprite = currentSprite;
+            SpriteRect = currentSprite.TextureRect;
+        }
+
+        /// <summary>
+        /// Initzializes a new entity
+        /// </summary>
+        /// <param name="visable">Indicates whenther the entity is visable or not</param>
+        /// <param name="collidable">Indicates whenther the entity is collidable or not</param>
+        /// <param name="tileRow">Tile row index</param>
+        /// <param name="tileColumn">Tile column index</param>
+        /// <param name="size">Size of entity</param>
+        /// <param name="currentSprite">Sprite of entity</param>
+        public Entity(bool visable, bool collidable, int tileRow, int tileColumn, Vector2i size, Sprite currentSprite, bool isPrototyp)
+        {
+            id = Count++;
+            Visable = visable;
+            IsCollidable = collidable;
+            overlappingTiles = new List<Vector2i>();
+            this.isPrototyp = isPrototyp;
             Size = size;
             TileRow = tileRow;
             TileColumn = tileColumn;
@@ -290,6 +312,12 @@ namespace EveryonesHell.EntityManagment
             SpriteRect = spriteRect;
         }
 
+        public void Init(int tileRow, int tileColumn)
+        {
+            TileRow = tileRow;
+            TileColumn = tileColumn;
+        }
+
         /// <summary>
         /// Calculates entity tile indices from position
         /// </summary>
@@ -297,6 +325,17 @@ namespace EveryonesHell.EntityManagment
         {
             tileColumn = Convert.ToInt32(Math.Floor(position.X / GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
             tileRow = Convert.ToInt32(Math.Floor(position.Y / GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+
+            int tempTileColumn = TileMapSystem.TileMathHelper.FixPositionIndex(tileColumn, GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GridColumnCount, GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.TileColumnCount);
+            int tempTileRow = TileMapSystem.TileMathHelper.FixPositionIndex(tileRow, GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GridRowCount, GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.TileRowCount);
+
+            /*if (tempTileRow != tileRow)
+                TileRow = tempTileRow;
+
+            if (tempTileColumn != tileColumn)
+                TileColumn = tempTileColumn;
+                */
+
             UpdateOverlappingTiles();
         }
 
@@ -316,20 +355,23 @@ namespace EveryonesHell.EntityManagment
         /// </summary>
         protected void UpdateOverlappingTiles()
         {
-            int tileColumnCount = Convert.ToInt32(Math.Ceiling(boundingBox.Width / (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
-            int tileRowCount = Convert.ToInt32(Math.Ceiling(boundingBox.Height / (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
-            List<Vector2i> prevOverlappings = overlappingTiles.ToList();
-            overlappingTiles.Clear();
-            for (int r = tileRow - tileRowCount; r < tileRow + tileRowCount + 1; r++)
+            if (!isPrototyp)
             {
-                for (int c = tileColumn - tileColumnCount; c < tileColumn + tileColumnCount + 1; c++)
+                int tileColumnCount = Convert.ToInt32(Math.Ceiling(boundingBox.Width / (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+                int tileRowCount = Convert.ToInt32(Math.Ceiling(boundingBox.Height / (double)GlobalReferences.MainGame.CurrentScene.Settings.TileSize));
+                List<Vector2i> prevOverlappings = overlappingTiles.ToList();
+                overlappingTiles.Clear();
+                for (int r = tileRow - tileRowCount; r < tileRow + tileRowCount + 1; r++)
                 {
-                    if (boundingBox.Intersects(GetTileBoundingBox(new Vector2i(c, r))))
-                        overlappingTiles.Add(new Vector2i(c, r));
+                    for (int c = tileColumn - tileColumnCount; c < tileColumn + tileColumnCount + 1; c++)
+                    {
+                        if (boundingBox.Intersects(GetTileBoundingBox(new Vector2i(c, r))))
+                            overlappingTiles.Add(new Vector2i(c, r));
+                    }
                 }
-            }
 
-            UpdateFlags(prevOverlappings);
+                UpdateFlags(prevOverlappings);
+            }
         }
 
         protected void UpdateFlags(List<Vector2i> prevOverlappingTiles)

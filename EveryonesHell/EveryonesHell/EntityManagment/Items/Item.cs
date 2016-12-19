@@ -9,8 +9,8 @@ namespace EveryonesHell.EntityManagment.Items
 {
     public abstract class Item : InteractiveObject
     {
-        private int value;
-        private bool canPickedUp;
+        protected int value;
+        protected bool canPickedUp;
 
         public bool CanPickedUp
         {
@@ -20,8 +20,15 @@ namespace EveryonesHell.EntityManagment.Items
             }
         }
 
-        public Item(int tileRow, int tileColumn, Vector2i size, AnimationManager animations, int groupId, int value, bool canPickedUp)
-            :base(tileRow, tileColumn, size, animations, false,new Vector2f(1, 0), 0, 0, groupId, -1)
+        public Item(int tileRow, int tileColumn, Vector2i size, AnimationManager animations, int groupId, int value, bool canPickedUp, bool isPrototyp)
+            : base(tileRow, tileColumn, size, animations, false, new Vector2f(1, 0), 0, 0, groupId, -1, isPrototyp)
+        {
+            this.value = value;
+            this.canPickedUp = canPickedUp;
+        }
+
+        public Item(Vector2i size, AnimationManager animations, int groupId, int value, bool canPickedUp, bool isPrototyp)
+            : base(0, 0, size, animations, false, new Vector2f(1, 0), 0, 0, groupId, -1, isPrototyp)
         {
             this.value = value;
             this.canPickedUp = canPickedUp;
@@ -42,5 +49,6 @@ namespace EveryonesHell.EntityManagment.Items
         }
 
         public abstract void Use(InteractiveObject user);
+        
     }
 }

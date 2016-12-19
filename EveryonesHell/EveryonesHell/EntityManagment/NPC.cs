@@ -29,8 +29,18 @@ namespace EveryonesHell.EntityManagment
             idle = true;
         }
 
-        public NPC(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, dialogIds)
+        public NPC(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, dialogIds, isPrototyp)
+        {
+            moveTime = 2.5f;
+            idleTime = 5f;
+            elapsedIdleTime = 0;
+            elapsedMoveTime = 0;
+            idle = true;
+        }
+
+        public NPC(Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
+            : base(size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, dialogIds, isPrototyp)
         {
             moveTime = 2.5f;
             idleTime = 5f;
@@ -211,6 +221,11 @@ namespace EveryonesHell.EntityManagment
         public override void Draw(RenderWindow window)
         {
             base.Draw(window);      
+        }
+
+        public override Entity Clone()
+        {
+            return new NPC(Position, Size, ViewDirection, animations, Healthbar, Speed, MaxHealth, fireRate, GroupID, FactionId, dialogIds.ToArray());
         }
     }
 }
