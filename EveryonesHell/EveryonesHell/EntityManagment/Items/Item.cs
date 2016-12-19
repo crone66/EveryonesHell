@@ -38,7 +38,9 @@ namespace EveryonesHell.EntityManagment.Items
         {
             if (picker != null && canPickedUp)
             {
-                value = picker.Inventory.AddItem(GroupID, value, 10, true);
+                if(value > 0)
+                    value = picker.Inventory.AddItem(GroupID, value, 10, true);
+
                 if (value == 0)
                     CallOnDestroyEvent();
 

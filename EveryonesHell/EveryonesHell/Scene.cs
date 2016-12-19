@@ -23,6 +23,8 @@ namespace EveryonesHell
         private ContentManager content;
         private HUD.HudManager hudManager;
         private Dictionary<int, Sprite> sprites;
+        private List<Sprite> evil;
+        private List<Sprite> friendly;
 
         private EntityManager entities;
         private DialogCollection dialogs;
@@ -155,7 +157,22 @@ namespace EveryonesHell
             //Sprites for the Characters's
             Sprite testNPC = content.Load<Sprite, Texture>("3", "Content/Npc/NPCAnimation.png");
             Sprite playerSpriteSheet = content.Load<Sprite, Texture>("-2", "Content/PlayerSpriteSheet.png");
-            Sprite red = content.Load<Sprite, Texture>("-1", "Content/Npc/testRed.png");
+            
+            evil = new List<Sprite>();
+            string[] evilFiles = System.IO.Directory.GetFiles("Content/Npc/Evil");
+            string[] friendlyFiles = System.IO.Directory.GetFiles("Content/Npc/Friendly");
+            int npcCounter = -3;
+            foreach (string file in evilFiles)
+            {
+                
+                evil.Add(content.Load<Sprite, Texture>((npcCounter--).ToString(), file));
+            }
+
+            friendly = new List<Sprite>();
+            foreach (string file in friendlyFiles)
+            {
+                friendly.Add(content.Load<Sprite, Texture>((npcCounter--).ToString(), file));
+            }
 
 
             //Sprites for the Gaugebar
@@ -178,10 +195,6 @@ namespace EveryonesHell
             sprites.Add(0, green);
             sprites.Add(1, blue);
             sprites.Add(2, gray);
-            sprites.Add(-1, red);
-            sprites.Add(3, testNPC);
-            sprites.Add(5, gaugebar);
-            sprites.Add(6, gaugebarborder);
             
             questTracker = new QuestManagment.QuestTracker(null, quests);
             questTrackerWindow = new QuestTrackerWindow(new Vector2f(100, 150), font, questTracker);
@@ -204,7 +217,7 @@ namespace EveryonesHell
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
             EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000, 0, 10, true));
             EntityFactory.AddPrototype("2", new NPC(new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(testNPC, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 100, 0.5f, 2, 1, new int[] { 0 }, true));
-            EntityFactory.AddPrototype("3", new NPC(new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(red, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 50, 0.5f, 3, 2, null, true));
+            EntityFactory.AddPrototype("3", new NPC(new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(testNPC, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 50, 0.5f, 3, 2, null, true));
             EntityFactory.AddPrototype("4", new NPC(new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(testNPC, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 100, 0.5f, 2, 1, new int[] { 4 }, true));
             EntityFactory.AddPrototype("5", new HealFlower(new Vector2i(50, 50), new AnimationManager(flower, 1, 1, 50, 50, 0.16f), 1, true));
             EntityFactory.AddPrototype("6", new QuestFlower(new Vector2i(50, 50), new AnimationManager(qFlower, 1, 1, 50, 50, 0.16f), 1, true));
@@ -261,18 +274,15 @@ namespace EveryonesHell
                                 {
                                     direction.Y -= 1;
                                 }
-
-                                if (Keyboard.IsKeyPressed(Keyboard.Key.S))
+                                else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
                                 {
                                     direction.Y += 1;
                                 }
-
-                                if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+                                else if (Keyboard.IsKeyPressed(Keyboard.Key.A))
                                 {
                                     direction.X -= 1;
                                 }
-
-                                if (Keyboard.IsKeyPressed(Keyboard.Key.D))
+                                else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
                                 {
                                     direction.X += 1;
                                 }
@@ -390,12 +400,19 @@ namespace EveryonesHell
             foreach (ObjectTile tile in map.ObjectPlacement)
             {
                 Entity ent = EntityFactory.Clone(tile.ObjectId.ToString());
+                if(ent is InteractiveObject)
+                {
+                    if (tile.ObjectId == 3)
+                        (ent as InteractiveObject).Animations.Sprite = evil[GlobalReferences.Randomizer.Next(0, evil.Count)];
+                    else if(tile.ObjectId == 2 || tile.ObjectId == 4)
+                        (ent as InteractiveObject).Animations.Sprite = friendly[GlobalReferences.Randomizer.Next(0, friendly.Count)];
+                }
                 int row, column;
                 TileMathHelper.ToPosition(tile.TileIndex, mapManager.CurrentLevel.TileColumnCount, out row, out column);
                 row = TileMathHelper.ToIndex(map.GridRow, row, mapManager.CurrentLevel.TileRowCount);
                 column = TileMathHelper.ToIndex(map.GridColumn, column, mapManager.CurrentLevel.TileColumnCount);
                 ent.Init(row, column);
-            }
+            }         
         }
 
         private void DeSpawn(GridEventArgs args)

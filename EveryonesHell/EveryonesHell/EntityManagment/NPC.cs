@@ -167,26 +167,26 @@ namespace EveryonesHell.EntityManagment
             float xDiff = enemy.Position.X - Position.X;
             float yDiff = enemy.Position.Y - Position.Y;
 
-            if (!(Between(xDiff, -1, 1) && (yDiff <= distance && yDiff >= -distance)) && !(Between(yDiff, -1, 1) && (xDiff <= distance && xDiff >= -distance)))
+            if (!(Between(xDiff, -4, 4) && (yDiff <= distance && yDiff >= -distance)) && !(Between(yDiff, -4, 4) && (xDiff <= distance && xDiff >= -distance)))
             {
-                if ((xDiff < 0 ? xDiff * -1 : xDiff) < (yDiff < 0 ? yDiff * -1 : yDiff) || Between(yDiff, -1, 1))
+                if ((xDiff < 0 ? xDiff * -1 : xDiff) < (yDiff < 0 ? yDiff * -1 : yDiff) || Between(yDiff, -4, 4))
                 {
-                    if (Between(yDiff, -1, 1) && (xDiff > distance || xDiff < -distance))
+                    if (Between(yDiff, -4, 4) && (xDiff > distance || xDiff < -distance))
                     {
                         x = xDiff > 0 ? 1 : -1;
                     }
-                    else if (!Between(yDiff, -1, 1))
+                    else if (!Between(yDiff, -4, 4))
                     {
                         x = xDiff > 0 ? 1 : -1;
                     }
                 }
                 else
                 {
-                    if (Between(xDiff, -1, 1) || (yDiff > distance || yDiff < -distance))
+                    if (Between(xDiff, -4, 4) || (yDiff > distance || yDiff < -distance))
                     {
                         y = yDiff > 0 ? 1 : -1;
                     }
-                    else if (!Between(xDiff, -1, 1))
+                    else if (!Between(xDiff, -4, 4))
                     {
                         y = yDiff > 0 ? 1 : -1;
                     }
@@ -196,11 +196,16 @@ namespace EveryonesHell.EntityManagment
             }
             else
             {
-                ViewDirection = new Vector2f(Between(xDiff, -1, 1) ? 0 : xDiff > 0 ? 1 : -1, Between(yDiff, -1, 1) ? 0 : yDiff > 0 ? 1 : -1);
+                Vector2f preViewDirection = ViewDirection;
+                ViewDirection = new Vector2f((Between(xDiff, -4, 4) ? 0 : (xDiff > 0 ? 1 : -1)), (Between(yDiff, -4, 4) ? 0 : (yDiff > 0 ? 1 : -1)));
+                if(preViewDirection != ViewDirection)
+                    Velocity = ViewDirection;
             }
 
-            if (Between(xDiff, -1, 1) || Between(yDiff, -1, 1))
+            if (Between(xDiff, -4, 4) || Between(yDiff, -4, 4))
+            {
                 Attack();
+            }
         }
 
         private void Attack()
@@ -225,7 +230,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new NPC(Position, Size, ViewDirection, animations, Healthbar, Speed, MaxHealth, fireRate, GroupID, FactionId, dialogIds.ToArray());
+            return new NPC(Position, Size, ViewDirection, Animations, Healthbar, Speed, MaxHealth, fireRate, GroupID, FactionId, dialogIds.ToArray());
         }
     }
 }

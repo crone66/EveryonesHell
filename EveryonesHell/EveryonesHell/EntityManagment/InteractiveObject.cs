@@ -11,7 +11,7 @@ namespace EveryonesHell.EntityManagment
     public class InteractiveObject : Entity
     {
         private Inventory inventory;
-        protected AnimationManager animations;
+        private AnimationManager animations;
 
         //TODO add Dialogs
 
@@ -178,6 +178,19 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        public AnimationManager Animations
+        {
+            get
+            {
+                return animations;
+            }
+
+            set
+            {
+                animations = value;
+            }
+        }
+
         /// <summary>
         /// Initzializes a new interactive object
         /// </summary>
@@ -190,7 +203,7 @@ namespace EveryonesHell.EntityManagment
             : base(true, true, size, animations.Sprite, isPrototyp)
         {
             this.inventory = null;
-            this.animations = animations;
+            this.Animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = new Vector2f(1, 0);
             this.healthBar = healthBar;
@@ -216,7 +229,7 @@ namespace EveryonesHell.EntityManagment
             : base(true, true, size, animations.Sprite, isPrototyp)
         {
             this.inventory = inventory;
-            this.animations = animations;
+            this.Animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
             this.healthBar = healthBar;
@@ -245,7 +258,7 @@ namespace EveryonesHell.EntityManagment
             :base(true, true, position, size, animations.Sprite)
         {
             this.inventory = inventory;
-            this.animations = animations;
+            this.Animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
             this.groupId = groupId;
@@ -273,7 +286,7 @@ namespace EveryonesHell.EntityManagment
         public InteractiveObject(Vector2f position, Vector2i size, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, int groupId, int factionId)
             : base(true, true, position, size, animations.Sprite)
         {
-            this.animations = animations;
+            this.Animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
             Speed = speed;
@@ -302,7 +315,7 @@ namespace EveryonesHell.EntityManagment
             : base(true, true, tileRow, tileColumn, size, animations.Sprite, isPrototyp)
         {
             this.inventory = inventory;
-            this.animations = animations;
+            this.Animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
 
@@ -332,7 +345,7 @@ namespace EveryonesHell.EntityManagment
         public InteractiveObject(int tileRow, int tileColumn, Vector2i size, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, int groupId, int factionId, bool isPrototyp)
             : base(true, true, tileRow, tileColumn, size, animations.Sprite, isPrototyp)
         {
-            this.animations = animations;
+            this.Animations = animations;
             this.isMoveAble = isMoveAble;
             this.viewDirection = viewDirection;
             this.groupId = groupId;
@@ -356,8 +369,8 @@ namespace EveryonesHell.EntityManagment
             if (isMoveAble && !Freeze)
             {
                 Move(elapsedSeconds);
-                animations.Update(elapsedSeconds, Velocity);
-                SpriteRect = animations.SpriteRect;
+                Animations.Update(elapsedSeconds, Velocity);
+                SpriteRect = Animations.SpriteRect;
             }
             
             Velocity = new Vector2f(0, 0);
@@ -488,11 +501,12 @@ namespace EveryonesHell.EntityManagment
             Vector2f backward = new Vector2f(0, 0);
             if (Position.X > tileBox.Left - Size.X && Position.X < tileBox.Left + tileBox.Width)
             {
-                if (moveVec.X > 0)
+                //Position.X > tileBox.Left
+                if (moveVec.X > 0 && ((Position.X + Size.X) > tileBox.Left && (Position.X + Size.X) < tileBox.Left + tileBox.Width))
                 {
                     backward = new Vector2f((Position.X + Size.X) - tileBox.Left, 0) * -1;
                 }
-                else if (moveVec.X < 0)
+                else if (moveVec.X < 0 && (Position.X < tileBox.Left + tileBox.Width && Position.X > tileBox.Left))
                 {
                     backward = new Vector2f((tileBox.Left + tileBox.Width) - Position.X, 0);
                 }
@@ -500,11 +514,11 @@ namespace EveryonesHell.EntityManagment
 
             if (Position.Y > tileBox.Top - Size.Y && Position.Y < tileBox.Top + tileBox.Height)
             {
-                if (moveVec.Y > 0)
+                if (moveVec.Y > 0 && ((Position.Y + Size.Y) > tileBox.Top && (Position.Y + Size.Y) < tileBox.Top + tileBox.Height))
                 {
                     backward = new Vector2f(backward.X, (Position.Y + Size.Y) - tileBox.Top) * -1;
                 }
-                else if (moveVec.Y < 0)
+                else if (moveVec.Y < 0 && ((Position.Y < tileBox.Top + tileBox.Height) && Position.Y > tileBox.Height))
                 {
                     backward = new Vector2f(backward.X, (tileBox.Top + tileBox.Height) - Position.Y);
                 }
@@ -551,7 +565,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new InteractiveObject(Size, animations.Clone(), isMoveAble, speed, maxHealth, healthBar?.Clone(healthBar.IsFixed), groupId, factionId, false);
+            return new InteractiveObject(Size, Animations.Clone(), isMoveAble, speed, maxHealth, healthBar?.Clone(healthBar.IsFixed), groupId, factionId, false);
         }
     }
 }
