@@ -13,7 +13,10 @@ namespace FileDescriptions
     {
         public Quest[] Quests;
 
-
+        /// <summary>
+        /// initialze the struct questcollection
+        /// </summary>
+        /// <param name="quests">quest you want to add to the struct</param>
         public QuestCollection(Quest[] quests)
         {
             Quests = quests;
