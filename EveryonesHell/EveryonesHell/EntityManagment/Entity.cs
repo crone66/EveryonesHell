@@ -312,6 +312,11 @@ namespace EveryonesHell.EntityManagment
             SpriteRect = spriteRect;
         }
 
+        /// <summary>
+        /// Init methode to set tile row and tile column indices
+        /// </summary>
+        /// <param name="tileRow">Tile row index</param>
+        /// <param name="tileColumn">Tile column index</param>
         public void Init(int tileRow, int tileColumn)
         {
             TileRow = tileRow;
@@ -329,7 +334,8 @@ namespace EveryonesHell.EntityManagment
             int tempTileColumn = TileMapSystem.TileMathHelper.FixPositionIndex(tileColumn, GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GridColumnCount, GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.TileColumnCount);
             int tempTileRow = TileMapSystem.TileMathHelper.FixPositionIndex(tileRow, GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GridRowCount, GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.TileRowCount);
 
-            /*if (tempTileRow != tileRow)
+            /*Maps tile indices to range
+             * if (tempTileRow != tileRow)
                 TileRow = tempTileRow;
 
             if (tempTileColumn != tileColumn)
@@ -374,6 +380,10 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Updates tile flags
+        /// </summary>
+        /// <param name="prevOverlappingTiles">Previouse overlapping tiles</param>
         protected void UpdateFlags(List<Vector2i> prevOverlappingTiles)
         {
             foreach (Vector2i tileInfo in OverlappingTiles)
@@ -450,6 +460,9 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Sets rotation around center point
+        /// </summary>
         private void SetRotation()
         {
             currentSprite.Rotation = rotation;
@@ -462,6 +475,9 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Calls OnDestroy event
+        /// </summary>
         protected void CallOnDestroyEvent()
         {
             OnDestroy?.Invoke(this, null);
@@ -473,6 +489,10 @@ namespace EveryonesHell.EntityManagment
         /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public abstract void Update(float elapsedSeconds);
 
+        /// <summary>
+        /// Clones the entity
+        /// </summary>
+        /// <returns>Returns a copy of the entity</returns>
         public abstract Entity Clone();
     }
 }

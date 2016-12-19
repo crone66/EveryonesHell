@@ -42,6 +42,10 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Adds a new Entity to the entity manager
+        /// </summary>
+        /// <param name="entity">Entity object</param>
         public void AddEntity(Entity entity)
         {
             if (entity != null)
@@ -51,11 +55,20 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Removes an entity from the entity manager
+        /// </summary>
+        /// <param name="entity">Entity object</param>
         public void RemoveEntity(Entity entity)
         {
             Entity_OnDestroy(entity, null);
         }
 
+        /// <summary>
+        /// On entity destroyed event
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event args</param>
         private void Entity_OnDestroy(object sender, EventArgs e)
         {
             if (sender != null)
@@ -66,6 +79,11 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// On entity spawned event
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event args</param>
         private void Entity_OnSpawn(object sender, EventArgs e)
         {
             if(sender != null)
@@ -75,6 +93,10 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Returns all registered entities
+        /// </summary>
+        /// <returns>Returns an array of entities</returns>
         public Entity[] GetEntities()
         {
             return entities.ToArray();

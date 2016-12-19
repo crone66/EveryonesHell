@@ -465,16 +465,28 @@ namespace EveryonesHell.EntityManagment
             return new Vector2f(0, 0);
         }
 
+        /// <summary>
+        /// Calls the on collision event
+        /// </summary>
+        /// <param name="destArgs">Collision event args</param>
         protected void CallCollisionEvent(CollisionArgs destArgs)
         {
             OnCollision?.Invoke(this, destArgs);
         }
 
+        /// <summary>
+        /// Call the on kill event
+        /// </summary>
+        /// <param name="args">Attacker event args</param>
         protected void CallOnKillEvent(AttackerArgs args)
         {
             OnKill?.Invoke(this, args);
         }
 
+        /// <summary>
+        /// Returns the current dialog id
+        /// </summary>
+        /// <returns>Returns a dialog id</returns>
         public int GetDialog()
         {
             if (dialogIds != null && dialogIds.Count > 0)
@@ -484,6 +496,9 @@ namespace EveryonesHell.EntityManagment
             return -1;
         }
 
+        /// <summary>
+        /// Removes the current dialog
+        /// </summary>
         public void RemoveDialog()
         {
             if(dialogIds.Count > 0)
@@ -563,6 +578,10 @@ namespace EveryonesHell.EntityManagment
             return health;
         }
 
+        /// <summary>
+        /// Clones an interactive object
+        /// </summary>
+        /// <returns>Returns a copy of the interactive object</returns>
         public override Entity Clone()
         {
             return new InteractiveObject(Size, Animations.Clone(), isMoveAble, speed, maxHealth, healthBar?.Clone(healthBar.IsFixed), groupId, factionId, false);

@@ -79,6 +79,12 @@ namespace EveryonesHell.EntityManagment
             BoundingBox = new IntRect(BoundingBox.Left, BoundingBox.Top, (int)rotatedSize.X, (int)rotatedSize.Y);
         }
 
+        /// <summary>
+        /// Calculates spawn rotation
+        /// </summary>
+        /// <param name="viewDirection">view direction</param>
+        /// <param name="sourceSize">source size</param>
+        /// <returns>Returns rotation</returns>
         private Vector2f SetupRotation(Vector2f viewDirection, Vector2i sourceSize)
         {
             Vector2f rotatedSize = GetRotatedSize(viewDirection);
@@ -96,6 +102,12 @@ namespace EveryonesHell.EntityManagment
             return offset;
         }
 
+        /// <summary>
+        /// Calculates spawn position
+        /// </summary>
+        /// <param name="viewDirection">View direction of projectile</param>
+        /// <param name="sourceSize">Source projectile size</param>
+        /// <returns>Returns spawn position</returns>
         private Vector2f CalculateSpawnPosition(Vector2f viewDirection, Vector2i sourceSize)
         {
             Vector2f spawn = new Vector2f(0, 0);
@@ -113,6 +125,11 @@ namespace EveryonesHell.EntityManagment
             return spawn;
         }
 
+        /// <summary>
+        /// Fixed Size on rotation
+        /// </summary>
+        /// <param name="viewDirection">View direction of projectile</param>
+        /// <returns>Returns a fixed rotation size</returns>
         private Vector2f GetRotatedSize(Vector2f viewDirection)
         {
             if (viewDirection.Y != 0)
@@ -125,6 +142,9 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Checks the travelled distance
+        /// </summary>
         private void CheckDistance()
         {
             Vector2f distance = Position - spawnPosition;
@@ -148,6 +168,10 @@ namespace EveryonesHell.EntityManagment
                 CallOnDestroyEvent();
         }
 
+        /// <summary>
+        /// Updates projectile
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public override void Update(float elapsedSeconds)
         {
             Vector2f lastPosition = Position;
@@ -157,12 +181,21 @@ namespace EveryonesHell.EntityManagment
             CheckDistance();
         }
 
+        /// <summary>
+        /// Draws the projectile
+        /// </summary>
+        /// <param name="window">Window to render</param>
         public override void Draw(RenderWindow window)
         {
             CurrentSprite.Origin = new Vector2f(Size.X / 2, Size.Y / 2);
             base.Draw(window);
         }
 
+        /// <summary>
+        /// On collision event
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Collision event args</param>
         private void InteractiveObject_OnCollision(object sender, CollisionArgs e)
         {
             Entity otherObject = null;
@@ -193,6 +226,11 @@ namespace EveryonesHell.EntityManagment
                 CallOnDestroyEvent();
         }
 
+        /// <summary>
+        /// Calculates damage
+        /// </summary>
+        /// <param name="teamAttack">Indicates whenther team attack is on or off</param>
+        /// <returns>Returns damage value</returns>
         private int CalculateDamage(bool teamAttack)
         {
             int currentDamage = damage * -1;
@@ -207,6 +245,10 @@ namespace EveryonesHell.EntityManagment
             return currentDamage;
         }
 
+        /// <summary>
+        /// Clones a Projectile
+        /// </summary>
+        /// <returns>Returns a copy of the projectile</returns>
         public override Entity Clone()
         {
             return new Projectile(Size, Animations.Clone(), IsMoveAble, Speed, maxDistance, GroupID, damage, false);

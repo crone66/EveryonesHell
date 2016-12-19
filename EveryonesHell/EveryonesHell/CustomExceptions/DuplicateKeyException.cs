@@ -10,6 +10,10 @@ namespace EveryonesHell
 {
     public class DuplicateKeyException : Exception
     {
+        /// <summary>
+        /// Duplicate key exception
+        /// </summary>
+        /// <param name="message">Error message</param>
         public DuplicateKeyException(string message)
             :base(message)
         {

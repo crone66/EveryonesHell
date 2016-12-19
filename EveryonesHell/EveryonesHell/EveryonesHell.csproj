@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="AnimationManager.cs" />
     <Compile Include="CustomEventArgs\DialogChangedArgs.cs" />
+    <Compile Include="CustomEventArgs\FactoryEventArgs.cs" />
     <Compile Include="CustomEventArgs\HudStateChangedArgs.cs" />
     <Compile Include="EntityManagment\Items\HealFlower.cs" />
     <Compile Include="EntityManagment\Items\Item.cs" />

@@ -7,6 +7,12 @@ namespace EveryonesHell.EntityManagment
         public Entity CollisionObjectSource;
         public Entity CollisionObjectDest;
         public bool CancelBackward;
+
+        /// <summary>
+        /// Collision event args
+        /// </summary>
+        /// <param name="collisionObjectSource">Source collision entity</param>
+        /// <param name="collisionObjectDest">Destination collision entity</param>
         public CollisionArgs(Entity collisionObjectSource, Entity collisionObjectDest)
         {
             CollisionObjectSource = collisionObjectSource;
