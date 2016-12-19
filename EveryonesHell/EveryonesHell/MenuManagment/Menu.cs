@@ -29,5 +29,7 @@ namespace EveryonesHell.MenuManagment
         public abstract void Update(float elapsedSeconds);
 
         public abstract void Draw(RenderWindow window);
+
+        public abstract void Input(float elapsedSeconds);
     }
 }

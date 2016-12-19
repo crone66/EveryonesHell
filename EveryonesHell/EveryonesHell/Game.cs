@@ -9,6 +9,8 @@ using SFML.System;
 using SFML.Window;
 using System;
 using EveryonesHell.HUD;
+using EveryonesHell.MenuManagment;
+using System.Collections.Generic;
 
 namespace EveryonesHell
 {
@@ -29,6 +31,8 @@ namespace EveryonesHell
         private Scene currentScene;
         private DebugConsoleManager consoleManager;
         private GameState prevState;
+
+        private MenuManager menuManager;
 
         public Scene CurrentScene
         {
@@ -70,6 +74,15 @@ namespace EveryonesHell
             {
                 windowHeight = value;
             }
+        }
+
+        public MenuManager MenuManager
+        {
+            get
+            {
+                return menuManager;
+            }
+           
         }
 
         /// <summary>
@@ -134,7 +147,15 @@ namespace EveryonesHell
             
             currentScene = new Scene(content, zoomFactor);
             currentScene.LoadContent();
-            GlobalReferences.State = GameState.Play;
+
+            List<Menu> menus = new List<Menu>();
+            menus.Add(new MainMenu(new Vector2f(windowWidth, windowHeight), font));
+            menus.Add(new SplashScreen(new Vector2f(windowWidth, windowHeight), font, 5f));
+            menus.Add(new CreditsScreen(new Vector2f(windowWidth, windowHeight), font, 5f));
+            menuManager = new MenuManager(menus);
+            menuManager.Show("SplashScreen");
+           
+            GlobalReferences.State = GameState.Menu;
         }
 
         /// <summary>
@@ -154,6 +175,7 @@ namespace EveryonesHell
                 case GameState.Pause:
                     break;
                 case GameState.Menu:
+                    menuManager.Input(elapsedSeconds);
                     break;
                 case GameState.Exit:
                     break;
@@ -177,6 +199,7 @@ namespace EveryonesHell
                 case GameState.Pause:
                     break;
                 case GameState.Menu:
+                    menuManager.Update(elapsedSeconds);
                     break;
                 case GameState.Exit:
                     break;
@@ -192,7 +215,7 @@ namespace EveryonesHell
             windowWidth = Convert.ToUInt32(window.DefaultView.Size.X);
             windowHeight = Convert.ToUInt32(window.DefaultView.Size.Y);
 
-            window.Clear(Color.Blue);
+            window.Clear(Color.Black);
             switch (GlobalReferences.State)
             {
                 case GameState.Play:
@@ -203,6 +226,7 @@ namespace EveryonesHell
                 case GameState.Pause:
                     break;
                 case GameState.Menu:
+                    menuManager.Draw(window);
                     break;
                 case GameState.Exit:
                     break;
