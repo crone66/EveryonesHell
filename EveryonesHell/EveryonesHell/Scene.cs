@@ -187,7 +187,7 @@ namespace EveryonesHell
             Sound shot = content.Load<Sound, SoundBuffer>("ShotSound", "Content/Sounds/shot.wav");
             Sound steps = content.Load<Sound, SoundBuffer>("Steps", "Content/Sounds/steps.wav");
             Sound jetpack = content.Load<Sound, SoundBuffer>("Jetpack", "Content/Sounds/jetpack_2.wav");
-            music = content.Load<Sound, SoundBuffer>("music","Content/Sounds/SpiderDance.wav");
+            music = content.Load<Sound, SoundBuffer>("music","Content/Sounds/SpiderDance.ogg");
             music.Volume = 35f;
             music.Loop = true;
             //music.Play();
