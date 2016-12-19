@@ -67,7 +67,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="sprite">Sprite of the player</param>
         /// <param name="dialog">Dialog system</param>
         public Player(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animation, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
-            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animation, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, null)
+            : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animation, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, null, false)
         {
             lastDirection = new Vector2f(0, 0);
             this.dialog = dialog;
@@ -222,15 +222,22 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e"></param>
         public void OnJetpack(object sender, ExecuteCommandArgs e)
         {
-            JetpackActive = !JetpackActive;
+            TileMapSystem.Tile tile;
+            if (GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(TileRow, TileColumn, out tile))
+            {
+                if (tile.Flags == 2 || tile.Flags == 0)
+                {
+                    JetpackActive = !JetpackActive;
 
-            if (JetpackActive)
-            {
-                IsCollidable = false;
-            }
-            else
-            {
-                IsCollidable = true;
+                    if (JetpackActive)
+                    {
+                        IsCollidable = false;
+                    }
+                    else
+                    {
+                        IsCollidable = true;
+                    }
+                }
             }
         }
 
