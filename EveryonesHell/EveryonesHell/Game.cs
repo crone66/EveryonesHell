@@ -11,6 +11,7 @@ using System;
 using EveryonesHell.HUD;
 using EveryonesHell.MenuManagment;
 using System.Collections.Generic;
+using SFML.Audio;
 
 namespace EveryonesHell
 {
@@ -141,6 +142,8 @@ namespace EveryonesHell
         {
             content = new ContentManager();
             Font font = content.Load<Font>(@"C:\Windows\Fonts\arial.ttf", "font");
+
+            Sound sound = content.Load<Sound, SoundBuffer>("menu", "Content/Sounds/menu.wav");
             
             consoleManager = new DebugConsoleManager(this, font);
             window.TextEntered += consoleManager.TextEntered;
@@ -149,7 +152,7 @@ namespace EveryonesHell
             currentScene.LoadContent();
 
             List<Menu> menus = new List<Menu>();
-            menus.Add(new MainMenu(new Vector2f(windowWidth, windowHeight), font));
+            menus.Add(new MainMenu(new Vector2f(windowWidth, windowHeight), font, sound));
             menus.Add(new SplashScreen(new Vector2f(windowWidth, windowHeight), font, 5f));
             menus.Add(new CreditsScreen(new Vector2f(windowWidth, windowHeight), font, 5f));
             menuManager = new MenuManager(menus);

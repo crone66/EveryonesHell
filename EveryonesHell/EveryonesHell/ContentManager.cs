@@ -167,7 +167,9 @@ namespace EveryonesHell
             }
             catch(Exception e)
             {
-                GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(e.Message, 255, 0, 0);
+                if(GlobalReferences.MainGame.ConsoleManager != null)
+                    GlobalReferences.MainGame.ConsoleManager.DebugConsole.WriteLine(e.Message, 255, 0, 0);
+
                 if (Exists(typeof(T), "error"))
                     return (T)content[typeof(T)]["error"];
                 else

@@ -5,6 +5,7 @@ using DebugConsole;
 using SFML.System;
 using EveryonesHell.HUD;
 using EveryonesHell.EntityManagment.Items;
+using SFML.Audio;
 
 namespace EveryonesHell.EntityManagment
 {
@@ -18,6 +19,10 @@ namespace EveryonesHell.EntityManagment
         private int ammo;
         private int maxAmmo;
         private Gaugebar ammunitionBar;
+        private Sound jetpack;
+        private Sound shot;
+        private Sound steps;
+        private bool soundStarted;
 
         /// <summary>
         /// Getter and setter for activation of the Jetpack
@@ -86,7 +91,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="groupID">Defines the group the player belongs to</param> 
         /// <param name="questTracker">Passes the questtracker</param>
         /// <param name="factionId">Defines the factione the player belongs to</param> 
-        public Player(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animation, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
+        public Player(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animation, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId, Sound steps, Sound shot, Sound jetpack)
             : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animation, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, null, false)
         {
             lastDirection = new Vector2f(0, 0);
@@ -102,6 +107,9 @@ namespace EveryonesHell.EntityManagment
             OnKill += Player_OnKill;
             ammunitionBar = ammunition;
             ammunitionBar.Init(ammo, maxAmmo);
+            this.steps = steps;
+            this.shot = shot;
+            this.jetpack = jetpack;
         }
 
 
@@ -196,6 +204,19 @@ namespace EveryonesHell.EntityManagment
         {
             if (IsVisable)
             {
+                if (Velocity != new Vector2f(0, 0) && !soundStarted)
+                {
+                    steps.Loop = true;
+                    steps.Volume = 100f;
+                    steps.Play();
+                    soundStarted = true;
+                }
+                else if (Velocity == new Vector2f(0, 0))
+                {
+                    steps.Stop();
+                    soundStarted = false;
+                }
+
                 base.Update(elapsedSeconds);
                 if (lastDirection != ViewDirection)
                     lastCollisionObject = null;
@@ -209,6 +230,7 @@ namespace EveryonesHell.EntityManagment
             if (IsVisable)
             {
                 lastDirection = ViewDirection;
+                
                 base.OnMove(sender, e);
             }
         }
@@ -268,6 +290,7 @@ namespace EveryonesHell.EntityManagment
                         ammo--;
                         ammunitionBar.Update(ammo, maxAmmo);
                         base.OnAttack(sender, e);
+                        shot.Play();
                     }
                 }
             }
@@ -291,10 +314,13 @@ namespace EveryonesHell.EntityManagment
 
                         if (JetpackActive)
                         {
+                            jetpack.Loop = true;
+                            jetpack.Play();   
                             IsCollidable = false;
                         }
                         else
                         {
+                            jetpack.Stop();
                             IsCollidable = true;
                         }
                     }

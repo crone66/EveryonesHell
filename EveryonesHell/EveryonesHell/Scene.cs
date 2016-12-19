@@ -8,6 +8,7 @@ using FileDescriptions;
 using EveryonesHell.EntityManagment;
 using EveryonesHell.HUD;
 using EveryonesHell.EntityManagment.Items;
+using SFML.Audio;
 
 namespace EveryonesHell
 {
@@ -23,6 +24,7 @@ namespace EveryonesHell
         private ContentManager content;
         private HudManager hudManager;
         private GameOver gameOver;
+        private Sound music;
 
         private Dictionary<int, Sprite> sprites;
         private List<Sprite> evil;
@@ -36,6 +38,7 @@ namespace EveryonesHell
         private IntRect viewBox;
 
         private Player player;
+        private bool jetPackKey;
 
         private QuestManagment.QuestTracker questTracker;
         private HUD.QuestTrackerWindow questTrackerWindow;
@@ -181,7 +184,13 @@ namespace EveryonesHell
             Sprite gaugebarborder = content.Load<Sprite, Texture>("6", "Content/Hud/gaugebarborder.png");
             Sprite fireBall = content.Load<Sprite, Texture>("7", "Content/fireBall.png");
 
-
+            Sound shot = content.Load<Sound, SoundBuffer>("ShotSound", "Content/Sounds/shot.wav");
+            Sound steps = content.Load<Sound, SoundBuffer>("Steps", "Content/Sounds/steps.wav");
+            Sound jetpack = content.Load<Sound, SoundBuffer>("Jetpack", "Content/Sounds/jetpack_2.wav");
+            music = content.Load<Sound, SoundBuffer>("music","Content/Sounds/SpiderDance.wav");
+            music.Volume = 35f;
+            music.Loop = true;
+            //music.Play();
             Sprite flower = content.Load<Sprite, Texture>("8", "Content/Items/healthflower.png");
             Sprite qFlower = content.Load<Sprite, Texture>("9", "Content/Items/questflower.png");
 
@@ -226,7 +235,7 @@ namespace EveryonesHell
             EntityFactory.AddPrototype("6", new QuestFlower(new Vector2i(50, 50), new AnimationManager(qFlower, 1, 1, 50, 50, 0.16f), 1, true));
             mapManager.Changelevel(Settings, areaSpreads, x, y, false);
 
-            Player = new Player(y, x, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(playerSpriteSheet, 3, 4, 50, 50, 0.16f), dialog, healthBar, ammunition, 620, 100, 0.5f, 1, questTracker, 1);
+            Player = new Player(y, x, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(playerSpriteSheet, 3, 4, 50, 50, 0.16f), dialog, healthBar, ammunition, 620, 100, 0.5f, 1, questTracker, 1, steps, shot, jetpack);
             Player.OnDestroy += Player_OnDestroy;
             
             entities.AddEntity(Player);
@@ -236,6 +245,7 @@ namespace EveryonesHell
         {
             gameOver.IsOpen = true;
             player.IsVisable = false;
+            music.Stop();
         }
 
         public void Respawn()
@@ -244,6 +254,7 @@ namespace EveryonesHell
             GlobalReferences.MainGame.MenuManager.Show("MainMenu");
             entities.AddEntity(player);
             player.Respawn(x, y, 100, 100);
+            music.Play();
         }
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
@@ -257,6 +268,9 @@ namespace EveryonesHell
         /// <param name="elapsedSeconds"></param>
         public void Update(float elapsedSeconds)
         {
+            if (music.Status != SoundStatus.Playing)
+                music.Play();
+
             entities.Update(elapsedSeconds, viewBox);
             mapManager.Update(Player.TileRow, Player.TileColumn);
             hudManager.Update(elapsedSeconds);
@@ -308,10 +322,14 @@ namespace EveryonesHell
                                     Player.OnAttack(this, null);
                                 }
 
-                                if (Keyboard.IsKeyPressed(Keyboard.Key.H))
+                                if (Keyboard.IsKeyPressed(Keyboard.Key.H) && !jetPackKey)
                                 {
                                     Player.OnJetpack(this, null);
-
+                                    jetPackKey = true;
+                                }
+                                else if(!Keyboard.IsKeyPressed(Keyboard.Key.H))
+                                {
+                                    jetPackKey = false;
                                 }
 
                                 if (Keyboard.IsKeyPressed(Keyboard.Key.Q))

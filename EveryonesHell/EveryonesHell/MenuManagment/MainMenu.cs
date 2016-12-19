@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using SFML.Audio;
+using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
@@ -10,15 +11,16 @@ namespace EveryonesHell.MenuManagment
         private int selectedIndex = 0;
         private bool prevUp = false;
         private bool prevDown = false;
-
+        private Sound sound;
         /// <summary>
         /// Initzializes a new Main menu
         /// </summary>
         /// <param name="size">Size of main menu</param>
         /// <param name="font">Text font</param>
-        public MainMenu(Vector2f size, Font font)
+        public MainMenu(Vector2f size, Font font, Sound click)
             :base("MainMenu", new Vector2f(0,0), size, false)
         {
+            sound = click;
             lines = new Button[3]
             {
                 new Button("Start",font, new Vector2f((size.X / 2) - 100, (size.Y / 2) - 60), new Vector2f(200, 30)),
@@ -64,6 +66,7 @@ namespace EveryonesHell.MenuManagment
                 {
                     selectedIndex--;
                     prevUp = true;
+                    sound.Play();
                 }
             }
             else
@@ -77,6 +80,7 @@ namespace EveryonesHell.MenuManagment
                 {
                     selectedIndex++;
                     prevDown = true;
+                    sound.Play();
                 }
             }
             else
@@ -86,6 +90,7 @@ namespace EveryonesHell.MenuManagment
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Return) && !prevUp && !prevDown)
             {
+                sound.Play();
                 if (selectedIndex == 0)
                     GlobalReferences.State = GameState.Play;
                 else if (selectedIndex == 1)
