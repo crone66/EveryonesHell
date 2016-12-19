@@ -38,7 +38,7 @@ namespace EveryonesHell.HUD
             this.questTracker = questTracker;
             this.position = position;
 
-            width = 600;
+            width = 660;
             height = 300;
             nameWidth = 250;
 
@@ -76,6 +76,11 @@ namespace EveryonesHell.HUD
             if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
             {
                 IsOpen = false;
+            }
+
+            if (displayedQuestCount >= questTracker.activeQuests.Count)
+            {
+                displayedQuestCount = 0;
             }
 
             if (elapsedTime >= keyDelay)

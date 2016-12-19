@@ -209,7 +209,7 @@ namespace EveryonesHell.EntityManagment
 
         public override Entity Clone()
         {
-            return new Projectile(Size, animations.Clone(), IsMoveAble, Speed, maxDistance, GroupID, damage, false);
+            return new Projectile(Size, Animations.Clone(), IsMoveAble, Speed, maxDistance, GroupID, damage, false);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace EveryonesHell.EntityManagment.Items
 
         public override Entity Clone()
         {
-            return new HealFlower(0, 0, Size, animations, value, false);
+            return new HealFlower(0, 0, Size, Animations, value, false);
         }
     }
 }
