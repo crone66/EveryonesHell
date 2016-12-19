@@ -73,8 +73,8 @@ namespace EveryonesHell.EntityManagment
         /// <summary>
         /// Creates a new Player and passes the data to parent class.
         /// </summary>
-        /// <param name="tileRow">Player Position by Row of Tiles</param> 
-        /// <param name="tileColumn"> Player Position by Column of Tiles</param>
+        /// <param name="tileRow">Player X Position by Row of Tiles</param> 
+        /// <param name="tileColumn"> Player Y Position by Column of Tiles</param>
         /// <param name="size">Size of the players hitbox</param>
         /// <param name="viewDirection">Initial view Direction</param>
         /// <param name="animation">Provides the animation Manager with the animation for the player</param>

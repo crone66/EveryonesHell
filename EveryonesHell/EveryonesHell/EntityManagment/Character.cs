@@ -43,8 +43,8 @@ namespace EveryonesHell.EntityManagment
         /// <summary>
         /// Creates a character and passes the data to parent class with position set by Tiles
         /// </summary>
-        /// <param name="tileRow">Character Position by Row of Tiles</param> 
-        /// <param name="tileColumn">Character Position by Column of Tiles</param> 
+        /// <param name="tileRow">Character X Position by Row of Tiles</param> 
+        /// <param name="tileColumn">Character Y Position by Column of Tiles</param> 
         /// <param name="size">Defines the hitbox size for the character</param> 
         /// <param name="inventory">Sets the inventory for the created character</param> 
         /// <param name="animations">Passes the characters animations to the animation manager</param> 
