@@ -365,7 +365,6 @@ namespace EveryonesHell.EntityManagment
         /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public override void Update(float elapsedSeconds)
         {
-            //TODO update animation and spriteRect
             if (isMoveAble && !Freeze)
             {
                 Move(elapsedSeconds);

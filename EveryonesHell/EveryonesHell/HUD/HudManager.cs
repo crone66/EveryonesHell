@@ -90,7 +90,7 @@ namespace EveryonesHell.HUD
             View newView = new View(new Vector2f(view.Size.X / 2f, view.Size.Y / 2f), view.Size);
             newView.Zoom(zoom);
             window.SetView(newView);
-
+            
             foreach (HudElement item in FixedHudElements)
             {
                 if(item.IsOpen)

@@ -23,11 +23,11 @@ namespace EveryonesHell
         private RenderWindow window;
         private ContentManager content;
 
-        private uint windowWidth = 800;
-        private uint windowHeight = 600;
+        private uint windowWidth = 1024;
+        private uint windowHeight = 768;
 
         private View view;
-        private float zoomFactor = 1f;
+        private float zoomFactor = 1.3f;
 
         private Scene currentScene;
         private DebugConsoleManager consoleManager;
@@ -92,7 +92,7 @@ namespace EveryonesHell
         public Game()
         {
             GlobalReferences.MainGame = this;
-            window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "Everyones-Hell");
+            window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "Everyones Hell");
             window.Closed += Window_Closed;
             window.LostFocus += Window_LostFocus;
             window.GainedFocus += Window_GainedFocus;

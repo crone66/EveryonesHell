@@ -183,6 +183,7 @@ namespace EveryonesHell
             Sprite gaugebar = content.Load<Sprite, Texture>("5", "Content/Hud/gaugebar.png");
             Sprite gaugebarborder = content.Load<Sprite, Texture>("6", "Content/Hud/gaugebarborder.png");
             Sprite fireBall = content.Load<Sprite, Texture>("7", "Content/fireBall.png");
+            Sprite jetpackAnimation = content.Load<Sprite, Texture>("jetpackTexture", "Content/PlayerJetpackSheet.png");
 
             Sound shot = content.Load<Sound, SoundBuffer>("ShotSound", "Content/Sounds/shot.wav");
             Sound steps = content.Load<Sound, SoundBuffer>("Steps", "Content/Sounds/steps.wav");
@@ -209,19 +210,10 @@ namespace EveryonesHell
             questTracker = new QuestManagment.QuestTracker(null, quests);
             questTrackerWindow = new QuestTrackerWindow(new Vector2f(70, 150), font, questTracker);
 
-            Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, GlobalReferences.MainGame.WindowHeight - gaugebarborder.Texture.Size.Y), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Red, true);
-            Gaugebar ammunition = new Gaugebar(30, 30, new Vector2f(GlobalReferences.MainGame.WindowWidth - (gaugebarborder.Texture.Size.X * 0.6f), GlobalReferences.MainGame.WindowHeight - (gaugebarborder.Texture.Size.Y * gaugebar.Scale.Y)), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Yellow, true);
-
-            /*NPC TheMightyTester = new NPC(NPCy, NPCx, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(testNPC, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 100, 0.5f, 2, 1, new int[] { 4 });
-            NPC TheEvilTester = new NPC(NPCy - 10, NPCx - 10, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(red, 3, 4, 50, 50, 0.16f), healthBar.Clone(false), 220, 50, 0.5f, 3, 2 , null);
-            HealFlower healFlower = new HealFlower(y + 5, x - 5, new Vector2i(50, 50), new AnimationManager(flower, 1, 1, 50, 50, 0.16f), 1);
-            QuestFlower questFlower = new QuestFlower(y - 10, x + 10, new Vector2i(50, 50), new AnimationManager(qFlower, 1, 1, 50, 50, 0.16f), 1);
-            */
-
-            /*entities.AddEntity(TheMightyTester);
-            entities.AddEntity(TheEvilTester);
-            entities.AddEntity(healFlower);
-            entities.AddEntity(questFlower);*/
+            int xZoomVal = (int)(GlobalReferences.MainGame.WindowWidth - (GlobalReferences.MainGame.WindowWidth * zoomFactor)) / 2;
+            int yZoomVal = (int)(GlobalReferences.MainGame.WindowHeight - (GlobalReferences.MainGame.WindowHeight * zoomFactor)) / 2;
+            Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0+xZoomVal, (GlobalReferences.MainGame.WindowHeight * zoomFactor) - gaugebarborder.Texture.Size.Y - yZoomVal), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Red, true);
+            Gaugebar ammunition = new Gaugebar(30, 30, new Vector2f((GlobalReferences.MainGame.WindowWidth * zoomFactor) - (gaugebarborder.Texture.Size.X * 0.6f) - xZoomVal, (GlobalReferences.MainGame.WindowHeight * zoomFactor) - (gaugebarborder.Texture.Size.Y * gaugebar.Scale.Y) - yZoomVal), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Yellow, true);
 
             gameOver = new GameOver((int)GlobalReferences.MainGame.WindowWidth, (int)GlobalReferences.MainGame.WindowHeight, font, 3f, this);
 
@@ -235,7 +227,7 @@ namespace EveryonesHell
             EntityFactory.AddPrototype("6", new QuestFlower(new Vector2i(50, 50), new AnimationManager(qFlower, 1, 1, 50, 50, 0.16f), 1, true));
             mapManager.Changelevel(Settings, areaSpreads, x, y, false);
 
-            Player = new Player(y, x, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(playerSpriteSheet, 3, 4, 50, 50, 0.16f), dialog, healthBar, ammunition, 620, 100, 0.5f, 1, questTracker, 1, steps, shot, jetpack);
+            Player = new Player(y, x, new Vector2i(50, 50), new Vector2f(1, 0), new AnimationManager(playerSpriteSheet, 3, 4, 50, 50, 0.16f), new AnimationManager(jetpackAnimation, 1, 4, 50, 50, 0.16f), dialog, healthBar, ammunition, 620, 100, 0.5f, 1, questTracker, 1, steps, shot, jetpack);
             Player.OnDestroy += Player_OnDestroy;
             
             entities.AddEntity(Player);
@@ -253,8 +245,7 @@ namespace EveryonesHell
             GlobalReferences.State = GameState.Menu;
             GlobalReferences.MainGame.MenuManager.Show("MainMenu");
             entities.AddEntity(player);
-            player.Respawn(x, y, 100, 100);
-            music.Play();
+            player.Respawn(x, y, 30, 100);
         }
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
@@ -268,7 +259,7 @@ namespace EveryonesHell
         /// <param name="elapsedSeconds"></param>
         public void Update(float elapsedSeconds)
         {
-            if (music.Status != SoundStatus.Playing)
+            if (music.Status != SoundStatus.Playing && player.IsVisable)
                 music.Play();
 
             entities.Update(elapsedSeconds, viewBox);
@@ -360,10 +351,7 @@ namespace EveryonesHell
             viewBox = new IntRect((int)playerCenter.X - (int)GlobalReferences.MainGame.WindowWidth, (int)playerCenter.Y - (int)GlobalReferences.MainGame.WindowHeight, (int)GlobalReferences.MainGame.WindowWidth * 2, (int)GlobalReferences.MainGame.WindowHeight * 2);
             v.Zoom(zoomFactor);
             window.SetView(v);
-
-            float zoomWidth = ((GlobalReferences.MainGame.WindowWidth * zoomFactor) - (GlobalReferences.MainGame.WindowWidth)) / 2f;
-            float zoomHeight = ((GlobalReferences.MainGame.WindowHeight * zoomFactor) - (GlobalReferences.MainGame.WindowHeight)) / 2f;
-
+            
             int rowCount = Convert.ToInt32((GlobalReferences.MainGame.WindowHeight * zoomFactor) / Settings.TileSize);
             int columnCount = Convert.ToInt32((GlobalReferences.MainGame.WindowWidth * zoomFactor) / Settings.TileSize);
 

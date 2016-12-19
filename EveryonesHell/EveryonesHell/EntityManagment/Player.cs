@@ -24,6 +24,10 @@ namespace EveryonesHell.EntityManagment
         private Sound steps;
         private bool soundStarted;
 
+        private AnimationManager jetpackAnimations;
+        private AnimationManager normalAnimations;
+        
+
         /// <summary>
         /// Getter and setter for activation of the Jetpack
         /// </summary>
@@ -66,8 +70,8 @@ namespace EveryonesHell.EntityManagment
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
             questTracker.OnQuestFinished += QuestTracker_OnQuestFinished;
-            ammo = 100;
-            maxAmmo = 100;
+            ammo = 30;
+            maxAmmo = 30;
             OnCollision += InteractiveObject_OnCollision;
             ammunitionBar = ammunition;
             ammunitionBar.Init(ammo, maxAmmo);
@@ -91,7 +95,7 @@ namespace EveryonesHell.EntityManagment
         /// <param name="groupID">Defines the group the player belongs to</param> 
         /// <param name="questTracker">Passes the questtracker</param>
         /// <param name="factionId">Defines the factione the player belongs to</param> 
-        public Player(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animation, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId, Sound steps, Sound shot, Sound jetpack)
+        public Player(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animation, AnimationManager jetpackAnimations, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId, Sound steps, Sound shot, Sound jetpack)
             : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animation, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, null, false)
         {
             lastDirection = new Vector2f(0, 0);
@@ -101,8 +105,8 @@ namespace EveryonesHell.EntityManagment
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
             questTracker.OnQuestFinished += QuestTracker_OnQuestFinished;
-            ammo = 100;
-            maxAmmo = 100;
+            ammo = 30;
+            maxAmmo = 30;
             OnCollision += InteractiveObject_OnCollision;
             OnKill += Player_OnKill;
             ammunitionBar = ammunition;
@@ -110,6 +114,8 @@ namespace EveryonesHell.EntityManagment
             this.steps = steps;
             this.shot = shot;
             this.jetpack = jetpack;
+            this.jetpackAnimations = jetpackAnimations;
+            this.normalAnimations = animation;
         }
 
 
@@ -317,11 +323,15 @@ namespace EveryonesHell.EntityManagment
                             jetpack.Loop = true;
                             jetpack.Play();   
                             IsCollidable = false;
+                            Animations = jetpackAnimations;
+                            CurrentSprite = jetpackAnimations.Sprite;
                         }
                         else
                         {
                             jetpack.Stop();
                             IsCollidable = true;
+                            Animations = normalAnimations;
+                            CurrentSprite = normalAnimations.Sprite;
                         }
                     }
                 }
@@ -346,6 +356,8 @@ namespace EveryonesHell.EntityManagment
             ChangeHealth(maxHealth, this);
             ammo = maxAmmo;
             Inventory = new InventorySystem.Inventory(32);
+            questTracker.inventory = Inventory;
+            questTracker.activeQuests.Clear();
         }
     }
 }
