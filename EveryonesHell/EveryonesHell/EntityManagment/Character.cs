@@ -18,30 +18,88 @@ namespace EveryonesHell.EntityManagment
         protected float elaspedAttackTime;
         public event EventHandler OnShoot;
 
+        /// <summary>
+        /// Creates a character and passes the data to parent class with combined position
+        /// </summary>
+        /// <param name="position"></param> Sets the characters position
+        /// <param name="size"></param> Defines the hitbox size for the character
+        /// <param name="inventory"></param> Sets the inventory for the created character
+        /// <param name="animations"></param> Passes the characters animations to the animation manager
+        /// <param name="isMoveAble"></param> Defines if the character can move or not
+        /// <param name="viewDirection"></param> Sets the initial viewing direction
+        /// <param name="speed"></param> Sets the movement speed
+        /// <param name="maxHealth"></param> Defines the maximum Health
+        /// <param name="fireRate"></param> Defines the fire Rate
+        /// <param name="healthBar"></param> Passes the healthbar for each character
+        /// <param name="groupID"></param> Defines the group the character belongs to
+        /// <param name="factionId"></param> Defines the faction the character belongs to
+        /// <param name="dialogIds"></param> Passes the dialog IDs the character communicates with
         public Character(Vector2f position, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, float fireRate, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds)
             :base(position, size, inventory, animations, isMoveAble, viewDirection, speed, maxHealth, healthBar, groupID, factionId, dialogIds)
         {
             this.fireRate = fireRate;
         }
 
+        /// <summary>
+        /// Creates a character and passes the data to parent class with position set by Tiles
+        /// </summary>
+        /// <param name="tileRow"></param> Character Position by Row of Tiles
+        /// <param name="tileColumn"></param> Character Position by Column of Tiles
+        /// <param name="size"></param> Defines the hitbox size for the character
+        /// <param name="inventory"></param> Sets the inventory for the created character
+        /// <param name="animations"></param> Passes the characters animations to the animation manager
+        /// <param name="isMoveAble"></param> Defines if the character can move or not
+        /// <param name="viewDirection"></param> Sets the initial viewing direction
+        /// <param name="speed"></param> Sets the movement speed
+        /// <param name="maxHealth"></param> Defines the maximum Health
+        /// <param name="fireRate"></param> Defines the fire Rate
+        /// <param name="healthBar"></param> Passes the healthbar for each character
+        /// <param name="groupID"></param> Defines the group the character belongs to
+        /// <param name="factionId"></param> Defines the faction the character belongs to
+        /// <param name="dialogIds"></param> Passes the dialog IDs the character communicates with
+        /// <param name="isPrototyp"></param> Defines whether the character is used for prototyping
         public Character(int tileRow, int tileColumn, Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, float fireRate, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
             : base(tileRow, tileColumn, size, inventory, animations, isMoveAble, viewDirection, speed, maxHealth, healthBar, groupID, factionId, dialogIds, isPrototyp)
         {
             this.fireRate = fireRate;
         }
 
+        /// <summary>
+        /// Creates a character and passes the data to parent class
+        /// /// </summary>
+        /// <param name="size"></param> Defines the hitbox size for the character
+        /// <param name="inventory"></param> Sets the inventory for the created character
+        /// <param name="animations"></param> Passes the characters animations to the animation manager
+        /// <param name="isMoveAble"></param> Defines if the character can move or not
+        /// <param name="viewDirection"></param> Sets the initial viewing direction
+        /// <param name="speed"></param> Sets the movement speed
+        /// <param name="maxHealth"></param> Defines the maximum Health
+        /// <param name="fireRate"></param> Defines the fire Rate
+        /// <param name="healthBar"></param> Passes the healthbar for each character
+        /// <param name="groupID"></param> Defines the group the character belongs to
+        /// <param name="factionId"></param> Defines the faction the character belongs to
+        /// <param name="dialogIds"></param> Passes the dialog IDs the character communicates with
+        /// <param name="isPrototyp"></param> Defines whether the character is used for prototyping
         public Character(Vector2i size, InventorySystem.Inventory inventory, AnimationManager animations, bool isMoveAble, Vector2f viewDirection, float speed, int maxHealth, float fireRate, Gaugebar healthBar, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
             : base(size, inventory, animations, isMoveAble, viewDirection, speed, maxHealth, healthBar, groupID, factionId, dialogIds, isPrototyp)
         {
             this.fireRate = fireRate;
         }
 
+        /// <summary>
+        /// Updates the character
+        /// </summary>
+        /// <param name="elapsedSeconds"></param> Elapsed game Time in Seconds
         public override void Update(float elapsedSeconds)
         {
             elaspedAttackTime += elapsedSeconds;
             base.Update(elapsedSeconds);
         }
 
+        /// <summary>
+        /// Draws the character to the game window
+        /// </summary>
+        /// <param name="window"></param>
         public override void Draw(RenderWindow window)
         {
             base.Draw(window);
@@ -71,10 +129,10 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Will be fired when the attack button is pressed aca the trigger is pulled
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Command arguments</param>
         public virtual void OnAttack(object sender, ExecuteCommandArgs e)
         {
             if (elaspedAttackTime > fireRate)
