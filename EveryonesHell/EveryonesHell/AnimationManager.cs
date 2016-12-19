@@ -10,6 +10,9 @@ using System.Collections.Generic;
 
 namespace EveryonesHell
 {
+    /// <summary>
+    /// responible for the animations, part of any entity
+    /// </summary>
     public class AnimationManager
     {
         private Sprite sprite;
@@ -93,6 +96,7 @@ namespace EveryonesHell
         /// changing between the rectangles in the list
         /// </summary>
         /// <param name="elapsedSeconds">elapsed time in the game</param>
+        /// <param name="velocity">velocity of the entity</param>
         public void Update(float elapsedSeconds, Vector2f velocity)
         {
             if (velocity != new Vector2f(0,0))
@@ -129,6 +133,10 @@ namespace EveryonesHell
             }
         }
 
+        /// <summary>
+        /// create a copy of the current animationmanager
+        /// </summary>
+        /// <returns></returns>
         public AnimationManager Clone()
         {
             return new AnimationManager(sprite, countX, countY, width, height, frameTime);

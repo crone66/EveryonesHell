@@ -1,5 +1,5 @@
 ﻿/* 
- * Purpose: Implements a Gaugebar
+ * Purpose: Provides a Gaugebar
  * Author: Fabian Subat
  * Date: 10.12.2016
  */
@@ -29,6 +29,17 @@ namespace EveryonesHell.HUD
             }
         }
 
+        /// <summary>
+        /// Can be called to create a gaugebar with the basic parameters
+        /// </summary>
+        /// <param name="currentvalue"></param> Sets the startvalue of the gaugebar. Must be lower or equal maxvalue
+        /// <param name="maxvalue"></param> Sets the maximum value for the bar
+        /// <param name="gaugebarPosition"></param>  Defines the position of bar and border
+        /// <param name="gaugeBar"></param> Passes the sprite for the bar itself
+        /// <param name="gaugeBarBorder"></param> Passes the sprite for the border
+        /// <param name="overallSize"></param> Defines the scaling for bar and border
+        /// <param name="gaugeColor"></param> Controls the color
+        /// <param name="isFixed"></param> Controls if the created bar is added to the Fixed HUD Elements
         public Gaugebar(int currentvalue, int maxvalue, Vector2f gaugebarPosition, Sprite gaugeBar, Sprite gaugeBarBorder, Vector2f overallSize, Color gaugeColor, bool isFixed)
             :base(false, isFixed, true)
         {
@@ -44,6 +55,13 @@ namespace EveryonesHell.HUD
             GlobalReferences.MainGame.CurrentScene.HudManager.RegistHud(this, isFixed);
         }
 
+        /// <summary>
+        /// Initializes the Gaugebar with a new Position and Scale
+        /// </summary>
+        /// <param name="currentvalue"></param> Sets the startvalue of the gaugebar. Must be lower or equal maxvalue
+        /// <param name="maxvalue"></param> Sets the maximum value for the bar
+        /// <param name="newPosition"></param> Provides the repositioning of bar and border
+        /// <param name="overallSize"></param> Defines the scaling for bar and border
         public void Init(int currentValue, int maxValue, Vector2f newPosition, Vector2f overallSize)
         {
             this.currentValue = currentValue;
@@ -53,6 +71,11 @@ namespace EveryonesHell.HUD
             scale = OverallGaugeBarSize;
         }
 
+        /// <summary>
+        /// Initializes the gaugebar
+        /// </summary>
+        /// <param name="currentvalue"></param> Sets the startvalue of the gaugebar. Must be lower or equal maxvalue
+        /// <param name="maxvalue"></param> Sets the maximum value for the bar
         public void Init(int currentValue, int maxValue)
         {
             this.currentValue = currentValue;
@@ -63,8 +86,8 @@ namespace EveryonesHell.HUD
         /// <summary>
         /// Calculates the percentage Value for the gaugebar
         /// </summary>
-        /// <param name="currentValue"></param>
-        /// <param name="maxValue"></param>
+        /// <param name="currentvalue"></param> Sets the startvalue of the gaugebar. Must be lower or equal maxvalue
+        /// <param name="maxvalue"></param> Sets the maximum value for the bar
         /// <returns></returns>
         private float calculateHealthPercent(float currentValue, float maxValue)
         {
@@ -72,14 +95,21 @@ namespace EveryonesHell.HUD
             return gaugePercent;
         }
 
+        /// <summary>
+        /// Updating the gaugebar
+        /// </summary>
+        /// <param name="elapsedSeconds"></param>
         public override void Update(float elapsedSeconds)
         {
             
         }
 
         /// <summary>
-        /// Updates the healthbar
+        /// Updates the gaugebar including the position
         /// </summary>
+        /// <param name="position"></param> Updates the position of bar and border
+        /// <param name="currentvalue"></param> Sets the startvalue of the gaugebar. Must be lower or equal maxvalue
+        /// <param name="maxvalue"></param> Sets the maximum value for the bar
         public void Update(Vector2f position, int currentValue, int maxValue)
         {
             this.currentValue = currentValue;
@@ -96,8 +126,10 @@ namespace EveryonesHell.HUD
         }
 
         /// <summary>
-        /// Updates the healthbar
+        /// Updates the gaugebars Values
         /// </summary>
+        /// <param name="currentvalue"></param> Sets the startvalue of the gaugebar. Must be lower or equal maxvalue
+        /// <param name="maxvalue"></param> Sets the maximum value for the bar
         public void Update(int currentValue, int maxValue)
         {
             this.currentValue = currentValue;
@@ -114,7 +146,7 @@ namespace EveryonesHell.HUD
         }
 
         /// <summary>
-        /// Draws the Healthbar and the border
+        /// Draws the Healthbar and the border to the window
         /// </summary>
         /// <param name="window"></param>
         public override void Draw(RenderWindow window)
@@ -129,6 +161,11 @@ namespace EveryonesHell.HUD
             window.Draw(gaugebarBorder);
         }
 
+        /// <summary>
+        /// Clones the gaugebar to the fixed HUD Elements
+        /// </summary>
+        /// <param name="isFixed"></param> Add to fixed Elements or not
+        /// <returns>Returns current gaugebar</returns>
         public Gaugebar Clone(bool isFixed)
         {
             return new Gaugebar(currentValue, maxValue, position, gaugebar, gaugebarBorder, OverallGaugeBarSize, color, isFixed);

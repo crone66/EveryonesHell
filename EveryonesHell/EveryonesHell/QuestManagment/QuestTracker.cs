@@ -10,18 +10,21 @@ using System;
 
 namespace EveryonesHell.QuestManagment
 {
+    /// <summary>
+    /// checking the active quests
+    /// </summary>
     public class QuestTracker
     {
         public InventorySystem.Inventory inventory;
         private QuestCollection loadedQuests = new QuestCollection();
         public List<Quest> activeQuests = new List<Quest>();
         public event EventHandler OnQuestFinished;
-        
+
         /// <summary>
         /// initialize the questtracker
         /// </summary>
         /// <param name="inventory">inventorysystem to check wether the player gained a required item or not</param>
-        /// <param name="path">path of the xml-file containing all the quests</param>
+        /// <param name="loadedQuests">questcollection including every quest in the game</param>
         public QuestTracker(InventorySystem.Inventory inventory, QuestCollection loadedQuests)
         {
             this.inventory = inventory;
@@ -46,7 +49,6 @@ namespace EveryonesHell.QuestManagment
         /// <summary>
         /// checking quests where the player has to require an item
         /// </summary>
-        /// <param name="quest">ID of the quest</param>
         public void ItemQuest()
         {
             for (int i = 0; i < activeQuests.Count; i++)
@@ -69,7 +71,7 @@ namespace EveryonesHell.QuestManagment
         /// <summary>
         /// checking quests where the player has to kill NPCs
         /// </summary>
-        /// <param name="quest">ID of the quest</param>
+        /// <param name="groupID">groupID of the entity that was just killed</param>
         private void EnemyQuest(int groupID)
         {
             for (int i = 0; i < activeQuests.Count; i++)
@@ -92,8 +94,8 @@ namespace EveryonesHell.QuestManagment
         /// <summary>
         /// checking whether a killed npc is part of a quest or not
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">eventsender</param>
+        /// <param name="e">eventargs</param>
         public void Projectile_OnDoDamage(object sender, EntityManagment.VictimArgs e)
         {
             if (e.Victim is EntityManagment.InteractiveObject)

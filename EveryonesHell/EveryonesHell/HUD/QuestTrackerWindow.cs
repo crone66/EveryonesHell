@@ -10,6 +10,9 @@ using SFML.Window;
 
 namespace EveryonesHell.HUD
 {
+    /// <summary>
+    /// drawing the information of the currently active quests
+    /// </summary>
     public class QuestTrackerWindow : HudElement
     {
         private RectangleShape background;
@@ -26,7 +29,9 @@ namespace EveryonesHell.HUD
         /// <summary>
         /// initialze questtrackerwindow
         /// </summary>
+        /// <param name="position">position where the window is drawn on the window</param>
         /// <param name="font">font used to draw the text</param>
+        /// <param name="questTracker">questtracker included in the player</param>
         public QuestTrackerWindow(Vector2f position, Font font, QuestManagment.QuestTracker questTracker)
             :base(true, true)
         {
@@ -60,6 +65,10 @@ namespace EveryonesHell.HUD
             elapsedTime = 0;
         }
 
+        /// <summary>
+        /// checking the input to choose between the active quests
+        /// </summary>
+        /// <param name="elapsedSeconds">elapsed time in the game</param>
         public override void Update(float elapsedSeconds)
         {
             elapsedTime += elapsedSeconds;

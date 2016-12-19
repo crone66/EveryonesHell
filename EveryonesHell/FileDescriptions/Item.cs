@@ -1,4 +1,9 @@
-﻿using System;
+﻿/* 
+ * Purpose: Provides a structure for the Items
+ * Author: Fabian Subat
+ * Date: 02.12.2016
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

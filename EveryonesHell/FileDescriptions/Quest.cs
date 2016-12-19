@@ -21,7 +21,7 @@ namespace FileDescriptions
         public string Description;
 
         /// <summary>
-        /// 
+        /// initialze the struct quest
         /// </summary>
         /// <param name="name">name of the quest</param>
         /// <param name="questID">ID of the quest</param>
