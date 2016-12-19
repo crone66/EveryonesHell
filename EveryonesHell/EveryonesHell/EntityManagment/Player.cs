@@ -34,12 +34,21 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// Initializes a new Player - outdated
+        /// Creates a new Player and passes the data to parent class.
         /// </summary>
-        /// <param name="position">Position of the player</param>
-        /// <param name="size">Size of the player</param>
-        /// <param name="sprite">Sprite of the player</param>
-        /// <param name="dialog">Dialog system</param>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        /// <param name="viewDirection"></param>
+        /// <param name="animation"></param>
+        /// <param name="dialog"></param>
+        /// <param name="healthBar"></param>
+        /// <param name="ammunition"></param>
+        /// <param name="speed"></param>
+        /// <param name="maxHealth"></param>
+        /// <param name="fireRate"></param>
+        /// <param name="groupID"></param>
+        /// <param name="questTracker"></param>
+        /// <param name="factionId"></param>
         public Player(Vector2f position, Vector2i size, Vector2f viewDirection, AnimationManager animation, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
             :base(position, size, new InventorySystem.Inventory(32), animation, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, null)
         {
@@ -59,13 +68,22 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// Initializes a new Player
+        /// Creates a new Player and passes the data to parent class.
         /// </summary>
-        /// <param name="tileRow">Tile row index</param>
-        /// <param name="tileColumn">Tile column index</param>
-        /// <param name="size">Size of the player</param>
-        /// <param name="sprite">Sprite of the player</param>
-        /// <param name="dialog">Dialog system</param>
+        /// <param name="tileRow"></param>
+        /// <param name="tileColumn"></param>
+        /// <param name="size"></param>
+        /// <param name="viewDirection"></param>
+        /// <param name="animation"></param>
+        /// <param name="dialog"></param>
+        /// <param name="healthBar"></param>
+        /// <param name="ammunition"></param>
+        /// <param name="speed"></param>
+        /// <param name="maxHealth"></param>
+        /// <param name="fireRate"></param>
+        /// <param name="groupID"></param>
+        /// <param name="questTracker"></param>
+        /// <param name="factionId"></param>
         public Player(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animation, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
             : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animation, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, null, false)
         {
@@ -84,6 +102,11 @@ namespace EveryonesHell.EntityManagment
             ammunitionBar.Init(ammo, maxAmmo);
         }
 
+        /// <summary>
+        /// Replenishes the Players Ammo after finishing a quest
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void QuestTracker_OnQuestFinished(object sender, EventArgs e)
         {
             ammo += 100;
@@ -94,6 +117,11 @@ namespace EveryonesHell.EntityManagment
             ammunitionBar.Update(ammo, maxAmmo);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Dialog_OnDialogChanged(object sender, DialogChangedArgs e)
         {
             if (GlobalReferences.MainGame.CurrentScene.Quests.Quests.ToList().Exists(q => q.BasedOnDialogue == e.PrevDialogId))
@@ -110,6 +138,11 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Player_OnShoot(object sender, EventArgs e)
         {
             if (sender != null && sender is Projectile)
@@ -202,6 +235,11 @@ namespace EveryonesHell.EntityManagment
             // => if object exists Execute Action 
         }
 
+        /// <summary>
+        /// Is called for the player shooting and ammunition decrease
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public override void OnAttack(object sender, ExecuteCommandArgs e)
         {
             if (elaspedAttackTime > fireRate)
@@ -216,7 +254,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Sets the Player on a Jetpack to enable flying over obstacles
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -247,6 +285,9 @@ namespace EveryonesHell.EntityManagment
             Visable = false;
         }
 
+        /// <summary>
+        /// Respawns the Player after death
+        /// </summary>
         private void Respawn()
         {
             ChangeHealth(MaxHealth, this);
