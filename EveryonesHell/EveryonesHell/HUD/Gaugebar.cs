@@ -52,7 +52,6 @@ namespace EveryonesHell.HUD
             OverallGaugeBarSize = overallSize;
             scale = OverallGaugeBarSize;
             this.isFixed = isFixed;
-            GlobalReferences.MainGame.CurrentScene.HudManager.RegistHud(this, isFixed);
         }
 
         /// <summary>

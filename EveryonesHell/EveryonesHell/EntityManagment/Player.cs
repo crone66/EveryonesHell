@@ -11,10 +11,9 @@ namespace EveryonesHell.EntityManagment
     public class Player : Character
     {
         private Vector2f lastDirection;
-        private HUD.DialogSystem dialog;
+        private DialogSystem dialog;
         private bool jetpackActive = false;
         private InteractiveObject lastCollisionObject;
-        private float elapsedTime, delay;
         private QuestManagment.QuestTracker questTracker;
         private int ammo;
         private int maxAmmo;
@@ -62,12 +61,12 @@ namespace EveryonesHell.EntityManagment
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
             questTracker.OnQuestFinished += QuestTracker_OnQuestFinished;
-            delay = 3.0f;
             ammo = 100;
             maxAmmo = 100;
             OnCollision += InteractiveObject_OnCollision;
             ammunitionBar = ammunition;
             ammunitionBar.Init(ammo, maxAmmo);
+            OnKill += Player_OnKill;
         }
 
         /// <summary>
@@ -97,12 +96,18 @@ namespace EveryonesHell.EntityManagment
             this.questTracker = questTracker;
             questTracker.inventory = Inventory;
             questTracker.OnQuestFinished += QuestTracker_OnQuestFinished;
-            delay = 3.0f;
             ammo = 100;
             maxAmmo = 100;
             OnCollision += InteractiveObject_OnCollision;
+            OnKill += Player_OnKill;
             ammunitionBar = ammunition;
             ammunitionBar.Init(ammo, maxAmmo);
+        }
+
+
+        private void Player_OnKill(object sender, AttackerArgs e)
+        {
+            ammunitionBar.IsOpen = false;
         }
 
         /// <summary>
@@ -127,17 +132,20 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Event Arguments</param> 
         private void Dialog_OnDialogChanged(object sender, DialogChangedArgs e)
         {
-            if (GlobalReferences.MainGame.CurrentScene.Quests.Quests.ToList().Exists(q => q.BasedOnDialogue == e.PrevDialogId))
-            {                
-                FileDescriptions.Quest quest = GlobalReferences.MainGame.CurrentScene.Quests.Quests.First(q => q.BasedOnDialogue == e.PrevDialogId);
-                if(questTracker.ActivateQuest(quest.QuestID))
-                    lastCollisionObject.RemoveDialog();
-            }
-
-            if(e.NewDialogId == -1)
+            if (IsVisable)
             {
-                lastCollisionObject.Freeze = false;
-                lastCollisionObject = null;
+                if (GlobalReferences.MainGame.CurrentScene.Quests.Quests.ToList().Exists(q => q.BasedOnDialogue == e.PrevDialogId))
+                {
+                    FileDescriptions.Quest quest = GlobalReferences.MainGame.CurrentScene.Quests.Quests.First(q => q.BasedOnDialogue == e.PrevDialogId);
+                    if (questTracker.ActivateQuest(quest.QuestID))
+                        lastCollisionObject.RemoveDialog();
+                }
+
+                if (e.NewDialogId == -1)
+                {
+                    lastCollisionObject.Freeze = false;
+                    lastCollisionObject = null;
+                }
             }
         }
 
@@ -148,10 +156,13 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Event Arguments</param> 
         private void Player_OnShoot(object sender, EventArgs e)
         {
-            if (sender != null && sender is Projectile)
+            if (IsVisable)
             {
-                Projectile projectile = (sender as Projectile);
-                projectile.OnDoDamage += questTracker.Projectile_OnDoDamage;
+                if (sender != null && sender is Projectile)
+                {
+                    Projectile projectile = (sender as Projectile);
+                    projectile.OnDoDamage += questTracker.Projectile_OnDoDamage;
+                }
             }
         }
 
@@ -162,15 +173,18 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Event Arguments</param> 
         private void InteractiveObject_OnCollision(object sender, CollisionArgs e)
         {
-            Entity otherObject = null;
-            if (e.CollisionObjectDest != null && e.CollisionObjectDest != this)
-                otherObject = e.CollisionObjectDest;
-            else if (e.CollisionObjectSource != null && e.CollisionObjectSource != this)
-                otherObject = e.CollisionObjectSource;
-
-            if (otherObject != null && lastCollisionObject == null && otherObject is InteractiveObject)
+            if (IsVisable)
             {
-                lastCollisionObject = otherObject as InteractiveObject;
+                Entity otherObject = null;
+                if (e.CollisionObjectDest != null && e.CollisionObjectDest != this)
+                    otherObject = e.CollisionObjectDest;
+                else if (e.CollisionObjectSource != null && e.CollisionObjectSource != this)
+                    otherObject = e.CollisionObjectSource;
+
+                if (otherObject != null && lastCollisionObject == null && otherObject is InteractiveObject)
+                {
+                    lastCollisionObject = otherObject as InteractiveObject;
+                }
             }
         }
 
@@ -180,27 +194,23 @@ namespace EveryonesHell.EntityManagment
         /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public override void Update(float elapsedSeconds)
         {
-            if (!Visable)
+            if (IsVisable)
             {
-                elapsedTime += elapsedSeconds;
+                base.Update(elapsedSeconds);
+                if (lastDirection != ViewDirection)
+                    lastCollisionObject = null;
 
-                if (elapsedTime >= delay)
-                {
-                    Respawn();
-                }
+                questTracker.ItemQuest();
             }
-
-            base.Update(elapsedSeconds);
-            if (lastDirection != ViewDirection)
-               lastCollisionObject = null;
-           
-            questTracker.ItemQuest();
         }
 
         public override void OnMove(object sender, ExecuteCommandArgs e)
         {
-            lastDirection = ViewDirection;
-            base.OnMove(sender, e);
+            if (IsVisable)
+            {
+                lastDirection = ViewDirection;
+                base.OnMove(sender, e);
+            }
         }
 
         /// <summary>
@@ -219,28 +229,27 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Command arguments</param>
         public void OnAction(object sender, ExecuteCommandArgs e)
         {
-            if (lastCollisionObject != null)
+            if (IsVisable)
             {
-                if (lastCollisionObject is Item)
+                if (lastCollisionObject != null)
                 {
-                    Item item = lastCollisionObject as Item;
-                    if (!item.PickUp(this))
-                        item.Use(this);
-                }
-                else
-                {
-                    int id = lastCollisionObject.GetDialog();
-                    if (id > -1)
+                    if (lastCollisionObject is Item)
                     {
-                        lastCollisionObject.Freeze = true;
-                        dialog.Open(lastCollisionObject.GetDialog());
+                        Item item = lastCollisionObject as Item;
+                        if (!item.PickUp(this))
+                            item.Use(this);
+                    }
+                    else
+                    {
+                        int id = lastCollisionObject.GetDialog();
+                        if (id > -1)
+                        {
+                            lastCollisionObject.Freeze = true;
+                            dialog.Open(lastCollisionObject.GetDialog());
+                        }
                     }
                 }
             }
-            //dialog.Open(0);//, Position + (new Vector2f(Size.X / 2, Size.Y / 2)));
-            //TODO: Action tile location
-            // => Get object on action tile
-            // => if object exists Execute Action 
         }
 
         /// <summary>
@@ -250,13 +259,16 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Event Arguments</param> 
         public override void OnAttack(object sender, ExecuteCommandArgs e)
         {
-            if (elaspedAttackTime > fireRate)
+            if (IsVisable)
             {
-                if (ammo > 0)
+                if (elaspedAttackTime > fireRate)
                 {
-                    ammo--;
-                    ammunitionBar.Update(ammo, maxAmmo);
-                    base.OnAttack(sender, e);
+                    if (ammo > 0)
+                    {
+                        ammo--;
+                        ammunitionBar.Update(ammo, maxAmmo);
+                        base.OnAttack(sender, e);
+                    }
                 }
             }
         }
@@ -268,38 +280,46 @@ namespace EveryonesHell.EntityManagment
         /// <param name="e">Event Arguments</param> 
         public void OnJetpack(object sender, ExecuteCommandArgs e)
         {
-            TileMapSystem.Tile tile;
-            if (GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(TileRow, TileColumn, out tile))
+            if (IsVisable)
             {
-                if (tile.Flags == 2 || tile.Flags == 0)
+                TileMapSystem.Tile tile;
+                if (GlobalReferences.MainGame.CurrentScene.MapManager.CurrentLevel.GetTileValue(TileRow, TileColumn, out tile))
                 {
-                    JetpackActive = !JetpackActive;
+                    if (tile.Flags == 2 || tile.Flags == 0)
+                    {
+                        JetpackActive = !JetpackActive;
 
-                    if (JetpackActive)
-                    {
-                        IsCollidable = false;
-                    }
-                    else
-                    {
-                        IsCollidable = true;
+                        if (JetpackActive)
+                        {
+                            IsCollidable = false;
+                        }
+                        else
+                        {
+                            IsCollidable = true;
+                        }
                     }
                 }
             }
         }
 
-        public void Initialize()
-        {
-            elapsedTime = 0;
-            Visable = false;
-        }
-
         /// <summary>
         /// Respawns the Player after death
         /// </summary>
-        private void Respawn()
+        public void Respawn(int x, int y, int maxAmmo, int maxHealth)
         {
+            TileRow = y;
+            TileColumn = x;
             ChangeHealth(MaxHealth, this);
-            Visable = true;
+            IsVisable = true;
+            IsCollidable = true;
+            JetpackActive = false;
+            Healthbar.IsOpen = true;
+            ammunitionBar.IsOpen = true;
+            this.maxAmmo = maxAmmo;
+            this.MaxHealth = maxHealth;
+            ChangeHealth(maxHealth, this);
+            ammo = maxAmmo;
+            Inventory = new InventorySystem.Inventory(32);
         }
     }
 }

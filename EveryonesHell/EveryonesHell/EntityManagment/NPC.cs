@@ -204,7 +204,7 @@ namespace EveryonesHell.EntityManagment
             int width = (int)GlobalReferences.MainGame.WindowWidth;
             int height = (int)GlobalReferences.MainGame.WindowHeight;
             Player player = GlobalReferences.MainGame.CurrentScene.Player;
-            if (player != null && player.FactionId != this.FactionId && player.Visable)
+            if (player != null && player.FactionId != this.FactionId && player.IsVisable)
             {
                 IntRect boundingBox = new IntRect(new Vector2i((int)Position.X - (height / 2), (int)Position.Y - (height / 2)), new Vector2i(width, height));
                 if (player.BoundingBox.Intersects(boundingBox))

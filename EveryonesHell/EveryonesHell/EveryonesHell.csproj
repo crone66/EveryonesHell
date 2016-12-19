@@ -99,6 +99,7 @@
     <Compile Include="EntityManagment\NPC.cs" />
     <Compile Include="EntityManagment\Player.cs" />
     <Compile Include="HUD\DialogSystem.cs" />
+    <Compile Include="HUD\GameOver.cs" />
     <Compile Include="HUD\Gaugebar.cs" />
     <Compile Include="HUD\HudElement.cs" />
     <Compile Include="HUD\HudManager.cs" />
@@ -277,7 +278,9 @@
       <Name>FileDescriptions</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\Sounds\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -549,10 +549,6 @@ namespace EveryonesHell.EntityManagment
         public override void Draw(RenderWindow window)
         {
             base.Draw(window);
-            if(Healthbar != null)
-            {
-                Healthbar.Draw(window);
-            }
         }
 
         public int ChangeHealth(int healthValue, Entity activator)
@@ -573,7 +569,11 @@ namespace EveryonesHell.EntityManagment
             {
                 OnKill?.Invoke(this, new AttackerArgs(activator));
                 CallOnDestroyEvent();
+                healthBar.IsOpen = false;
             }
+
+            if (healthBar != null)
+                healthBar.Update(health, maxHealth);
 
             return health;
         }

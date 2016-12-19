@@ -40,14 +40,14 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
-        public bool Visable
+        public bool IsVisable
         {
             get
             {
                 return isVisable;
             }
 
-            protected set
+            set
             {
                 isVisable = value;
             }
@@ -201,7 +201,7 @@ namespace EveryonesHell.EntityManagment
         public Entity(bool visable, bool collidable)
         {
             id = Count++;
-            Visable = visable;
+            IsVisable = visable;
             IsCollidable = collidable;
             overlappingTiles = new List<Vector2i>();
         }
@@ -217,7 +217,7 @@ namespace EveryonesHell.EntityManagment
         public Entity(bool visable, bool collidable, Vector2f position, Vector2i size, Sprite currentSprite)
         {
             id = Count++;
-            Visable = visable;
+            IsVisable = visable;
             IsCollidable = collidable;
             overlappingTiles = new List<Vector2i>();
             Size = size;
@@ -236,7 +236,7 @@ namespace EveryonesHell.EntityManagment
         public Entity(bool visable, bool collidable, Vector2i size, Sprite currentSprite, bool isPrototyp)
         {
             id = Count++;
-            Visable = visable;
+            IsVisable = visable;
             IsCollidable = collidable;
             overlappingTiles = new List<Vector2i>();
             this.isPrototyp = isPrototyp;
@@ -257,7 +257,7 @@ namespace EveryonesHell.EntityManagment
         public Entity(bool visable, bool collidable, int tileRow, int tileColumn, Vector2i size, Sprite currentSprite, bool isPrototyp)
         {
             id = Count++;
-            Visable = visable;
+            IsVisable = visable;
             IsCollidable = collidable;
             overlappingTiles = new List<Vector2i>();
             this.isPrototyp = isPrototyp;
@@ -280,7 +280,7 @@ namespace EveryonesHell.EntityManagment
         public Entity(bool visable, bool collidable, Vector2f position, Vector2i size, Sprite currentSprite, IntRect spriteRect)
         {
             id = Count++;
-            Visable = visable;
+            IsVisable = visable;
             IsCollidable = collidable;
             overlappingTiles = new List<Vector2i>();
             Size = size;
@@ -302,7 +302,7 @@ namespace EveryonesHell.EntityManagment
         public Entity(bool visable, bool collidable, int tileRow, int tileColumn, Vector2i size, Sprite currentSprite, IntRect spriteRect)
         {
             id = Count++;
-            Visable = visable;
+            IsVisable = visable;
             IsCollidable = collidable;
             overlappingTiles = new List<Vector2i>();
             Size = size;

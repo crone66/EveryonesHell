@@ -21,7 +21,9 @@ namespace EveryonesHell
         private AreaSpread[] areaSpreads;
 
         private ContentManager content;
-        private HUD.HudManager hudManager;
+        private HudManager hudManager;
+        private GameOver gameOver;
+
         private Dictionary<int, Sprite> sprites;
         private List<Sprite> evil;
         private List<Sprite> friendly;
@@ -163,8 +165,7 @@ namespace EveryonesHell
             string[] friendlyFiles = System.IO.Directory.GetFiles("Content/Npc/Friendly");
             int npcCounter = -3;
             foreach (string file in evilFiles)
-            {
-                
+            {            
                 evil.Add(content.Load<Sprite, Texture>((npcCounter--).ToString(), file));
             }
 
@@ -213,6 +214,8 @@ namespace EveryonesHell
             entities.AddEntity(healFlower);
             entities.AddEntity(questFlower);*/
 
+            gameOver = new GameOver((int)GlobalReferences.MainGame.WindowWidth, (int)GlobalReferences.MainGame.WindowHeight, font, 3f, this);
+
             entities = new EntityManager();
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;
             EntityFactory.AddPrototype("Bullet", new Projectile(new Vector2i((int)fireBall.Texture.Size.X, (int)fireBall.Texture.Size.Y), new AnimationManager(fireBall, 0, 0, 0, 0, 0), true, 1000, 5000, 0, 10, true));
@@ -231,8 +234,16 @@ namespace EveryonesHell
 
         private void Player_OnDestroy(object sender, EventArgs e)
         {
-            player.Initialize();
+            gameOver.IsOpen = true;
+            player.IsVisable = false;
+        }
+
+        public void Respawn()
+        { 
+            GlobalReferences.State = GameState.Menu;
+            GlobalReferences.MainGame.MenuManager.Show("MainMenu");
             entities.AddEntity(player);
+            player.Respawn(x, y, 100, 100);
         }
 
         private void EntityFactory_EntityCreated(object sender, FactoryEventArgs e)
