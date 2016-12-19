@@ -1,10 +1,5 @@
 ﻿using SFML.Graphics;
 using SFML.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EveryonesHell.MenuManagment
 {
@@ -14,6 +9,9 @@ namespace EveryonesHell.MenuManagment
         private RectangleShape shape;
         private Color textColor;
 
+        /// <summary>
+        /// Color of button text
+        /// </summary>
         public Color TextColor
         {
             get
@@ -28,6 +26,13 @@ namespace EveryonesHell.MenuManagment
             }
         }
 
+        /// <summary>
+        /// Initzializes a new button
+        /// </summary>
+        /// <param name="buttonText">Button text</param>
+        /// <param name="font">Text font</param>
+        /// <param name="position">Button position</param>
+        /// <param name="size">Button size</param>
         public Button(string buttonText, Font font, Vector2f position, Vector2f size)
         {
             text = new Text(buttonText, font, 18);
@@ -39,6 +44,10 @@ namespace EveryonesHell.MenuManagment
             shape.OutlineThickness = 2;
         }
 
+        /// <summary>
+        /// Draws the button
+        /// </summary>
+        /// <param name="window">Window to render</param>
         public void Draw(RenderWindow window)
         {
             window.Draw(shape);

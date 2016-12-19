@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
@@ -16,6 +11,11 @@ namespace EveryonesHell.MenuManagment
         private bool prevUp = false;
         private bool prevDown = false;
 
+        /// <summary>
+        /// Initzializes a new Main menu
+        /// </summary>
+        /// <param name="size">Size of main menu</param>
+        /// <param name="font">Text font</param>
         public MainMenu(Vector2f size, Font font)
             :base("MainMenu", new Vector2f(0,0), size, false)
         {
@@ -29,6 +29,10 @@ namespace EveryonesHell.MenuManagment
             lines[0].TextColor = Color.Green;
         }
 
+        /// <summary>
+        /// Draws the main menu
+        /// </summary>
+        /// <param name="window">Window to render</param>
         public override void Draw(RenderWindow window)
         {
             foreach (Button item in lines)
@@ -37,11 +41,19 @@ namespace EveryonesHell.MenuManagment
             }
         }
 
+        /// <summary>
+        /// Updates main menu
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public override void Update(float elapsedSeconds)
         {
             
         }
 
+        /// <summary>
+        /// Handles input of main menu
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last input</param>
         public override void Input(float elapsedSeconds)
         {
             int prevIndex = selectedIndex;

@@ -10,6 +10,9 @@ namespace EveryonesHell.MenuManagment
         private Vector2f size;
         public bool IsVisable;
 
+        /// <summary>
+        /// Name of menu
+        /// </summary>
         public string Name
         {
             get
@@ -18,6 +21,13 @@ namespace EveryonesHell.MenuManagment
             }
         }
 
+        /// <summary>
+        /// Initzializes a menu
+        /// </summary>
+        /// <param name="name">Menu name</param>
+        /// <param name="position">Position of menu</param>
+        /// <param name="size">Size of menu</param>
+        /// <param name="isVisable">Indicates whenther the menu is visable or not</param>
         public Menu(string name, Vector2f position, Vector2f size, bool isVisable)
         {
             this.name = name;
@@ -26,10 +36,22 @@ namespace EveryonesHell.MenuManagment
             IsVisable = isVisable;
         }
 
+        /// <summary>
+        /// Updates menu
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public abstract void Update(float elapsedSeconds);
 
+        /// <summary>
+        /// Draws menu
+        /// </summary>
+        /// <param name="window">Window to render</param>
         public abstract void Draw(RenderWindow window);
 
+        /// <summary>
+        /// Handles menu input
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last input</param>
         public abstract void Input(float elapsedSeconds);
     }
 }

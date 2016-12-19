@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -14,8 +10,14 @@ namespace EveryonesHell.MenuManagment
         private float duration;
         private float elapsedDuration;
 
-        Text text;
+        private Text text;
 
+        /// <summary>
+        /// Initzializes a new splash screen
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="font"></param>
+        /// <param name="duration"></param>
         public SplashScreen(Vector2f size, Font font, float duration)
             :base("SplashScreen", new Vector2f(0,0), size, false)
         {
@@ -27,17 +29,29 @@ namespace EveryonesHell.MenuManagment
             text.Position = new Vector2f((size.X / 2) - (text.GetGlobalBounds().Width / 2), (size.Y / 2) - 25);  
         }
 
+        /// <summary>
+        /// Draws splash screen
+        /// </summary>
+        /// <param name="window">Window to render</param>
         public override void Draw(RenderWindow window)
         {
             window.Draw(text);
         }
 
+        /// <summary>
+        /// Handles splash screen input
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed second since last input</param>
         public override void Input(float elapsedSeconds)
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
                 elapsedDuration = duration;
         }
 
+        /// <summary>
+        /// Updates splash screen
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public override void Update(float elapsedSeconds)
         {
             text.Color = new Color(255, 255, 255, (byte)Convert.ToInt32((1-(elapsedDuration / duration)) * 255f));

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
@@ -13,10 +8,15 @@ namespace EveryonesHell.MenuManagment
     {
         private float duration;
         private float elapsedDuration;
+        
+        private Text[] lines;
 
-        Text text;
-        Text[] lines;
-
+        /// <summary>
+        /// Initzializes a new credit screen
+        /// </summary>
+        /// <param name="size">Size of credit screen</param>
+        /// <param name="font">Text font</param>
+        /// <param name="duration">Fade out duration</param>
         public CreditsScreen(Vector2f size, Font font, float duration)
             : base("CreditsScreen", new Vector2f(0, 0), size, false)
         {
@@ -49,6 +49,10 @@ namespace EveryonesHell.MenuManagment
             };
         }
 
+        /// <summary>
+        /// Draws credit screen
+        /// </summary>
+        /// <param name="window">Window to render</param>
         public override void Draw(RenderWindow window)
         {
             foreach (Text item in lines)
@@ -57,12 +61,20 @@ namespace EveryonesHell.MenuManagment
             }
         }
 
+        /// <summary>
+        /// Handles credit screen input
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last input</param>
         public override void Input(float elapsedSeconds)
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
                 elapsedDuration = duration;
         }
 
+        /// <summary>
+        /// Updates credits screen
+        /// </summary>
+        /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public override void Update(float elapsedSeconds)
         {
             elapsedDuration += elapsedSeconds;
