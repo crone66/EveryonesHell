@@ -19,6 +19,20 @@ namespace EveryonesHell.EntityManagment
         
         private Player enemy;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        /// <param name="viewDirection"></param>
+        /// <param name="animations"></param>
+        /// <param name="healthBar"></param>
+        /// <param name="speed"></param>
+        /// <param name="maxHealth"></param>
+        /// <param name="fireRate"></param>
+        /// <param name="groupID"></param>
+        /// <param name="factionId"></param>
+        /// <param name="dialogIds"></param>
         public NPC(Vector2f position, Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds)
             :base(position, size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID,factionId, dialogIds)
         {
@@ -29,6 +43,22 @@ namespace EveryonesHell.EntityManagment
             idle = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tileRow"></param>
+        /// <param name="tileColumn"></param>
+        /// <param name="size"></param>
+        /// <param name="viewDirection"></param>
+        /// <param name="animations"></param>
+        /// <param name="healthBar"></param>
+        /// <param name="speed"></param>
+        /// <param name="maxHealth"></param>
+        /// <param name="fireRate"></param>
+        /// <param name="groupID"></param>
+        /// <param name="factionId"></param>
+        /// <param name="dialogIds"></param>
+        /// <param name="isPrototyp"></param>
         public NPC(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
             : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, dialogIds, isPrototyp)
         {
@@ -39,6 +69,20 @@ namespace EveryonesHell.EntityManagment
             idle = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="viewDirection"></param>
+        /// <param name="animations"></param>
+        /// <param name="healthBar"></param>
+        /// <param name="speed"></param>
+        /// <param name="maxHealth"></param>
+        /// <param name="fireRate"></param>
+        /// <param name="groupID"></param>
+        /// <param name="factionId"></param>
+        /// <param name="dialogIds"></param>
+        /// <param name="isPrototyp"></param>
         public NPC(Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
             : base(size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, dialogIds, isPrototyp)
         {
@@ -71,6 +115,10 @@ namespace EveryonesHell.EntityManagment
             base.Update(elapsedSeconds);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elapsedSeconds"></param>
         private void Do(float elapsedSeconds)
         {
             if (idle)
@@ -101,6 +149,10 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elapsedSeconds"></param>
         private void Movement(float elapsedSeconds)
         {
             elapsedDirectionTime += elapsedSeconds;
@@ -110,6 +162,9 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void CreateNewDirection()
         {
             x = GlobalReferences.Randomizer.Next(-1, 2);
@@ -119,6 +174,9 @@ namespace EveryonesHell.EntityManagment
             elapsedDirectionTime = 0f;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetVelocity()
         {
             if(x != 0 && y != 0)
@@ -136,6 +194,10 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private bool IsEnemyInRange()
         {
             //player can be replaced with all entities/NPCS
@@ -158,6 +220,9 @@ namespace EveryonesHell.EntityManagment
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void Hunt()
         {
             y = 0;
@@ -208,12 +273,22 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void Attack()
         {
             //attack when in view
             OnAttack(this, null);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         private bool Between(float value, float min, float max)
         {
             return value >= min && value <= max;
@@ -228,6 +303,10 @@ namespace EveryonesHell.EntityManagment
             base.Draw(window);      
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override Entity Clone()
         {
             return new NPC(Position, Size, ViewDirection, Animations, Healthbar, Speed, MaxHealth, fireRate, GroupID, FactionId, dialogIds.ToArray());
