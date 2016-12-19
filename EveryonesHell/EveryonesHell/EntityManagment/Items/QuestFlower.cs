@@ -22,7 +22,7 @@ namespace EveryonesHell.EntityManagment.Items
 
         public override Entity Clone()
         {
-            return new QuestFlower(0, 0, Size, animations, value, false);
+            return new QuestFlower(0, 0, Size, Animations, value, false);
         }
     }
 }
