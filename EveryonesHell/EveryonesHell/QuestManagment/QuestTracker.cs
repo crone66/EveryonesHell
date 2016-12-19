@@ -55,7 +55,7 @@ namespace EveryonesHell.QuestManagment
             {
                 if (activeQuests[i].Questitem != -1)
                 {
-                    for (int j = 0; i < inventory.InventorySlots.Count; i++)
+                    for (int j = 0; j < inventory.InventorySlots.Count; j++)
                     {
                         if (inventory.InventorySlots[j].ItemId == activeQuests[i].RequiredItem)
                         {
