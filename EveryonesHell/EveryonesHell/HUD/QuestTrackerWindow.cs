@@ -38,7 +38,7 @@ namespace EveryonesHell.HUD
             this.questTracker = questTracker;
             this.position = position;
 
-            width = 600;
+            width = 660;
             height = 300;
             nameWidth = 250;
 

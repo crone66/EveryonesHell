@@ -184,7 +184,7 @@ namespace EveryonesHell
             sprites.Add(6, gaugebarborder);
             
             questTracker = new QuestManagment.QuestTracker(null, quests);
-            questTrackerWindow = new QuestTrackerWindow(new Vector2f(100, 150), font, questTracker);
+            questTrackerWindow = new QuestTrackerWindow(new Vector2f(70, 150), font, questTracker);
 
             Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0, GlobalReferences.MainGame.WindowHeight - gaugebarborder.Texture.Size.Y), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Red, true);
             Gaugebar ammunition = new Gaugebar(30, 30, new Vector2f(GlobalReferences.MainGame.WindowWidth - (gaugebarborder.Texture.Size.X * 0.6f), GlobalReferences.MainGame.WindowHeight - (gaugebarborder.Texture.Size.Y * gaugebar.Scale.Y)), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Yellow, true);

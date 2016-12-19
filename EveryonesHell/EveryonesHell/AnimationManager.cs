@@ -134,7 +134,7 @@ namespace EveryonesHell
         }
 
         /// <summary>
-        /// create a copy of the current animationmanager
+        /// create a copy of the current animationmanager and returns it
         /// </summary>
         /// <returns></returns>
         public AnimationManager Clone()
