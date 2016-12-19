@@ -20,6 +20,9 @@ namespace EveryonesHell.EntityManagment
         private int maxAmmo;
         private Gaugebar ammunitionBar;
 
+        /// <summary>
+        /// Getter and setter for activation of the Jetpack
+        /// </summary>
         public bool JetpackActive
         {
             get
@@ -36,19 +39,19 @@ namespace EveryonesHell.EntityManagment
         /// <summary>
         /// Creates a new Player and passes the data to parent class.
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="size"></param>
-        /// <param name="viewDirection"></param>
-        /// <param name="animation"></param>
-        /// <param name="dialog"></param>
-        /// <param name="healthBar"></param>
-        /// <param name="ammunition"></param>
-        /// <param name="speed"></param>
-        /// <param name="maxHealth"></param>
-        /// <param name="fireRate"></param>
-        /// <param name="groupID"></param>
-        /// <param name="questTracker"></param>
-        /// <param name="factionId"></param>
+        /// <param name="position"></param> Initial player Position
+        /// <param name="size"></param> Size of the players hitbox
+        /// <param name="viewDirection"></param> Initial view Direction
+        /// <param name="animation"></param> Provides the animation Manager with the animation for the player
+        /// <param name="dialog"></param> Provides dialogs for the created player
+        /// <param name="healthBar"></param> Passes the players healthbar
+        /// <param name="ammunition"></param> Passes the players max Ammunition
+        /// <param name="speed"></param> Sets the players movement speed
+        /// <param name="maxHealth"></param> Sets the players maximum Health
+        /// <param name="fireRate"></param> Controls players fire Rate
+        /// <param name="groupID"></param> Defines the group the player belongs to
+        /// <param name="questTracker"></param> Passes the questtracker
+        /// <param name="factionId"></param> Defines the factione the player belongs to
         public Player(Vector2f position, Vector2i size, Vector2f viewDirection, AnimationManager animation, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
             :base(position, size, new InventorySystem.Inventory(32), animation, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, null)
         {
@@ -70,20 +73,20 @@ namespace EveryonesHell.EntityManagment
         /// <summary>
         /// Creates a new Player and passes the data to parent class.
         /// </summary>
-        /// <param name="tileRow"></param>
-        /// <param name="tileColumn"></param>
-        /// <param name="size"></param>
-        /// <param name="viewDirection"></param>
-        /// <param name="animation"></param>
-        /// <param name="dialog"></param>
-        /// <param name="healthBar"></param>
-        /// <param name="ammunition"></param>
-        /// <param name="speed"></param>
-        /// <param name="maxHealth"></param>
-        /// <param name="fireRate"></param>
-        /// <param name="groupID"></param>
-        /// <param name="questTracker"></param>
-        /// <param name="factionId"></param>
+        /// <param name="tileRow"></param> Player Position by Row of Tiles
+        /// <param name="tileColumn"></param> Player Position by Column of Tiles
+        /// <param name="size"></param> Size of the players hitbox
+        /// <param name="viewDirection"></param> Initial view Direction
+        /// <param name="animation"></param> Provides the animation Manager with the animation for the player
+        /// <param name="dialog"></param> Provides dialogs for the created player
+        /// <param name="healthBar"></param> Passes the players healthbar
+        /// <param name="ammunition"></param> Passes the players max Ammunition
+        /// <param name="speed"></param> Sets the players movement speed
+        /// <param name="maxHealth"></param> Sets the players maximum Health
+        /// <param name="fireRate"></param> Controls players fire Rate
+        /// <param name="groupID"></param> Defines the group the player belongs to
+        /// <param name="questTracker"></param> Passes the questtracker
+        /// <param name="factionId"></param> Defines the faction the player belongs to
         public Player(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animation, DialogSystem dialog, Gaugebar healthBar, Gaugebar ammunition, float speed, int maxHealth, float fireRate, int groupID, QuestManagment.QuestTracker questTracker, int factionId)
             : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animation, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, null, false)
         {
@@ -105,8 +108,8 @@ namespace EveryonesHell.EntityManagment
         /// <summary>
         /// Replenishes the Players Ammo after finishing a quest
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender"></param> Caller of the method
+        /// <param name="e"></param> Event Arguments
         private void QuestTracker_OnQuestFinished(object sender, EventArgs e)
         {
             ammo += 100;
@@ -118,10 +121,10 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Handles interacting with the Dialog
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender"></param> Caller of the method
+        /// <param name="e"></param> Event Arguments
         private void Dialog_OnDialogChanged(object sender, DialogChangedArgs e)
         {
             if (GlobalReferences.MainGame.CurrentScene.Quests.Quests.ToList().Exists(q => q.BasedOnDialogue == e.PrevDialogId))
@@ -139,10 +142,10 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Called if the player pulls the trigger
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender"></param> Caller of the method
+        /// <param name="e"></param> Event Arguments
         private void Player_OnShoot(object sender, EventArgs e)
         {
             if (sender != null && sender is Projectile)
@@ -152,6 +155,11 @@ namespace EveryonesHell.EntityManagment
             }
         }
 
+        /// <summary>
+        /// Called on collision with other interactive Objects / Entitys
+        /// </summary>
+        /// <param name="sender"></param> Caller of the method
+        /// <param name="e"></param> Event Arguments
         private void InteractiveObject_OnCollision(object sender, CollisionArgs e)
         {
             Entity otherObject = null;
@@ -167,7 +175,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// Updates the player
+        /// Updates the player with the game Time
         /// </summary>
         /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
         public override void Update(float elapsedSeconds)
