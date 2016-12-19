@@ -78,6 +78,11 @@ namespace EveryonesHell.HUD
                 IsOpen = false;
             }
 
+            if (displayedQuestCount >= questTracker.activeQuests.Count)
+            {
+                displayedQuestCount = 0;
+            }
+
             if (elapsedTime >= keyDelay)
             {
                 elapsedTime = 0f;
