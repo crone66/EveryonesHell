@@ -38,8 +38,8 @@ namespace EveryonesHell.HUD
             this.questTracker = questTracker;
             this.position = position;
 
-            width = 660;
-            height = 300;
+            width = 1060;
+            height = 700;
             nameWidth = 250;
 
             background = new RectangleShape(new Vector2f(width, height));
@@ -56,11 +56,11 @@ namespace EveryonesHell.HUD
 
 
             this.font = font;
-            text = new Text("", font, 16);
+            text = new Text("", font, 30);
 
-            characterSizeNames = 16;
-            characterSizeInformation = 13;
-            lineSpacing = 12;
+            characterSizeNames = 30;
+            characterSizeInformation = 26;
+            lineSpacing = 24;
             displayedQuestCount = 0;
             elapsedTime = 0;
         }

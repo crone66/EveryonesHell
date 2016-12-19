@@ -8,10 +8,10 @@ namespace EveryonesHell.HUD
 {
     public class DebugConsoleManager
     {
-        private const int lineSpacing = 16;
-        private const int width = 600;
-        private const int outputHeight = 380;
-        private const int inputHeight = 25;
+        private const int lineSpacing = 24;
+        private const int width = 1200;
+        private const int outputHeight = 680;
+        private const int inputHeight = 40;
         private const int suggestionCount = 5;
         private const float KeyDelay = 0.15f;
 
@@ -54,7 +54,7 @@ namespace EveryonesHell.HUD
 
             DebugConsole = new DebuggingConsole(commands, new DebugConsole.Color(255, 255, 255));
 
-            baseText = new Text("", font, 14);
+            baseText = new Text("", font, 28);
             baseText.Color = SFML.Graphics.Color.White;
             outputBackground = new RectangleShape(new SFML.System.Vector2f(width, outputHeight));
             outputBackground.FillColor = new SFML.Graphics.Color(0, 0, 0, 128);

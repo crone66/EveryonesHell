@@ -191,7 +191,7 @@ namespace EveryonesHell
             music = content.Load<Sound, SoundBuffer>("music","Content/Sounds/SpiderDance.ogg");
             music.Volume = 35f;
             music.Loop = true;
-            //music.Play();
+
             Sprite flower = content.Load<Sprite, Texture>("8", "Content/Items/healthflower.png");
             Sprite qFlower = content.Load<Sprite, Texture>("9", "Content/Items/questflower.png");
 
@@ -200,7 +200,10 @@ namespace EveryonesHell
 
             quests = content.Load<QuestCollection>("Content/Descriptions/QuestCollection.xml");
 
-            DialogSystem dialog = new DialogSystem(Dialogs, new Vector2f(0, GlobalReferences.MainGame.WindowHeight - 200), new Vector2f(GlobalReferences.MainGame.WindowWidth, 200), font, Color.White, Color.Yellow);
+            int xZoomVal = (int)(GlobalReferences.MainGame.WindowWidth - (GlobalReferences.MainGame.WindowWidth * zoomFactor)) / 2;
+            int yZoomVal = (int)(GlobalReferences.MainGame.WindowHeight - (GlobalReferences.MainGame.WindowHeight * zoomFactor)) / 2;
+
+            DialogSystem dialog = new DialogSystem(Dialogs, new Vector2f(xZoomVal, (GlobalReferences.MainGame.WindowHeight * zoomFactor) - 200), new Vector2f((GlobalReferences.MainGame.WindowWidth * zoomFactor) - (xZoomVal - 150), 200 * zoomFactor), font, Color.White, Color.Yellow);
 
             sprites = new Dictionary<int, Sprite>();
             sprites.Add(0, green);
@@ -208,14 +211,12 @@ namespace EveryonesHell
             sprites.Add(2, gray);
             
             questTracker = new QuestManagment.QuestTracker(null, quests);
-            questTrackerWindow = new QuestTrackerWindow(new Vector2f(70, 150), font, questTracker);
-
-            int xZoomVal = (int)(GlobalReferences.MainGame.WindowWidth - (GlobalReferences.MainGame.WindowWidth * zoomFactor)) / 2;
-            int yZoomVal = (int)(GlobalReferences.MainGame.WindowHeight - (GlobalReferences.MainGame.WindowHeight * zoomFactor)) / 2;
-            Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(0+xZoomVal, (GlobalReferences.MainGame.WindowHeight * zoomFactor) - gaugebarborder.Texture.Size.Y - yZoomVal), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Red, true);
+            questTrackerWindow = new QuestTrackerWindow(new Vector2f(100, 150), font, questTracker);
+            
+            Gaugebar healthBar = new Gaugebar(100, 100, new Vector2f(xZoomVal, (GlobalReferences.MainGame.WindowHeight * zoomFactor) - gaugebarborder.Texture.Size.Y - yZoomVal), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Red, true);
             Gaugebar ammunition = new Gaugebar(30, 30, new Vector2f((GlobalReferences.MainGame.WindowWidth * zoomFactor) - (gaugebarborder.Texture.Size.X * 0.6f) - xZoomVal, (GlobalReferences.MainGame.WindowHeight * zoomFactor) - (gaugebarborder.Texture.Size.Y * gaugebar.Scale.Y) - yZoomVal), gaugebar, gaugebarborder, new Vector2f(0.6f, 1), Color.Yellow, true);
 
-            gameOver = new GameOver((int)GlobalReferences.MainGame.WindowWidth, (int)GlobalReferences.MainGame.WindowHeight, font, 3f, this);
+            gameOver = new GameOver((int)(GlobalReferences.MainGame.WindowWidth * zoomFactor), (int)(GlobalReferences.MainGame.WindowHeight * zoomFactor), font, 3f, this);
 
             entities = new EntityManager();
             EntityFactory.EntityCreated += EntityFactory_EntityCreated;

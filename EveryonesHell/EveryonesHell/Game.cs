@@ -148,16 +148,17 @@ namespace EveryonesHell
             consoleManager = new DebugConsoleManager(this, font);
             window.TextEntered += consoleManager.TextEntered;
             
+            
             currentScene = new Scene(content, zoomFactor);
             currentScene.LoadContent();
-
             List<Menu> menus = new List<Menu>();
-            menus.Add(new MainMenu(new Vector2f(windowWidth, windowHeight), font, sound));
-            menus.Add(new SplashScreen(new Vector2f(windowWidth, windowHeight), font, 5f));
-            menus.Add(new CreditsScreen(new Vector2f(windowWidth, windowHeight), font, 5f));
+            menus.Add(new MainMenu(new Vector2f(windowWidth * zoomFactor, windowHeight * zoomFactor), font, sound));
+            menus.Add(new SplashScreen(new Vector2f(windowWidth * zoomFactor, windowHeight * zoomFactor), font, 5f));
+            menus.Add(new CreditsScreen(new Vector2f(windowWidth * zoomFactor, windowHeight * zoomFactor), font, 5f));
             menuManager = new MenuManager(menus);
             menuManager.Show("SplashScreen");
-           
+
+            currentScene.Draw(window);
             GlobalReferences.State = GameState.Menu;
         }
 

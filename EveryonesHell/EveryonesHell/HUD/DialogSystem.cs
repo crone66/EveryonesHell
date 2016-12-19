@@ -13,11 +13,11 @@ namespace EveryonesHell.HUD
     public class DialogSystem : HudElement
     {
         private const int padding = 10;
-        private const int lineSpacing = 18;
-        private const int answerSpacing = 25;
+        private const int lineSpacing = 30;
+        private const int answerSpacing = 35;
         private const float selectionDelay = 0.20f;
-        private const int answerCharacterSize = 16;
-        private const int textCharacterSize = 18;
+        private const int answerCharacterSize = 28;
+        private const int textCharacterSize = 36;
 
         private Dialog currentDialog;
         private Dialog[] answers;
