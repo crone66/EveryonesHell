@@ -20,19 +20,19 @@ namespace EveryonesHell.EntityManagment
         private Player enemy;
 
         /// <summary>
-        /// 
+        /// Creates an NPC with position and standard params
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="size"></param>
-        /// <param name="viewDirection"></param>
-        /// <param name="animations"></param>
-        /// <param name="healthBar"></param>
-        /// <param name="speed"></param>
-        /// <param name="maxHealth"></param>
-        /// <param name="fireRate"></param>
-        /// <param name="groupID"></param>
-        /// <param name="factionId"></param>
-        /// <param name="dialogIds"></param>
+        /// <param name="position">Initial position of the NPC</param>
+        /// <param name="size">The NPC's hitbox size</param>
+        /// <param name="viewDirection">Initial viewing direction</param>
+        /// <param name="animations">Passes NPC's animation </param>
+        /// <param name="healthBar">Passes the NPC's healthbar</param>
+        /// <param name="speed">Defines the movement speed</param>
+        /// <param name="maxHealth">Sets the maximum health</param>
+        /// <param name="fireRate">Controls the Fire Rate</param>
+        /// <param name="groupID">Defines which group the NPC belongs to</param>
+        /// <param name="factionId">Defines which faction the NPC belongs to</param>
+        /// <param name="dialogIds">Passes the dialog ID's the NPC communicates with</param>
         public NPC(Vector2f position, Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds)
             :base(position, size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID,factionId, dialogIds)
         {
@@ -44,21 +44,21 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Creates NPC with position set by tiles and standard params and prototyping
         /// </summary>
-        /// <param name="tileRow"></param>
-        /// <param name="tileColumn"></param>
-        /// <param name="size"></param>
-        /// <param name="viewDirection"></param>
-        /// <param name="animations"></param>
-        /// <param name="healthBar"></param>
-        /// <param name="speed"></param>
-        /// <param name="maxHealth"></param>
-        /// <param name="fireRate"></param>
-        /// <param name="groupID"></param>
-        /// <param name="factionId"></param>
-        /// <param name="dialogIds"></param>
-        /// <param name="isPrototyp"></param>
+        /// <param name="tileRow">Sets the X Position by row of tiles</param>
+        /// <param name="tileColumn">Sets the Y position by column of tiles</param>
+        /// <param name="size">The NPC's hitbox size</param>
+        /// <param name="viewDirection">Initial viewing direction</param>
+        /// <param name="animations">Passes NPC's animation </param>
+        /// <param name="healthBar">Passes the NPC's healthbar</param>
+        /// <param name="speed">Defines the movement speed</param>
+        /// <param name="maxHealth">Sets the maximum health</param>
+        /// <param name="fireRate">Controls the Fire Rate</param>
+        /// <param name="groupID">Defines which group the NPC belongs to</param>
+        /// <param name="factionId">Defines which faction the NPC belongs to</param>
+        /// <param name="dialogIds">Passes the dialog ID's the NPC communicates with</param>
+        /// <param name="isPrototyp"></param> Defines whether the NPC is used for prototyping
         public NPC(int tileRow, int tileColumn, Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
             : base(tileRow, tileColumn, size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, dialogIds, isPrototyp)
         {
@@ -70,19 +70,19 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        ///  Creates NPC without position
         /// </summary>
-        /// <param name="size"></param>
-        /// <param name="viewDirection"></param>
-        /// <param name="animations"></param>
-        /// <param name="healthBar"></param>
-        /// <param name="speed"></param>
-        /// <param name="maxHealth"></param>
-        /// <param name="fireRate"></param>
-        /// <param name="groupID"></param>
-        /// <param name="factionId"></param>
-        /// <param name="dialogIds"></param>
-        /// <param name="isPrototyp"></param>
+        /// <param name="size">The NPC's hitbox size</param>
+        /// <param name="viewDirection">Initial viewing direction</param>
+        /// <param name="animations">Passes NPC's animation </param>
+        /// <param name="healthBar">Passes the NPC's healthbar</param>
+        /// <param name="speed">Defines the movement speed</param>
+        /// <param name="maxHealth">Sets the maximum health</param>
+        /// <param name="fireRate">Controls the Fire Rate</param>
+        /// <param name="groupID">Defines which group the NPC belongs to</param>
+        /// <param name="factionId">Defines which faction the NPC belongs to</param>
+        /// <param name="dialogIds">Passes the dialog ID's the NPC communicates with</param>
+        /// <param name="isPrototyp"></param> Defines whether the NPC is used for prototyping
         public NPC(Vector2i size, Vector2f viewDirection, AnimationManager animations, Gaugebar healthBar, float speed, int maxHealth, float fireRate, int groupID, int factionId, int[] dialogIds, bool isPrototyp)
             : base(size, new InventorySystem.Inventory(32), animations, true, viewDirection, speed, maxHealth, fireRate, healthBar, groupID, factionId, dialogIds, isPrototyp)
         {
@@ -96,7 +96,7 @@ namespace EveryonesHell.EntityManagment
         /// <summary>
         /// Updates the NPC
         /// </summary>
-        /// <param name="elapsedSeconds"></param>
+        /// <param name="elapsedSeconds">Elapsed Game Time in Seconds</param>
         public override void Update(float elapsedSeconds)
         {
             if (IsMoveAble && !Freeze)
@@ -116,9 +116,9 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Lets the NPC move around if idle
         /// </summary>
-        /// <param name="elapsedSeconds"></param>
+        /// <param name="elapsedSeconds">Elapsed Game Time in Seconds</param>
         private void Do(float elapsedSeconds)
         {
             if (idle)
@@ -150,9 +150,9 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Moves the NPC for idling
         /// </summary>
-        /// <param name="elapsedSeconds"></param>
+        /// <param name="elapsedSeconds">Elapsed Game Time in Seconds</param>
         private void Movement(float elapsedSeconds)
         {
             elapsedDirectionTime += elapsedSeconds;
@@ -163,7 +163,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Creates a new direction for random idle movement
         /// </summary>
         private void CreateNewDirection()
         {
@@ -175,7 +175,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Sets the velocity for hunting the player
         /// </summary>
         private void SetVelocity()
         {
@@ -195,7 +195,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Checks whether and enemy for the NPC is in range
         /// </summary>
         /// <returns></returns>
         private bool IsEnemyInRange()
@@ -221,7 +221,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Makes the NPC Hunt his enemies
         /// </summary>
         private void Hunt()
         {
@@ -274,7 +274,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Attacks his enemies if they are in range
         /// </summary>
         private void Attack()
         {
@@ -283,7 +283,7 @@ namespace EveryonesHell.EntityManagment
         }
 
         /// <summary>
-        /// 
+        /// Value helper for hunting method
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>
@@ -297,16 +297,16 @@ namespace EveryonesHell.EntityManagment
         /// <summary>
         /// Draws the NPC
         /// </summary>
-        /// <param name="window"></param>
+        /// <param name="window">Sets the gamewindow the NPC is drawn to</param>
         public override void Draw(RenderWindow window)
         {
             base.Draw(window);      
         }
 
         /// <summary>
-        /// 
+        /// Handlings cloning the NPC for prototyping
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns the prototype NPC</returns>
         public override Entity Clone()
         {
             return new NPC(Position, Size, ViewDirection, Animations, Healthbar, Speed, MaxHealth, fireRate, GroupID, FactionId, dialogIds.ToArray());
