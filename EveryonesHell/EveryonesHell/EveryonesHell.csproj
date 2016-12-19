@@ -234,6 +234,7 @@
     <Content Include="Content\Npc\NPCAnimation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\PlayerJetpackSheet.png" />
     <Content Include="Content\PlayerSpriteSheet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
