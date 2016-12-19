@@ -20,11 +20,12 @@ namespace EveryonesHell.EntityManagment
         /// Updates all entities
         /// </summary>
         /// <param name="elapsedSeconds">Elapsed seconds since last update</param>
-        public void Update(float elapsedSeconds)
+        public void Update(float elapsedSeconds, IntRect viewBox)
         {
             for (int i = 0; i < entities.Count; i++)
             {
-                entities[i].Update(elapsedSeconds);
+                if (entities[i].BoundingBox.Intersects(viewBox))
+                    entities[i].Update(elapsedSeconds);
             }
         }
 
@@ -32,11 +33,12 @@ namespace EveryonesHell.EntityManagment
         /// Draws all entities
         /// </summary>
         /// <param name="window">Window to render</param>
-        public void Draw(RenderWindow window)
+        public void Draw(RenderWindow window, IntRect viewBox)
         {
             for (int i = 0; i < entities.Count; i++)
             {
-                entities[i].Draw(window);
+                if(entities[i].BoundingBox.Intersects(viewBox))
+                    entities[i].Draw(window);
             }
         }
 
