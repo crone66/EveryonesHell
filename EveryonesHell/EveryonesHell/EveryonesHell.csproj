@@ -102,8 +102,12 @@
     <Compile Include="HUD\HudElement.cs" />
     <Compile Include="HUD\HudManager.cs" />
     <Compile Include="HUD\QuestTrackerWindow.cs" />
+    <Compile Include="MenuManagment\Button.cs" />
+    <Compile Include="MenuManagment\MainMenu.cs" />
     <Compile Include="MenuManagment\Menu.cs" />
     <Compile Include="MenuManagment\MenuManager.cs" />
+    <Compile Include="MenuManagment\CreditsScreen.cs" />
+    <Compile Include="MenuManagment\SplashScreen.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuestManagment\QuestTracker.cs" />

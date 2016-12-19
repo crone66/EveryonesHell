@@ -30,6 +30,15 @@ namespace EveryonesHell.MenuManagment
             }
         }
 
+        public void Input(float elapsedSeconds)
+        {
+            foreach (Menu item in menus)
+            {
+                if (item.IsVisable)
+                    item.Input(elapsedSeconds);
+            }
+        }
+
         public void Show(string menuName)
         {
             foreach (Menu item in menus)
